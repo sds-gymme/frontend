@@ -1,16 +1,17 @@
 import React from "react";
 import { View } from "react-native";
-import LoginComponent from "@/components/LoginAction";
+import Background from "@/components/Background";
+import SignIn from "@/components/SignIn";
 import { StyleSheet } from "react-native";
 
 export default function Index() {
   return (
     <View style={{ flex: 1 }}>
-      <LoginComponent />
+      <Background />
+      <SignIn />
     </View>
   );
 }
-
 
 
 const styles = StyleSheet.create({
@@ -22,12 +23,5 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
   },
 });
