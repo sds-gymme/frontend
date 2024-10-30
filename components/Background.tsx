@@ -6,8 +6,7 @@ const LoginComponent = () => {
   const router = useRouter(); 
   const image = require("../assets/images/1.png");
   const handleLogin = () => {
-    // Add your login logic here
-    // For now, we'll just navigate to the tabs
+
     router.replace("/(tabs)");
   };
   
