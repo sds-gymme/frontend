@@ -28,6 +28,8 @@ const SignIn = () => {
     require("../assets/images/3.png"),
   ];
 
+  const Logo = require("../assets/images/Group 18337.png");
+
   const renderCarouselItem = ({ item }: { item: any }) => {
     return (
       <ImageBackground
@@ -61,7 +63,7 @@ const SignIn = () => {
               defaultIndex={0}
             />
             <View style={styles.logoContainer}>
-              <Text style={styles.logoText}>GYM ME</Text>
+              <Image source={Logo}/>
             </View>
           </View>
 
@@ -205,6 +207,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  
 });
 
 export default SignIn;
