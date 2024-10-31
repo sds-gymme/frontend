@@ -16,6 +16,13 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../app/types";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
@@ -40,7 +47,12 @@ const SignIn = () => {
     );
   };
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+
   return (
+    
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.mainContainer}
@@ -53,7 +65,7 @@ const SignIn = () => {
               loop
               width={width}
               height={height * 0.67}
-              autoPlay={true}
+              autoPlay={false}
               data={carouselImages}
               scrollAnimationDuration={1000}
               onProgressChange={(offset) => {
@@ -99,7 +111,7 @@ const SignIn = () => {
 
                 <TouchableOpacity
                   style={styles.signInButton}
-                  onPress={() => alert("Sign In")}
+                  onPress={() => navigation.navigate('Verification')}
                 >
                   <Text style={styles.signInText}>Sign In</Text>
                 </TouchableOpacity>
@@ -127,7 +139,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    
   },
   scrollView: {
     flex: 0,
