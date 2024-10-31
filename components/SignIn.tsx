@@ -63,7 +63,7 @@ const SignIn = () => {
               defaultIndex={0}
             />
             <View style={styles.logoContainer}>
-              <Image source={Logo}/>
+              <Image source={Logo} />
             </View>
           </View>
 
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     position: "absolute",
-    top: "50%",
     left: 20,
+    top: 60,
     zIndex: 1,
   },
   logoText: {
