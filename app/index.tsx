@@ -8,6 +8,7 @@ import { Stack } from "expo-router";
 import SignIn from "@/components/SignIn";
 import Verification from "./screens/Verification";
 import Registration from "./screens/Registration";
+import HomePage from "./screens/HomePage";
 
 export default function Index() {
 
@@ -30,6 +31,11 @@ export default function Index() {
           name="Registration"
           options={{ headerShown: false }}
           component={Registration}
+        />
+        <Stack.Screen
+          name="HomePage"
+          options={{ headerShown: false }}
+          component={HomePage}
         />
       </Stack.Navigator>
     </GestureHandlerRootView>
