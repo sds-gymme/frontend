@@ -13,7 +13,7 @@ export default function Registration() {
       <Stack.Navigator initialRouteName="Registration">
         <Stack.Screen
           name=" "
-          options={{ headerTitle: " " }}
+          options={{ headerTitle: "Basic Information" }}
           component={RegistrationCompo}
         />
       </Stack.Navigator>

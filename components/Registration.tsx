@@ -12,6 +12,7 @@ import { TextInput } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
+import { blue100 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type RegistrationScreenProps = StackScreenProps<ParamListBase>;
 
@@ -73,7 +74,6 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    // Handle form submission
     console.log("Form submitted:", formData);
     navigation.navigate("HomePage")
   };
@@ -81,8 +81,8 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.title}>Basic Information</Text>
-      <Text style={styles.subtitle}>Add details</Text>
+      <Text style={styles.title}>Add details</Text>
+      <Text style={styles.subtitle}>Enter height, weight, dob etc.</Text>
       <Text style={styles.fieldLabel}>DOB</Text>
 
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
@@ -90,7 +90,8 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
           mode="outlined"
           value={formData.dob.toLocaleDateString()}
           editable={false}
-          right={<TextInput.Icon icon="calendar" />}
+          left={<TextInput.Icon icon="calendar" color="#007AFF" size={30} />}
+          outlineColor="rgba(0, 0, 0, 0.2)"
         />
       </TouchableOpacity>
 
@@ -107,7 +108,11 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
         mode="outlined"
         value={formData.gender}
         onChangeText={(text) => setFormData({ ...formData, gender: text })}
-        right={<TextInput.Icon icon="chevron-down" />}
+        right={<TextInput.Icon icon="chevron-down" color="#007AFF" size={35} />}
+        left={
+          <TextInput.Icon icon="gender-male-female" color="orange" size={35} />
+        }
+        outlineColor="rgba(0, 0, 0, 0.2)"
       />
 
       <View style={styles.rowContainer}>
@@ -117,9 +122,10 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
             mode="outlined"
             value={formData.height}
             onChangeText={(text) => setFormData({ ...formData, height: text })}
-            placeholder="Enter height (cm)"
+            placeholder="Enter height (m)"
             keyboardType="numeric"
-            right={<TextInput.Icon icon="human-male-height" />}
+            left={<TextInput.Icon icon="human-male-height" color="#007AFF" />}
+            outlineColor="rgba(0, 0, 0, 0.2)"
           />
         </View>
         <View style={styles.halfWidth}>
@@ -130,7 +136,8 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
             onChangeText={(text) => setFormData({ ...formData, weight: text })}
             placeholder="Enter weight (kg)"
             keyboardType="numeric"
-            right={<TextInput.Icon icon="weight" />}
+            left={<TextInput.Icon icon="weight" color="#4CAF50" />}
+            outlineColor="rgba(0, 0, 0, 0.2)"
           />
         </View>
       </View>
@@ -171,14 +178,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     color: "#666",
-    marginBottom: 24,
+    marginBottom: 12,
   },
   fieldLabel: {
-    fontSize: 16,
+    fontSize: 22,
     marginBottom: 8,
-    marginTop: 16,
+    marginTop: 24,
   },
   buttonContainer: {
     flexDirection: "row",

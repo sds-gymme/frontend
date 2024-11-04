@@ -34,7 +34,7 @@ export default function Index() {
         />
         <Stack.Screen
           name="HomePage"
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
           component={HomePage}
         />
       </Stack.Navigator>
