@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Stack } from "expo-router";
 import SignIn from "@/components/SignIn";
 import Verification from "./screens/Verification";
+import Registration from "./screens/Registration";
 
 export default function Index() {
 
@@ -24,6 +25,11 @@ export default function Index() {
           name="Verification"
           options={{ headerShown: false }}
           component={Verification}
+        />
+        <Stack.Screen
+          name="Registration"
+          options={{ headerShown: false }}
+          component={Registration}
         />
       </Stack.Navigator>
     </GestureHandlerRootView>
