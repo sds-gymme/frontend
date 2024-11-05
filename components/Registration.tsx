@@ -8,11 +8,10 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput } from "react-native-paper";
+import { TextInput, Menu, Button } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
-import { blue100 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type RegistrationScreenProps = StackScreenProps<ParamListBase>;
 
@@ -25,13 +24,18 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
     foodPreference: "Non-Vegetarian",
     bodyType: "Fit",
     fitnessLevel: "Intermediate",
+    fitnessGoals: "Fitness",
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+
 
   const foodPreferences = ["Vegetarian", "Non-Vegetarian", "Eggetarian"];
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
   const fitnessLevels = ["Beginner", "Intermediate", "Professional"];
+  const fitnessGoals = ["Weight Loss", "Weight Gain", "Fitness"];
+  
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === "ios");
@@ -40,38 +44,71 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
     }
   };
 
-  const renderSelectionButtons = (
-    options: string[],
-    selectedValue: string,
-    field: keyof typeof formData
-  ) => {
-    return (
-      <View style={styles.buttonContainer}>
-        {options.map((option) => (
-          <TouchableOpacity
-            key={option}
-            style={[
-              styles.selectionButton,
-              formData[field] === option && styles.selectedButton,
-              option === "Vegetarian" && styles.greenButton,
-              option === "Lean" && styles.blueButton,
-              option === "Beginner" && styles.yellowButton,
-            ]}
-            onPress={() => setFormData({ ...formData, [field]: option })}
-          >
-            <Text
+    const renderSelectionButtons = (
+      options: string[],
+      selectedValue: string,
+      field: keyof typeof formData
+    ) => {
+      return (
+        <View style={styles.buttonContainer}>
+          {options.map((option) => (
+            <TouchableOpacity
+              key={option}
               style={[
-                styles.buttonText,
-                formData[field] === option && styles.selectedButtonText,
+                styles.selectionButton,
+                formData[field] === option && styles.selectedButton,
+                formData[field] === option &&
+                  option === "Vegetarian" &&
+                  styles.greenButton,
+                formData[field] == option &&
+                  option === "Eggetarian" &&
+                  styles.greenButton,
+                formData[field] == option &&
+                  option === "Non-Vegetarian" &&
+                  styles.greenButton,
+                // formData[field] === option &&
+                //   option === "Lean" &&
+                //   styles.grayButton,
+                // formData[field] == option &&
+                //   option === "Fit" &&
+                //   styles.greenButton,
+                // formData[field] == option &&
+                //   option === "Obsessed" &&
+                //   styles.redButton,
+                formData[field] === option &&
+                  option === "Beginner" &&
+                  styles.yellowButton,
+                formData[field] === option &&
+                  option === "Intermediate" &&
+                  styles.yellowButton,
+                formData[field] === option &&
+                  option === "Professional" &&
+                  styles.yellowButton,
+                formData[field] === option &&
+                  option === "Weight Loss" &&
+                  styles.purpleButton,
+                formData[field] === option &&
+                  option === "Weight Gain" &&
+                  styles.purpleButton,
+                formData[field] === option &&
+                  option === "Fitness" &&
+                  styles.purpleButton,
               ]}
+              onPress={() => setFormData({ ...formData, [field]: option })}
             >
-              {option}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
+              <Text
+                style={[
+                  styles.buttonText,
+                  formData[field] === option && styles.selectedButtonText,
+                ]}
+              >
+                {option}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      );
+    };
 
   const handleSubmit = () => {
     console.log("Form submitted:", formData);
@@ -79,90 +116,115 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar style="auto" />
-      <Text style={styles.title}>Add details</Text>
-      <Text style={styles.subtitle}>Enter height, weight, dob etc.</Text>
-      <Text style={styles.fieldLabel}>DOB</Text>
+    <View style={styles.container}>
+      <ScrollView>
+        <StatusBar style="auto" />
+        <Text style={styles.title}>Add details</Text>
+        <Text style={styles.subtitle}>Enter height, weight, dob etc.</Text>
+        <Text style={styles.fieldLabel}>DOB</Text>
 
-      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+          <TextInput
+            mode="outlined"
+            value={formData.dob.toLocaleDateString()}
+            editable={false}
+            left={<TextInput.Icon icon="calendar" color="#007AFF" size={30} />}
+            outlineColor="rgba(0, 0, 0, 0.2)"
+          />
+        </TouchableOpacity>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={formData.dob}
+            mode="date"
+            onChange={handleDateChange}
+          />
+        )}
+
+        <Text style={styles.fieldLabel}>Gender</Text>
         <TextInput
           mode="outlined"
-          value={formData.dob.toLocaleDateString()}
-          editable={false}
-          left={<TextInput.Icon icon="calendar" color="#007AFF" size={30} />}
+          value={formData.gender}
+          onChangeText={(text) => setFormData({ ...formData, gender: text })}
+          placeholder="Male"
+          right={<TextInput.Icon icon="chevron-down" color="#666" size={35} />}
+          left={
+            <TextInput.Icon
+              icon="gender-male-female"
+              color="orange"
+              size={35}
+            />
+          }
           outlineColor="rgba(0, 0, 0, 0.2)"
         />
-      </TouchableOpacity>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={formData.dob}
-          mode="date"
-          onChange={handleDateChange}
-        />
-      )}
-
-      <Text style={styles.fieldLabel}>Gender</Text>
-      <TextInput
-        mode="outlined"
-        value={formData.gender}
-        onChangeText={(text) => setFormData({ ...formData, gender: text })}
-        right={<TextInput.Icon icon="chevron-down" color="#007AFF" size={35} />}
-        left={
-          <TextInput.Icon icon="gender-male-female" color="orange" size={35} />
-        }
-        outlineColor="rgba(0, 0, 0, 0.2)"
-      />
-
-      <View style={styles.rowContainer}>
-        <View style={styles.halfWidth}>
-          <Text style={styles.fieldLabel}>Height</Text>
-          <TextInput
-            mode="outlined"
-            value={formData.height}
-            onChangeText={(text) => setFormData({ ...formData, height: text })}
-            placeholder="Enter height (m)"
-            keyboardType="numeric"
-            left={<TextInput.Icon icon="human-male-height" color="#007AFF" />}
-            outlineColor="rgba(0, 0, 0, 0.2)"
-          />
+        <View style={styles.rowContainer}>
+          <View style={styles.halfWidth}>
+            <Text style={styles.fieldLabel}>Height</Text>
+            <TextInput
+              mode="outlined"
+              value={formData.height}
+              onChangeText={(text) =>
+                setFormData({ ...formData, height: text })
+              }
+              placeholder="Enter height (m)"
+              keyboardType="numeric"
+              left={<TextInput.Icon icon="human-male-height" color="#007AFF" />}
+              outlineColor="rgba(0, 0, 0, 0.2)"
+            />
+          </View>
+          <View style={styles.halfWidth}>
+            <Text style={styles.fieldLabel}>Weight</Text>
+            <TextInput
+              mode="outlined"
+              value={formData.weight}
+              onChangeText={(text) =>
+                setFormData({ ...formData, weight: text })
+              }
+              placeholder="Enter weight (kg)"
+              keyboardType="numeric"
+              left={<TextInput.Icon icon="weight" color="#4CAF50" />}
+              outlineColor="rgba(0, 0, 0, 0.2)"
+            />
+          </View>
         </View>
-        <View style={styles.halfWidth}>
-          <Text style={styles.fieldLabel}>Weight</Text>
-          <TextInput
-            mode="outlined"
-            value={formData.weight}
-            onChangeText={(text) => setFormData({ ...formData, weight: text })}
-            placeholder="Enter weight (kg)"
-            keyboardType="numeric"
-            left={<TextInput.Icon icon="weight" color="#4CAF50" />}
-            outlineColor="rgba(0, 0, 0, 0.2)"
-          />
-        </View>
+
+        <Text style={styles.fieldLabel}>Food preferences</Text>
+        {renderSelectionButtons(
+          foodPreferences,
+          formData.foodPreference,
+          "foodPreference"
+        )}
+
+        <Text style={styles.fieldLabel}>Body type</Text>
+        {renderSelectionButtons(bodyTypes, formData.bodyType, "bodyType")}
+
+        <Text style={styles.fieldLabel}>Fitness level</Text>
+        {renderSelectionButtons(
+          fitnessLevels,
+          formData.fitnessLevel,
+          "fitnessLevel"
+        )}
+        <Text style={styles.fieldLabel}>Fitness Goals</Text>
+        {renderSelectionButtons(
+          fitnessGoals,
+          formData.fitnessGoals,
+          "fitnessGoals"
+        )}
+      </ScrollView>
+      <View style={styles.submitButtonContainer}>
+        <View style={styles.partition} />
+        <SubmitButton onPress={handleSubmit} />
       </View>
+    </View>
+  );
+};
 
-      <Text style={styles.fieldLabel}>Food preferences</Text>
-      {renderSelectionButtons(
-        foodPreferences,
-        formData.foodPreference,
-        "foodPreference"
-      )}
-
-      <Text style={styles.fieldLabel}>Body type</Text>
-      {renderSelectionButtons(bodyTypes, formData.bodyType, "bodyType")}
-
-      <Text style={styles.fieldLabel}>Fitness level</Text>
-      {renderSelectionButtons(
-        fitnessLevels,
-        formData.fitnessLevel,
-        "fitnessLevel"
-      )}
-
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
-    </ScrollView>
+const SubmitButton: React.FC<{ onPress: () => void }> = ({ onPress }) => {
+  return (
+    <TouchableOpacity style={styles.submitButton} onPress={onPress}>
+      <Text style={styles.submitButtonText}>Submit</Text>
+    </TouchableOpacity>
   );
 };
 
@@ -213,11 +275,17 @@ const styles = StyleSheet.create({
   greenButton: {
     backgroundColor: "#4CAF50",
   },
+  redButton: {
+    backgroundColor: "red",
+  },
   blueButton: {
     backgroundColor: "#2196F3",
   },
   yellowButton: {
     backgroundColor: "#FFC107",
+  },
+  purpleButton: {
+    backgroundColor: "purple",
   },
   buttonText: {
     color: "#666",
@@ -237,6 +305,22 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  submitButtonContainer: {
+    position: "relative",
+    backgroundColor: "transparent",
+    top: 10,
+  },
+  partition: {
+    height: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  fitnessLevelContainer: {
+    marginBottom: 16, // Add margin to create space between fitness level buttons and submit button
   },
 });
 
