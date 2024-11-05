@@ -1,5 +1,3 @@
-// Homepage.tsx
-
 import React from "react";
 import {
   StyleSheet,
@@ -22,9 +20,11 @@ const Homepage: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={styles.header}>
-        <View style={styles.titleAndLogoContainer}>
-          <Appbar.Content title="Pravesh!" titleStyle={styles.title} />
-          <Text style={styles.subtitle}>Welcome back,</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.subtitle}>Welcome Back!</Text>
+          <Text style={styles.title}>Pravesh!</Text>
+        </View>
+        <View style={styles.logoContainer}>
           <Image
             source={require("../../assets/images/Group 18337.png")}
             style={styles.logo}
@@ -45,99 +45,46 @@ const Homepage: React.FC = () => {
 
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Live Personal Training</Title>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#FF6B6B"
-              textColor="white"
-              style={styles.button}
-            >
-              Live
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319410.png")}
+            style={styles.cardImage}
+            resizeMode="cover"
+          />
         </Card>
 
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Free Recorded Home Workout</Title>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#4285F4"
-              textColor="white"
-              style={styles.button}
-            >
-              Rec
-            </Button>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#4285F4"
-              textColor="white"
-              style={styles.button}
-            >
-              Free Home Workout
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319403.png")}
+            style={styles.cardImage}
+          />
         </Card>
 
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Personal Training @ Nearby Gym</Title>
-            <Paragraph>45 Min/Session</Paragraph>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#34A853"
-              textColor="white"
-              style={styles.button}
-            >
-              Book Now
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319405.png")}
+            style={styles.cardImage}
+          />
         </Card>
 
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Free Diet Planner</Title>
-            <Paragraph>Protein, Carb, Fibre</Paragraph>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#FFA500"
-              textColor="white"
-              style={styles.button}
-            >
-              Get Diet Plan
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319406.png")}
+            style={styles.cardImage}
+          />
         </Card>
 
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Decode Age (Forever Young!)</Title>
-            <Paragraph>Discover your youthful potential.</Paragraph>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#6C63FF"
-              textColor="white"
-              style={styles.button}
-            >
-              Learn More
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319407.png")}
+            style={styles.cardImage}
+          />
         </Card>
 
         <Card style={styles.card}>
-          <Card.Content>
-            <Title>Calorie Counter</Title>
-            <Paragraph>50 Kcal</Paragraph>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#FF6B6B"
-              textColor="white"
-              style={styles.button}
-            >
-              Track Calories
-            </Button>
-          </Card.Content>
+          <Card.Cover
+            source={require("../../assets/images/Frame 427319409.png")}
+            style={styles.cardImage}
+          />
         </Card>
       </ScrollView>
     </SafeAreaView>
@@ -152,24 +99,30 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#fff",
     elevation: 4,
-  },
-  titleAndLogoContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+   
+  },
+  titleContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  logoContainer: {
+    marginLeft: "auto", // Pushes the logo to the far right
   },
   title: {
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#666",
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 120,
+    height: 120,
   },
   searchContainer: {
     paddingHorizontal: 16,
@@ -183,13 +136,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
-    padding: 8,
+    padding: 0,
+    backgroundColor: "white",
   },
   card: {
     width: "45%",
     marginVertical: 8,
     borderRadius: 8,
-    elevation: 2,
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+  },
+  cardImage: {
+    height: 160, // Adjust this value based on your needs
+    width: 184,
+    resizeMode: "cover",
   },
   button: {
     marginTop: 12,
