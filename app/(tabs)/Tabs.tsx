@@ -3,7 +3,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomePage from "../screens/HomePage";
-import Services from "../screens/Registration";
+import Services from "../screens/Services";
 import History from "../screens/Verification";
 import Account from "../screens/HomePage"; // You might want to create a separate Account component
 
