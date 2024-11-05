@@ -1,159 +1,178 @@
 import React from "react";
 import {
-  StyleSheet,
   View,
   Text,
-  Image,
   SafeAreaView,
   ScrollView,
-} from "react-native";
-import {
-  Card,
-  Title,
-  Paragraph,
-  Button,
-  Appbar,
   TextInput,
-} from "react-native-paper";
+  Image,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
+import { Search } from "lucide-react-native";
 
-const Homepage: React.FC = () => {
+// Header Component
+const Header = ({ username = "Pravesh" }) => (
+  <View style={styles.header}>
+    <View>
+      <Text style={styles.welcomeText}>Welcome back,</Text>
+      <Text style={styles.usernameText}>{username}!</Text>
+    </View>
+    <Image
+      source={require("../../assets/images/gymmeLogo.svg")}
+      style={styles.logo}
+    />
+  </View>
+);
+
+// Search Bar Component
+const SearchBar = () => (
+  <View style={styles.searchContainer}>
+    <Search size={20} color="#666" />
+    <TextInput
+      placeholder="Search for 'Gym workout'"
+      style={styles.searchInput}
+      placeholderTextColor="#666"
+    />
+  </View>
+);
+
+// Feature Card Component
+const FeatureCard = ({ title, subtitle, color, icon, style }) => (
+  <View style={[styles.card, { backgroundColor: color }, style]}>
+    {icon}
+    <Text style={styles.cardTitle}>{title}</Text>
+    {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
+  </View>
+);
+
+// Main Component
+export default function Component() {
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header style={styles.header}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.subtitle}>Welcome Back!</Text>
-          <Text style={styles.title}>Pravesh!</Text>
-        </View>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("../../assets/images/Group 18337.png")}
-            style={styles.logo}
-            resizeMode="contain"
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Header />
+        <SearchBar />
+
+        <View style={styles.grid}>
+          <FeatureCard
+            title="Live Personal Training"
+            subtitle=""
+            color="#FF4B4B"
+            style={styles.squareCard}
+            icon={<View style={styles.liveIndicator} />}
+          />
+          <FeatureCard
+            title="Recorded Home Workout"
+            subtitle=""
+            color="#4B7BFF"
+            style={styles.squareCard}
+            icon={<Text style={styles.freeTag}>Free!!</Text>}
+          />
+          <FeatureCard
+            title="Personal Training"
+            subtitle="@Nearby Gym"
+            icon=""
+            color="#8B4BFF"
+            style={styles.squareCard}
+          />
+          <FeatureCard
+            title="Diet Planning"
+            color="#FF8B4B"
+            subtitle=""
+            style={styles.squareCard}
+            icon={<Text style={styles.freeTag}>Free!!</Text>}
+          />
+          <FeatureCard
+            title="Calorie Counter"
+            color="#4BFF8B"
+            style={styles.squareCard}
+          />
+          <FeatureCard
+            title="Decode Age"
+            subtitle="(Forever Young)"
+            color="#FFD700"
+            style={styles.squareCard}
           />
         </View>
-      </Appbar.Header>
-
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Search for 'Gym workout'"
-          mode="outlined"
-          left={<TextInput.Icon icon="magnify" />}
-          outlineColor="rgba(0, 0, 0, 0.2)"
-        />
-      </View>
-
-      <ScrollView contentContainerStyle={styles.cardContainer}>
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319410.png")}
-            style={styles.cardImage}
-            resizeMode="cover"
-          />
-        </Card>
-
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319403.png")}
-            style={styles.cardImage}
-          />
-        </Card>
-
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319405.png")}
-            style={styles.cardImage}
-          />
-        </Card>
-
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319406.png")}
-            style={styles.cardImage}
-          />
-        </Card>
-
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319407.png")}
-            style={styles.cardImage}
-          />
-        </Card>
-
-        <Card style={styles.card}>
-          <Card.Cover
-            source={require("../../assets/images/Frame 427319409.png")}
-            style={styles.cardImage}
-          />
-        </Card>
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
   },
+  scrollContent: {
+    padding: 16,
+  },
   header: {
-    backgroundColor: "#fff",
-    elevation: 4,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-   
+    alignItems: "center",
+    marginBottom: 16,
+    paddingTop: StatusBar.currentHeight || 0,
   },
-  titleContainer: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  logoContainer: {
-    marginLeft: "auto", // Pushes the logo to the far right
-  },
-  title: {
-    fontSize: 23,
-    fontWeight: "bold",
-  },
-  subtitle: {
+  welcomeText: {
     fontSize: 16,
     color: "#666",
   },
+  usernameText: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
   logo: {
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 30,
   },
   searchContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
   },
-  searchBar: {
-    backgroundColor: "white",
+  searchInput: {
+    marginLeft: 8,
+    flex: 1,
   },
-  cardContainer: {
+  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-around",
-    padding: 0,
-    backgroundColor: "white",
+    gap: 16,
   },
   card: {
-    width: "45%",
-    marginVertical: 8,
-    borderRadius: 8,
-    alignItems: "center", // Center horizontally
-    justifyContent: "center", // Center vertically
+    padding: 16,
+    borderRadius: 16,
+    justifyContent: "space-between",
   },
-  cardImage: {
-    height: 160, // Adjust this value based on your needs
-    width: 184,
-    resizeMode: "cover",
+  squareCard: {
+    width: "47%",
+    height: 180,
   },
-  button: {
-    marginTop: 12,
+  cardTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  cardSubtitle: {
+    color: "#fff",
+    fontSize: 14,
+    marginTop: 4,
+  },
+  liveIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#fff",
+  },
+  freeTag: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });
-
-export default Homepage;

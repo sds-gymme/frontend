@@ -35,7 +35,7 @@ const SignIn = () => {
     require("../assets/images/3.png"),
   ];
 
-  const Logo = require("../assets/images/Group 18337.png");
+  const Logo = require("../assets/images/gymmeLogo.svg");
 
   const renderCarouselItem = ({ item }: { item: any }) => {
     return (
@@ -50,9 +50,7 @@ const SignIn = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-
   return (
-    
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.mainContainer}
@@ -111,7 +109,7 @@ const SignIn = () => {
 
                 <TouchableOpacity
                   style={styles.signInButton}
-                  onPress={() => navigation.navigate('Verification')}
+                  onPress={() => navigation.navigate("Verification")}
                 >
                   <Text style={styles.signInText}>Sign In</Text>
                 </TouchableOpacity>
@@ -218,7 +216,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  
 });
 
 export default SignIn;
