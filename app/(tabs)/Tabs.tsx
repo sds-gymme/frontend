@@ -25,10 +25,10 @@ const App = () => {
     >
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "#000000", // Active icon color black
-          tabBarInactiveTintColor: "#808080", // Inactive icon color gray
+          tabBarActiveTintColor: "#000000", 
+          tabBarInactiveTintColor: "#808080", 
           tabBarStyle: {
-            backgroundColor: "#ffffff", // Tab bar background white
+            backgroundColor: "#ffffff",
             borderTopWidth: 1,
             borderTopColor: "#eeeeee",
             paddingBottom: 8,
