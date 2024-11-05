@@ -1,19 +1,16 @@
 // index.tsx
 import React from "react";
-import { SafeAreaView, StyleSheet,  } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Stack } from "expo-router";
 import SignIn from "@/components/SignIn";
 import Verification from "./screens/Verification";
 import Registration from "./screens/Registration";
-import HomePage from "./screens/HomePage";
+import Tabs from "./(tabs)/Tabs";
+
+const Stack = createStackNavigator();
 
 export default function Index() {
-
-  const Stack = createStackNavigator(); 
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack.Navigator initialRouteName="SignIn">
@@ -33,12 +30,11 @@ export default function Index() {
           component={Registration}
         />
         <Stack.Screen
-          name="HomePage"
-          options={{ headerShown: true }}
-          component={HomePage}
+          name="MainTabs"
+          options={{ headerShown: false }}
+          component={Tabs}
         />
       </Stack.Navigator>
     </GestureHandlerRootView>
   );
-};
-
+}
