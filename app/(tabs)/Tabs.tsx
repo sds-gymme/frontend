@@ -1,11 +1,10 @@
-// (tabs)/Tabs.tsx
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Home, Briefcase, Clock, User } from "iconsax-react-native";
 import HomePage from "../screens/HomePage";
 import Services from "../screens/Services";
 import History from "../screens/Verification";
-import Account from "../screens/HomePage"; // You might want to create a separate Account component
+import Account from "../screens/Account";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,13 +28,7 @@ const Tabs = () => {
         name="Home"
         component={HomePage}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="home-outline"
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -43,11 +36,7 @@ const Tabs = () => {
         component={Services}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="briefcase-outline"
-              color={color}
-              size={size}
-            />
+            <Briefcase color={color} size={size} />
           ),
         }}
       />
@@ -55,22 +44,14 @@ const Tabs = () => {
         name="History"
         component={History}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="history" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color, size }) => <Clock color={color} size={size} />,
         }}
       />
       <Tab.Screen
         name="Account"
         component={Account}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="account-outline"
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
     </Tab.Navigator>

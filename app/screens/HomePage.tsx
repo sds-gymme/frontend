@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,13 @@ import {
   Image,
   StyleSheet,
   StatusBar,
-  Pressable,
+  TouchableOpacity,
+  Animated,
 } from "react-native";
 import { Search } from "lucide-react-native";
-import ImageCarousel from "../../components/ImageCrousel"; // Adjust the import path as necessary
-import CouponCard from "../../components/CouponCard"; // Adjust the import path as necessary
+import ImageCarousel from "../../components/ImageCrousel";
+import CouponCard from "../../components/CouponCard";
 
-// Header Component
 const Header = ({ username = "Pravesh" }) => (
   <View style={styles.header}>
     <View>
@@ -28,31 +28,74 @@ const Header = ({ username = "Pravesh" }) => (
   </View>
 );
 
-// Search Bar Component
-const SearchBar = () => (
-  <View style={styles.searchContainer}>
-    <Search size={20} color="#666" />
-    <TextInput
-      placeholder="Search for 'Gym workout'"
-      style={styles.searchInput}
-      placeholderTextColor="#666"
-    />
-  </View>
-);
+const SearchBar = () => {
+  const placeholders = [
+    "gym workout",
+    "cardio",
+    "crossfit",
+    "zumba",
+    "aerobics",
+    "boxing",
+    "martial arts",
+    "expertise",
+  ];
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-// Feature Card Component
-const FeatureCard = ({ title, subtitle, color, icon, style }) => (
-  <View style={[styles.card, { backgroundColor: color }, style]}>
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setPlaceholderIndex(
+          (prevIndex) => (prevIndex + 1) % placeholders.length,
+        );
+      });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [fadeAnim]);
+
+  return (
+    <View style={styles.searchContainer}>
+      <Search size={20} color="#666" />
+      <View style={styles.searchInput}>
+        <Text style={styles.staticText}>Search for </Text>
+        <Animated.Text style={[styles.animatedText, { opacity: fadeAnim }]}>
+          {placeholders[placeholderIndex]}
+        </Animated.Text>
+      </View>
+    </View>
+  );
+};
+
+const FeatureCard = ({ title, subtitle, color, icon, style, onPress }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={[styles.card, { backgroundColor: color }, style]}
+  >
     {icon}
     <Text style={styles.cardTitle}>{title}</Text>
     {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
-  </View>
+  </TouchableOpacity>
 );
 
-// Main Component
 const HomePage: React.FC = () => {
   const handleCouponPress = () => {
     // Do nothing for now
+  };
+
+  const handleFeatureCardPress = (title) => {
+    console.log(`${title} card pressed`);
   };
 
   return (
@@ -70,6 +113,7 @@ const HomePage: React.FC = () => {
               color="#FF4B4B"
               style={styles.squareCard}
               icon={<View style={styles.liveIndicator} />}
+              onPress={() => handleFeatureCardPress("Live Personal Training")}
             />
             <FeatureCard
               title="Recorded Home Workout"
@@ -77,6 +121,7 @@ const HomePage: React.FC = () => {
               color="#4B7BFF"
               style={styles.squareCard}
               icon={<Text style={styles.freeTag}>Free!!</Text>}
+              onPress={() => handleFeatureCardPress("Recorded Home Workout")}
             />
             <FeatureCard
               title="Personal Training"
@@ -84,6 +129,7 @@ const HomePage: React.FC = () => {
               icon=""
               color="#8B4BFF"
               style={styles.squareCard}
+              onPress={() => handleFeatureCardPress("Personal Training")}
             />
             <FeatureCard
               title="Diet Planning"
@@ -91,17 +137,20 @@ const HomePage: React.FC = () => {
               subtitle=""
               style={styles.squareCard}
               icon={<Text style={styles.freeTag}>Free!!</Text>}
+              onPress={() => handleFeatureCardPress("Diet Planning")}
             />
             <FeatureCard
               title="Calorie Counter"
               color="#4BFF8B"
               style={styles.squareCard}
+              onPress={() => handleFeatureCardPress("Calorie Counter")}
             />
             <FeatureCard
               title="Decode Age"
               subtitle="(Forever Young)"
               color="#FFD700"
               style={styles.squareCard}
+              onPress={() => handleFeatureCardPress("Decode Age")}
             />
           </View>
         </View>
@@ -151,6 +200,7 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -189,6 +239,13 @@ const styles = StyleSheet.create({
   searchInput: {
     marginLeft: 8,
     flex: 1,
+    flexDirection: "row",
+  },
+  staticText: {
+    color: "#666",
+  },
+  animatedText: {
+    color: "#666",
   },
   grid: {
     flexDirection: "row",
