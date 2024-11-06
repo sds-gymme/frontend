@@ -10,6 +10,8 @@ import {
   StatusBar,
 } from "react-native";
 import { Search } from "lucide-react-native";
+import ImageCarousel from "../../components/ImageCrousel"; // Adjust the import path as necessary
+import CouponCard from "../../components/CouponCard"; // Adjust the import path as necessary
 
 // Header Component
 const Header = ({ username = "Pravesh" }) => (
@@ -47,7 +49,7 @@ const FeatureCard = ({ title, subtitle, color, icon, style }) => (
 );
 
 // Main Component
-export default function Component() {
+export default function HomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -96,6 +98,31 @@ export default function Component() {
             style={styles.squareCard}
           />
         </View>
+
+        <ImageCarousel
+          title="Professional trainer's real life"
+          images={[
+            {
+              src: require("../../assets/images/1.png"),
+              alt: "Trainer demonstrating medicine ball exercise",
+            },
+            {
+              src: require("../../assets/images/2.png"),
+              alt: "Trainer demonstrating standing exercise",
+            },
+            {
+              src: require("../../assets/images/3.png"),
+              alt: "Trainer demonstrating workout routine",
+            },
+          ]}
+        />
+
+        <CouponCard
+          discount="50% OFF*"
+          description="Get an exclusive discount up to 50%* on your purchase with Nike"
+          buttonText="GET COUPON"
+          onClick={() => console.log("Coupon button clicked")}
+        />
       </ScrollView>
     </SafeAreaView>
   );
