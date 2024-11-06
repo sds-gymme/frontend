@@ -6,7 +6,18 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { SvgXml } from "react-native-svg";
+
+// Import SVG contents
+import {
+  Services1,
+  Services2,
+  Services3,
+  Services4,
+  Services5,
+  Services6,
+  Services7,
+} from "./svgIcons";
 
 interface ServiceProps {
   icon: string;
@@ -31,7 +42,7 @@ const Service: React.FC<ServiceProps> = ({
     activeOpacity={0.7}
   >
     <View style={styles.iconContainer}>
-      <FontAwesome5 name={icon} size={24} color="#007AFF" />
+      <SvgXml xml={icon} width={44} height={44} />
     </View>
     <View style={styles.serviceContent}>
       <Text style={styles.serviceTitle}>{title}</Text>
@@ -55,39 +66,39 @@ const Service: React.FC<ServiceProps> = ({
 const ServicesScreen: React.FC = () => {
   const services: ServiceProps[] = [
     {
-      icon: "dumbbell",
+      icon: Services1,
       title: "Live Personal Training",
       description: "Start your training journey with expert guidance",
       isLive: true,
     },
     {
-      icon: "video",
+      icon: Services2,
       title: "Recorded Home Workout",
       description: "Access premium workout videos for free!",
       isRecorded: true,
     },
     {
-      icon: "user-tie",
+      icon: Services3,
       title: "Personal Training @Nearby Gym",
       description: "Train with professionals at your local gym",
     },
     {
-      icon: "utensils",
+      icon: Services4,
       title: "Diet Planning",
       description: "Personalized nutrition plans for your goals",
     },
     {
-      icon: "fire",
+      icon: Services5,
       title: "Calorie Counter",
       description: "Track your daily calorie intake easily",
     },
     {
-      icon: "user-clock",
+      icon: Services6,
       title: "Decode Age (Forever Young)",
       description: "Age-specific fitness programs",
     },
     {
-      icon: "home",
+      icon: Services7,
       title: "Fitness Trainer @Home",
       description: "Expert training in the comfort of your home",
     },
@@ -129,7 +140,6 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#E0E0E0",
-    
     marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -163,8 +173,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 50,
     height: 50,
-    borderRadius: 25,
-    backgroundColor: "#f0f8ff",
     justifyContent: "center",
     alignItems: "center",
   },

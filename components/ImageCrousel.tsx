@@ -1,5 +1,5 @@
 import { Play } from "lucide-react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 
 interface ImageCarouselProps {
@@ -38,12 +39,36 @@ export default function ImageCarousel(
 ) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get("window").width,
+  );
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setScreenWidth(Dimensions.get("window").width);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  }, []);
+
+  const imageWidth = screenWidth * 0.75; // Increased width
+  const containerPadding = 16;
+  const gap = 8;
 
   const handleScroll = (event: any) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
-    const itemWidth = event.nativeEvent.layoutMeasurement.width;
-    const newIndex = Math.round(scrollPosition / itemWidth);
+    const newIndex = Math.round(scrollPosition / (imageWidth + gap));
     setActiveIndex(newIndex);
+  };
+
+  const scrollToIndex = (index: number) => {
+    scrollRef.current?.scrollTo({
+      x: index * (imageWidth + gap),
+      animated: true,
+    });
   };
 
   return (
@@ -56,14 +81,30 @@ export default function ImageCarousel(
       <ScrollView
         ref={scrollRef}
         horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        style={styles.scrollView}
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          {
+            paddingHorizontal:
+              (screenWidth - imageWidth) / 2 - containerPadding,
+          },
+        ]}
+        snapToInterval={imageWidth + gap}
+        decelerationRate="fast"
       >
         {images.map((image, index) => (
-          <View key={index} style={styles.imageContainer}>
+          <View
+            key={index}
+            style={[
+              styles.imageContainer,
+              {
+                width: imageWidth,
+                marginRight: index === images.length - 1 ? 0 : gap,
+              },
+            ]}
+          >
             <Image source={image.src} style={styles.image} />
             <View style={styles.overlay} />
             <TouchableOpacity
@@ -80,16 +121,13 @@ export default function ImageCarousel(
         {images.map((_, index) => (
           <TouchableOpacity
             key={index}
+            onPress={() => scrollToIndex(index)}
             style={[
               styles.indicator,
               index === activeIndex
                 ? styles.activeIndicator
                 : styles.inactiveIndicator,
             ]}
-            onPress={() => {
-              scrollRef.current?.scrollTo({ x: index * 280, animated: true });
-            }}
-            accessibilityLabel={`Go to slide ${index + 1}`}
           />
         ))}
       </View>
@@ -106,25 +144,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
+    marginBottom: 16,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#000",
   },
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: "#ccc",
-    marginLeft: 16,
+    backgroundColor: "#E5E5E5",
+    marginLeft: 8,
   },
-  scrollView: {
-    marginTop: 16,
+  scrollViewContent: {
+    gap: 8,
   },
   imageContainer: {
-    width: 280,
-    height: 350,
-    marginRight: 16,
-    borderRadius: 16,
+    height: 350, // Slightly decreased from 400
+    borderRadius: 12,
     overflow: "hidden",
     position: "relative",
   },
@@ -141,11 +179,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: [{ translateX: -24 }, { translateY: -24 }],
-    width: 48,
-    height: 48,
+    transform: [{ translateX: -20 }, { translateY: -20 }],
+    width: 40,
+    height: 40,
     backgroundColor: "rgba(255, 255, 255, 0.25)",
-    borderRadius: 24,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -153,17 +191,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 16,
+    gap: 4,
   },
   indicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
+    width: 16,
+    height: 4,
+    borderRadius: 2,
   },
   activeIndicator: {
-    backgroundColor: "#000",
+    backgroundColor: "#2563EB",
+    width: 24,
   },
   inactiveIndicator: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#E5E5E5",
   },
 });

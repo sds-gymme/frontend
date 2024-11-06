@@ -1,136 +1,92 @@
-import { ArrowRight } from "lucide-react-native";
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-interface CouponCardProps {
-  discount: string;
-  description: string;
-  buttonText?: string;
-  onClick?: () => void;
-}
-
-interface ButtonProps {
-  onClick?: () => void;
-  style?: object;
-  size?: "sm" | "md" | "lg";
-  children: React.ReactNode;
-}
-
-const Button: React.FC<ButtonProps> = ({
-  onClick,
-  style,
-  size = "md",
-  children,
-}) => {
-  const sizeStyles = {
-    sm: styles.buttonSm,
-    md: styles.buttonMd,
-    lg: styles.buttonLg,
-  };
-
+export default function CouponCard() {
   return (
-    <TouchableOpacity
-      onPress={onClick}
-      style={[styles.button, sizeStyles[size], style]}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-};
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <LinearGradient
+          colors={["#1a1a1a", "#000000"]}
+          style={styles.leftContent}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <Text style={styles.brandText}>/GYM ME</Text>
+        </LinearGradient>
 
-export default function CouponCard({
-  discount = "50% OFF*",
-  description = "Get an exclusive discount up to 50%* on your purchase with Nike",
-  buttonText = "GET COUPON",
-  onClick,
-}: CouponCardProps) {
-  return (
-    <View style={styles.card}>
-      {/* Logo Section */}
-      <View style={styles.logoContainer}>
-        <Image
-          source={require("../assets/images/gymmeLogo.svg")}
-          style={styles.logo}
-        />
-      </View>
+        <View style={styles.rightContent}>
+          <View style={styles.discountContainer}>
+            <Text style={styles.discountText}>50% OFF*</Text>
+            <Text style={styles.descriptionText}>
+              Get exclusive discount upto 50%* {"\n"}to your purchase with Nike
+            </Text>
+          </View>
 
-      {/* Content Section */}
-      <View style={styles.content}>
-        <Text style={styles.discount}>{discount}</Text>
-        <Text style={styles.description}>{description}</Text>
-        <Button onClick={onClick} style={styles.buttonStyle} size="sm">
-          <Text style={styles.buttonText}>{buttonText}</Text>
-          <ArrowRight size={16} color="#fff" style={styles.icon} />
-        </Button>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => console.log("Coupon claimed")}
+          >
+            <Text style={styles.buttonText}>GET COUPON</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 1,
+  },
   card: {
     flexDirection: "row",
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: "hidden",
-    backgroundColor: "linear-gradient(to right, #000, #FF0000)",
-    alignItems: "center",
+    width: "100%",
+    maxWidth: 400, // Increased width
   },
-  logoContainer: {
-    height: "100%",
-    width: 80,
+  leftContent: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000",
-  },
-  logo: {
-    width: 80,
-    height: 30,
-  },
-  content: {
-    flex: 1,
     padding: 16,
   },
-  discount: {
+  rightContent: {
+    flex: 2,
+    backgroundColor: "#dc2626", // Changed to red
+    padding: 16,
+  },
+  brandText: {
+    color: "#ffffff",
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
   },
-  description: {
+  discountContainer: {
+    marginBottom: 12,
+  },
+  discountText: {
+    color: "#ffffff",
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  descriptionText: {
+    color: "#ffffff", // Changed to white for better contrast
     fontSize: 14,
-    color: "#fff",
-    opacity: 0.9,
-    marginVertical: 8,
+    lineHeight: 20,
   },
   button: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    backgroundColor: "#000",
+    backgroundColor: "#ffffff", // Changed to white for contrast
     paddingVertical: 8,
     paddingHorizontal: 16,
-  },
-  buttonSm: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  buttonMd: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  buttonLg: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    borderRadius: 6,
+    alignSelf: "flex-start",
+    marginTop: 8,
   },
   buttonText: {
-    color: "#fff",
+    color: "#dc2626", // Changed to red for contrast
     fontSize: 14,
     fontWeight: "bold",
-  },
-  icon: {
-    marginLeft: 8,
-  },
-  buttonStyle: {
-    marginTop: 8,
   },
 });

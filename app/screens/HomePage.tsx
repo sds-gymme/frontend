@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   StatusBar,
+  Pressable,
 } from "react-native";
 import { Search } from "lucide-react-native";
 import ImageCarousel from "../../components/ImageCrousel"; // Adjust the import path as necessary
@@ -49,7 +50,11 @@ const FeatureCard = ({ title, subtitle, color, icon, style }) => (
 );
 
 // Main Component
-export default function HomePage() {
+const HomePage: React.FC = () => {
+  const handleCouponPress = () => {
+    // Do nothing for now
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -58,45 +63,47 @@ export default function HomePage() {
         <SearchBar />
 
         <View style={styles.grid}>
-          <FeatureCard
-            title="Live Personal Training"
-            subtitle=""
-            color="#FF4B4B"
-            style={styles.squareCard}
-            icon={<View style={styles.liveIndicator} />}
-          />
-          <FeatureCard
-            title="Recorded Home Workout"
-            subtitle=""
-            color="#4B7BFF"
-            style={styles.squareCard}
-            icon={<Text style={styles.freeTag}>Free!!</Text>}
-          />
-          <FeatureCard
-            title="Personal Training"
-            subtitle="@Nearby Gym"
-            icon=""
-            color="#8B4BFF"
-            style={styles.squareCard}
-          />
-          <FeatureCard
-            title="Diet Planning"
-            color="#FF8B4B"
-            subtitle=""
-            style={styles.squareCard}
-            icon={<Text style={styles.freeTag}>Free!!</Text>}
-          />
-          <FeatureCard
-            title="Calorie Counter"
-            color="#4BFF8B"
-            style={styles.squareCard}
-          />
-          <FeatureCard
-            title="Decode Age"
-            subtitle="(Forever Young)"
-            color="#FFD700"
-            style={styles.squareCard}
-          />
+          <View style={styles.grid}>
+            <FeatureCard
+              title="Live Personal Training"
+              subtitle=""
+              color="#FF4B4B"
+              style={styles.squareCard}
+              icon={<View style={styles.liveIndicator} />}
+            />
+            <FeatureCard
+              title="Recorded Home Workout"
+              subtitle=""
+              color="#4B7BFF"
+              style={styles.squareCard}
+              icon={<Text style={styles.freeTag}>Free!!</Text>}
+            />
+            <FeatureCard
+              title="Personal Training"
+              subtitle="@Nearby Gym"
+              icon=""
+              color="#8B4BFF"
+              style={styles.squareCard}
+            />
+            <FeatureCard
+              title="Diet Planning"
+              color="#FF8B4B"
+              subtitle=""
+              style={styles.squareCard}
+              icon={<Text style={styles.freeTag}>Free!!</Text>}
+            />
+            <FeatureCard
+              title="Calorie Counter"
+              color="#4BFF8B"
+              style={styles.squareCard}
+            />
+            <FeatureCard
+              title="Decode Age"
+              subtitle="(Forever Young)"
+              color="#FFD700"
+              style={styles.squareCard}
+            />
+          </View>
         </View>
 
         <ImageCarousel
@@ -116,18 +123,34 @@ export default function HomePage() {
             },
           ]}
         />
-
         <CouponCard
-          discount="50% OFF*"
-          description="Get an exclusive discount up to 50%* on your purchase with Nike"
-          buttonText="GET COUPON"
-          onClick={() => console.log("Coupon button clicked")}
+          discount={50}
+          description="Get exclusive discount on your next purchase"
+          onPress={handleCouponPress}
+        />
+        <ImageCarousel
+          title="Your fitness and healthy lifestyle made easy"
+          images={[
+            {
+              src: require("../../assets/images/1.png"),
+              alt: "Trainer demonstrating medicine ball exercise",
+            },
+            {
+              src: require("../../assets/images/2.png"),
+              alt: "Trainer demonstrating standing exercise",
+            },
+            {
+              src: require("../../assets/images/3.png"),
+              alt: "Trainer demonstrating workout routine",
+            },
+          ]}
         />
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
+export default HomePage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
