@@ -7,7 +7,6 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
-  TextInputProps,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -25,7 +24,8 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   phoneNumber = "+91 98765****1",
 }) => {
   const [code, setCode] = useState<string[]>(["", "", "", ""]);
-  const [timer, setTimer] = useState<number>(60); 
+  const [timer, setTimer] = useState<number>(60);
+  const [error, setError] = useState<string>("");
   const inputs = useRef<Array<InputRefType | null>>([]);
 
   useEffect(() => {
@@ -69,7 +69,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   const handleVerify = async (): Promise<boolean> => {
     try {
       const verificationCode = code.join("");
-      // verification la logic idhar
       console.log("Verifying code:", verificationCode);
       if (verificationCode === "1234") {
         return true;
@@ -87,13 +86,13 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
     if (isVerified) {
       navigation.navigate("Registration");
     } else {
-      console.log("Verification failed");
+      setError("Invalid verification code. Please try again.");
     }
   };
 
   const handleKeyPress = (
     index: number,
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
   ): void => {
     if (e.nativeEvent.key === "Backspace") {
       handleBackspace(index);
@@ -132,6 +131,8 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       <View style={styles.inputContainer}>
         {[0, 1, 2, 3].map((index) => renderInput(index))}
       </View>
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity
         style={[
@@ -183,6 +184,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     borderColor: "#ddd",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    textAlign: "center",
   },
   verifyButton: {
     backgroundColor: "#000",

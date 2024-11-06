@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,13 +16,9 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../app/types";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
@@ -50,12 +46,28 @@ const SignIn = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [error, setError] = useState("");
+
+  const handlePhoneNumberChange = (text: string) => {
+    setPhoneNumber(text);
+    if (text.length === 10) {
+      setError("");
+    } else {
+      setError("Please enter a valid 10-digit phone number.");
+    }
+  };
+
+  const handleSignInPress = () => {
+    if (phoneNumber.length === 10) {
+      navigation.navigate("Verification");
+    } else {
+      setError("Please enter a valid 10-digit phone number.");
+    }
+  };
+
   return (
-    <KeyboardAvoidingView
-      // behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.mainContainer}
-      // keyboardVerticalOffset={Platform.OS === "ios" ? -120 : 0}
-    >
+    <KeyboardAvoidingView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.mainContainer}>
           <View style={styles.carouselContainer}>
@@ -104,12 +116,22 @@ const SignIn = () => {
                     style={styles.phoneInput}
                     keyboardType="phone-pad"
                     placeholderTextColor="#666"
+                    value={phoneNumber}
+                    onChangeText={handlePhoneNumberChange}
                   />
                 </View>
+                {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
                 <TouchableOpacity
-                  style={styles.signInButton}
-                  onPress={() => navigation.navigate("Verification")}
+                  style={[
+                    styles.signInButton,
+                    {
+                      backgroundColor:
+                        phoneNumber.length === 10 ? "#000" : "#ccc",
+                    },
+                  ]}
+                  onPress={handleSignInPress}
+                  disabled={phoneNumber.length !== 10}
                 >
                   <Text style={styles.signInText}>Sign In</Text>
                 </TouchableOpacity>
@@ -203,8 +225,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     color: "#333",
   },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+  },
   signInButton: {
-    backgroundColor: "#000",
     borderRadius: 8,
     height: 50,
     justifyContent: "center",
