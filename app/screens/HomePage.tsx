@@ -40,40 +40,44 @@ const SearchBar = () => {
     "expertise",
   ];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState(placeholders[0]);
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      Animated.sequence([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        setPlaceholderIndex(
-          (prevIndex) => (prevIndex + 1) % placeholders.length,
-        );
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          const nextIndex = (placeholderIndex + 1) % placeholders.length;
+          setPlaceholderIndex(nextIndex);
+          setDisplayedText(placeholders[nextIndex]);
+
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }).start();
+        }
       });
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [fadeAnim]);
+  }, [fadeAnim, placeholderIndex]);
 
   return (
     <View style={styles.searchContainer}>
       <Search size={20} color="#666" />
-      <View style={styles.searchInput}>
-        <Text style={styles.staticText}>Search for </Text>
-        <Animated.Text style={[styles.animatedText, { opacity: fadeAnim }]}>
-          {placeholders[placeholderIndex]}
-        </Animated.Text>
-      </View>
+      <TextInput
+        style={styles.searchInput}
+        placeholder={`Search for ${displayedText}`}
+        placeholderTextColor="#666"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
     </View>
   );
 };
@@ -90,9 +94,7 @@ const FeatureCard = ({ title, subtitle, color, icon, style, onPress }) => (
 );
 
 const HomePage: React.FC = () => {
-  const handleCouponPress = () => {
-    // Do nothing for now
-  };
+  const handleCouponPress = () => {};
 
   const handleFeatureCardPress = (title) => {
     console.log(`${title} card pressed`);
@@ -199,8 +201,6 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   searchInput: {
     marginLeft: 8,
     flex: 1,
-    flexDirection: "row",
+    color: "#000",
   },
   staticText: {
     color: "#666",
@@ -283,3 +283,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export default HomePage;

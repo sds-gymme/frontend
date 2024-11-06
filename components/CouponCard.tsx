@@ -44,17 +44,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     width: "100%",
-    maxWidth: 400, // Increased width
+    maxWidth: 400,
   },
   leftContent: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
+    padding: 3,
   },
   rightContent: {
     flex: 2,
-    backgroundColor: "#dc2626", // Changed to red
+    backgroundColor: "#dc2626",
     padding: 16,
   },
   brandText: {
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   descriptionText: {
-    color: "#ffffff", // Changed to white for better contrast
+    color: "#ffffff",
     fontSize: 14,
     lineHeight: 20,
   },
   button: {
-    backgroundColor: "#ffffff", // Changed to white for contrast
+    backgroundColor: "#ffffff",
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 6,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonText: {
-    color: "#dc2626", // Changed to red for contrast
+    color: "#dc2626",
     fontSize: 14,
     fontWeight: "bold",
   },

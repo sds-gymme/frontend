@@ -49,7 +49,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
 const AccountPage: React.FC = () => {
   const handlePress = (action: string) => {
     console.log(`${action} pressed`);
-    // Handle the action here
   };
 
   return (
@@ -57,7 +56,6 @@ const AccountPage: React.FC = () => {
       <StatusBar barStyle="dark-content" />
       <Text style={styles.headerText}>Account</Text>
       <ScrollView style={styles.scrollView}>
-        {/* Profile Section */}
         <View style={styles.card}>
           <TouchableOpacity
             style={styles.profileSection}
@@ -74,7 +72,6 @@ const AccountPage: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Menu Items */}
         <View style={[styles.card, styles.menuCard]}>
           <MenuItem
             icon={<Clock size={24} color="#666" />}
@@ -119,7 +116,6 @@ const AccountPage: React.FC = () => {
           />
         </View>
 
-        {/* Logout Button */}
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => handlePress("Logout")}
@@ -141,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     padding: 16,
-    paddingTop: StatusBar.currentHeight || 0,
+    paddingTop: (StatusBar.currentHeight || 0) + 16,
     textAlign: "center",
   },
   scrollView: {

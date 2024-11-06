@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home, Briefcase, Clock, User } from "iconsax-react-native";
 import HomePage from "../screens/HomePage";
 import Services from "../screens/Services";
-import History from "../screens/Verification";
+import History from "../screens/History";
 import Account from "../screens/Account";
 
 const Tab = createBottomTabNavigator();
