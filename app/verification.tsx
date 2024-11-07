@@ -9,6 +9,7 @@ import {
   TextInputKeyPressEventData,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { router } from "expo-router";
 
 interface VerificationScreenProps {
   navigation: StackNavigationProp<any>;
@@ -84,7 +85,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   const handlePress = async () => {
     const isVerified = await handleVerify();
     if (isVerified) {
-      navigation.navigate("Registration");
+      router.replace("/registration");
     } else {
       setError("Invalid verification code. Please try again.");
     }

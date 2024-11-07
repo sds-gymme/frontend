@@ -17,7 +17,7 @@ import {
   Services5,
   Services6,
   Services7,
-} from "./svgIcons";
+} from "@/constants/SvgIcons";
 
 interface ServiceProps {
   icon: string;
@@ -48,7 +48,9 @@ const Service: React.FC<ServiceProps> = ({
       <Text style={styles.serviceTitle}>{title}</Text>
       {description ? (
         <Text style={styles.serviceDescription}>{description}</Text>
-      ) : null}
+      ) : (
+        ""
+      )}
     </View>
     {isLive && (
       <View style={styles.liveIndicator}>

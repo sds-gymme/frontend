@@ -7,7 +7,7 @@ import {
   StyleSheet,
   StatusBar,
 } from "react-native";
-import HistoryCard from "../../components/HistoryCard";
+import HistoryCard from "@/components/HistoryCard";
 
 const HistoryPage = () => {
   const historyData = [

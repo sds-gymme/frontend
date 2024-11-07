@@ -1,4 +1,3 @@
-import { Play } from "lucide-react-native";
 import React, { useRef, useState, useEffect } from "react";
 import {
   View,
@@ -10,6 +9,7 @@ import {
   Dimensions,
   ImageSourcePropType,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface ImageCarouselProps {
   title: string;
@@ -111,7 +111,12 @@ export default function ImageCarousel(
               style={styles.playButton}
               accessibilityLabel="Play video"
             >
-              <Play size={24} color="#fff" />
+              <Ionicons
+                size={24}
+                style={[{ margin: "auto" }]}
+                name="play"
+                color="#fff"
+              />
             </TouchableOpacity>
           </View>
         ))}

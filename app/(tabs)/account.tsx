@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -8,18 +8,9 @@ import {
   ScrollView,
   StatusBar,
 } from "react-native";
-import {
-  Clock,
-  MessageQuestion,
-  Card,
-  Setting,
-  InfoCircle,
-  Star,
-  User,
-  UserAdd,
-  LogoutCurve,
-  ArrowRight2,
-} from "iconsax-react-native";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { LoginContext } from "@/contexts/loginContext";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -42,7 +33,12 @@ const MenuItem: React.FC<MenuItemProps> = ({
       {icon}
       <Text style={styles.menuItemText}>{title}</Text>
     </View>
-    <ArrowRight2 size={20} color="#666" />
+    <Ionicons
+      size={20}
+      style={[{ marginVertical: "auto" }]}
+      name="arrow-forward"
+      color="#666"
+    />
   </TouchableOpacity>
 );
 
@@ -50,6 +46,7 @@ const AccountPage: React.FC = () => {
   const handlePress = (action: string) => {
     console.log(`${action} pressed`);
   };
+  const { setIsLoggedIn } = useContext(LoginContext);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,54 +59,120 @@ const AccountPage: React.FC = () => {
             onPress={() => handlePress("Edit Profile")}
           >
             <View style={styles.profileLeft}>
-              <User size={50} color="#666" />
+              <Ionicons
+                size={50}
+                style={[{ marginVertical: "auto" }]}
+                name="person"
+                color="#666"
+              />
               <View>
                 <Text style={styles.profileName}>Pravesh Mankar</Text>
                 <Text style={styles.profileEdit}>Edit Profile</Text>
               </View>
             </View>
-            <ArrowRight2 size={20} color="#666" />
+            <Ionicons
+              size={20}
+              style={[{ marginVertical: "auto" }]}
+              name="arrow-forward"
+              color="#666"
+            />
           </TouchableOpacity>
         </View>
 
         <View style={[styles.card, styles.menuCard]}>
           <MenuItem
-            icon={<Clock size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="time"
+                color="#666"
+              />
+            }
             title="History"
             onPress={() => handlePress("History")}
           />
           <MenuItem
-            icon={<MessageQuestion size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="help"
+                color="#666"
+              />
+            }
             title="Help Center"
             onPress={() => handlePress("Help Center")}
           />
           <MenuItem
-            icon={<Card size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="card"
+                color="#666"
+              />
+            }
             title="Manage Payments"
             onPress={() => handlePress("Manage Payments")}
           />
           <MenuItem
-            icon={<Setting size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="cog"
+                color="#666"
+              />
+            }
             title="Settings"
             onPress={() => handlePress("Settings")}
           />
           <MenuItem
-            icon={<InfoCircle size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="information-circle"
+                color="#666"
+              />
+            }
             title="About Gymme"
             onPress={() => handlePress("About")}
           />
           <MenuItem
-            icon={<Star size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="star"
+                color="#666"
+              />
+            }
             title="Ratings"
             onPress={() => handlePress("Ratings")}
           />
           <MenuItem
-            icon={<UserAdd size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="person-add"
+                color="#666"
+              />
+            }
             title="Referral Programs"
             onPress={() => handlePress("Referral")}
           />
           <MenuItem
-            icon={<User size={24} color="#666" />}
+            icon={
+              <Ionicons
+                size={24}
+                style={[{ marginVertical: "auto" }]}
+                name="person"
+                color="#666"
+              />
+            }
             title="Switch to Trainer"
             onPress={() => handlePress("Switch to Trainer")}
             showBorder={false}
@@ -118,9 +181,14 @@ const AccountPage: React.FC = () => {
 
         <TouchableOpacity
           style={styles.logoutButton}
-          onPress={() => handlePress("Logout")}
+          onPress={() => setIsLoggedIn(false)}
         >
-          <LogoutCurve size={24} color="#666" />
+          <Ionicons
+            size={24}
+            style={[{ marginVertical: "auto" }]}
+            name="log-out"
+            color="#666"
+          />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>

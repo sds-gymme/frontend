@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import { TextInput, Menu, Button } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
+import { router } from "expo-router";
+import { LoginContext } from "@/contexts/loginContext";
 
 type RegistrationScreenProps = StackScreenProps<ParamListBase>;
 
@@ -26,6 +28,8 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
     fitnessLevel: "Intermediate",
     fitnessGoals: "Fitness",
   });
+
+  const { setIsLoggedIn } = useContext(LoginContext);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -109,7 +113,8 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    navigation.navigate("MainTabs", { screen: "Home" });
+    setIsLoggedIn(true);
+    router.replace("/");
   };
 
   return (

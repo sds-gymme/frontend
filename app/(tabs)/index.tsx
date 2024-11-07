@@ -5,15 +5,16 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  Image,
+  // Image,
   StyleSheet,
   StatusBar,
   TouchableOpacity,
   Animated,
 } from "react-native";
-import { Search } from "lucide-react-native";
-import ImageCarousel from "../../components/ImageCrousel";
-import CouponCard from "../../components/CouponCard";
+import ImageCarousel from "@/components/ImageCarousel";
+import CouponCard from "@/components/CouponCard";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Image } from "expo-image";
 
 const Header = ({ username = "Pravesh" }) => (
   <View style={styles.header}>
@@ -56,7 +57,7 @@ const SearchBar = () => {
           const nextIndex = (placeholderIndex + 1) % placeholders.length;
           setPlaceholderIndex(nextIndex);
           setDisplayedText(placeholders[nextIndex]);
-          
+
           // Then fade back in
           Animated.timing(fadeAnim, {
             toValue: 1,
@@ -72,7 +73,13 @@ const SearchBar = () => {
 
   return (
     <View style={styles.searchContainer}>
-      <Search size={20} color="#666" />
+      {/* <Search size={20} color="#666" /> */}
+      <Ionicons
+        size={20}
+        style={[{ margin: "auto" }]}
+        name="search"
+        color="#666"
+      />
       <View style={styles.searchInput}>
         <Text style={styles.staticText}>Search for </Text>
         <Animated.Text style={[styles.animatedText, { opacity: fadeAnim }]}>
@@ -112,13 +119,17 @@ const HomePage: React.FC = () => {
 
         <View style={styles.grid}>
           <View style={styles.grid}>
-            <FeatureCard
+            {/* <FeatureCard
               title="Live Personal Training"
               subtitle=""
               color="#FF4B4B"
               style={styles.squareCard}
               icon={<View style={styles.liveIndicator} />}
               onPress={() => handleFeatureCardPress("Live Personal Training")}
+            /> */}
+            <Image
+              source={require("@/assets/images/LivePersonalTraining2.svg")}
+              style={styles.squareCard}
             />
             <FeatureCard
               title="Recorded Home Workout"

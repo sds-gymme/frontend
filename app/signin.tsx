@@ -17,8 +17,9 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../app/types";
+// import { RootStackParamList } from "../app/types";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import { router } from "expo-router";
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
@@ -26,12 +27,12 @@ const SignIn = () => {
   const scrollOffsetValue = useSharedValue<number>(0);
 
   const carouselImages = [
-    require("../assets/images/1.png"),
-    require("../assets/images/2.png"),
-    require("../assets/images/3.png"),
+    require("@/assets/images/1.png"),
+    require("@/assets/images/2.png"),
+    require("@/assets/images/3.png"),
   ];
 
-  const Logo = require("../assets/images/gymmeLogo.svg");
+  const Logo = require("@/assets/images/gymmeLogo.svg");
 
   const renderCarouselItem = ({ item }: { item: any }) => {
     return (
@@ -60,7 +61,7 @@ const SignIn = () => {
 
   const handleSignInPress = () => {
     if (phoneNumber.length === 10) {
-      navigation.navigate("Verification");
+      router.replace("/verification");
     } else {
       setError("Please enter a valid 10-digit phone number.");
     }
