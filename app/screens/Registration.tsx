@@ -34,7 +34,6 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
   const fitnessLevels = ["Beginner", "Intermediate", "Professional"];
   const fitnessGoals = ["Weight Loss", "Weight Gain", "Fitness"];
-  const genders = ["Male", "Female", "Other"];
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === "ios");
@@ -59,12 +58,21 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
               formData[field] === option &&
                 option === "Vegetarian" &&
                 styles.greenButton,
-              formData[field] === option &&
+              formData[field] == option &&
                 option === "Eggetarian" &&
                 styles.greenButton,
-              formData[field] === option &&
+              formData[field] == option &&
                 option === "Non-Vegetarian" &&
                 styles.greenButton,
+              // formData[field] === option &&
+              //   option === "Lean" &&
+              //   styles.grayButton,
+              // formData[field] == option &&
+              //   option === "Fit" &&
+              //   styles.greenButton,
+              // formData[field] == option &&
+              //   option === "Obsessed" &&
+              //   styles.redButton,
               formData[field] === option &&
                 option === "Beginner" &&
                 styles.yellowButton,
@@ -101,8 +109,7 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    navigation.navigate("Home");
+    navigation.navigate("MainTabs", { screen: "Home" });
   };
 
   return (
@@ -132,42 +139,21 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
         )}
 
         <Text style={styles.fieldLabel}>Gender</Text>
-        <Menu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          anchor={
-            <TouchableOpacity onPress={() => setMenuVisible(true)}>
-              <TextInput
-                mode="outlined"
-                value={formData.gender}
-                placeholder="Select Gender"
-                editable={false}
-                right={
-                  <TextInput.Icon icon="chevron-down" color="#666" size={35} />
-                }
-                left={
-                  <TextInput.Icon
-                    icon="gender-male-female"
-                    color="orange"
-                    size={35}
-                  />
-                }
-                outlineColor="rgba(0, 0, 0, 0.2)"
-              />
-            </TouchableOpacity>
-          }
-        >
-          {genders.map((gender) => (
-            <Menu.Item
-              key={gender}
-              onPress={() => {
-                setFormData({ ...formData, gender });
-                setMenuVisible(false);
-              }}
-              title={gender}
+        <TextInput
+          mode="outlined"
+          value={formData.gender}
+          onChangeText={(text) => setFormData({ ...formData, gender: text })}
+          placeholder="Male"
+          right={<TextInput.Icon icon="chevron-down" color="#666" size={35} />}
+          left={
+            <TextInput.Icon
+              icon="gender-male-female"
+              color="orange"
+              size={35}
             />
-          ))}
-        </Menu>
+          }
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
 
         <View style={styles.rowContainer}>
           <View style={styles.halfWidth}>
@@ -331,7 +317,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   fitnessLevelContainer: {
-    marginBottom: 16,
+    marginBottom: 16, // Add margin to create space between fitness level buttons and submit button
   },
 });
 
