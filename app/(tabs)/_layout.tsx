@@ -1,20 +1,46 @@
 import { Tabs } from "expo-router";
 import React, { useContext } from "react";
-
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import {
+  Home2,
+  Home,
+  BrifecaseTimer,
+  Timer1,
+  Profile,
+  ProfileCircle,
+} from "iconsax-react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { Redirect, useRootNavigationState } from "expo-router";
 
+// Custom TabBarIcon component using Iconsax
+const TabBarIcon = ({
+  focused,
+  color,
+  FilledIcon,
+  OutlineIcon,
+}: {
+  focused: boolean;
+  color: string;
+  FilledIcon: typeof Home2;
+  OutlineIcon: typeof Home;
+}) => {
+  const IconComponent = focused ? FilledIcon : OutlineIcon;
+  return (
+    <IconComponent
+      size={24}
+      color={color}
+      variant={focused ? "Bold" : "Linear"}
+    />
+  );
+};
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { isLoggedIn } = useContext(LoginContext);
-
   const rootNavigationState = useRootNavigationState();
 
   if (!rootNavigationState?.key) return null;
-
   if (!isLoggedIn) {
     return <Redirect href={"/signin"} />;
   }
@@ -32,8 +58,10 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "home" : "home-outline"}
+              focused={focused}
               color={color}
+              FilledIcon={Home2}
+              OutlineIcon={Home}
             />
           ),
         }}
@@ -44,8 +72,10 @@ export default function TabLayout() {
           title: "Services",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "briefcase" : "briefcase-outline"}
+              focused={focused}
               color={color}
+              FilledIcon={BrifecaseTimer}
+              OutlineIcon={BrifecaseTimer}
             />
           ),
         }}
@@ -56,8 +86,10 @@ export default function TabLayout() {
           title: "History",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "time" : "time-outline"}
+              focused={focused}
               color={color}
+              FilledIcon={Timer1}
+              OutlineIcon={Timer1}
             />
           ),
         }}
@@ -68,8 +100,10 @@ export default function TabLayout() {
           title: "Account",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "person" : "person-outline"}
+              focused={focused}
               color={color}
+              FilledIcon={ProfileCircle}
+              OutlineIcon={Profile}
             />
           ),
         }}
