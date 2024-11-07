@@ -8,12 +8,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ImageSourcePropType,
 } from "react-native";
 
 interface ImageCarouselProps {
   title: string;
   images: {
-    src: string;
+    src: ImageSourcePropType;
     alt: string;
   }[];
 }
@@ -44,13 +45,12 @@ export default function ImageCarousel(
   );
 
   useEffect(() => {
-    const updateLayout = () => {
-      setScreenWidth(Dimensions.get("window").width);
-    };
+    const subscription = Dimensions.addEventListener("change", ({ window }) => {
+      setScreenWidth(window.width);
+    });
 
-    Dimensions.addEventListener("change", updateLayout);
     return () => {
-      Dimensions.removeEventListener("change", updateLayout);
+      subscription?.remove();
     };
   }, []);
 

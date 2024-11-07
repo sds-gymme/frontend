@@ -109,7 +109,6 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
     navigation.navigate("MainTabs", { screen: "Home" });
   };
 
