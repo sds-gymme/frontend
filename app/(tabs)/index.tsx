@@ -114,27 +114,37 @@ const HomePage: React.FC = () => {
         <SearchBar />
 
         <View style={styles.grid}>
-          <View style={styles.grid}>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/LivePersonalTraining.svg")}
               style={styles.squareCard}
             />
+          </View>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/RecordedHomeWorkout.svg")}
               style={styles.squareCard}
             />
+          </View>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/PersonalTraining.svg")}
               style={styles.squareCard}
             />
+          </View>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/DietPlanning.svg")}
               style={styles.squareCard}
             />
+          </View>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/CalorieCounter.svg")}
               style={styles.squareCard}
             />
+          </View>
+          <View style={styles.gridItem}>
             <Image
               source={require("@/assets/images/DecodeAge.svg")}
               style={styles.squareCard}
@@ -235,19 +245,21 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 16,
+    marginHorizontal: -8, // Compensate for gridItem margin
+  },
+  gridItem: {
+    width: "50%", // Two columns
+    padding: 8,
+  },
+  squareCard: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 20,
   },
   card: {
     padding: 16,
     borderRadius: 20,
     justifyContent: "space-between",
-  },
-  squareCard: {
-    // width: "47%",
-    // height: 180,
-    aspectRatio: 1,
-    height: 170,
-    borderRadius: 20,
   },
   cardTitle: {
     color: "#fff",
