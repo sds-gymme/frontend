@@ -46,19 +46,16 @@ const SearchBar = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // First fade out
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
-          // Update the text when fully faded out
           const nextIndex = (placeholderIndex + 1) % placeholders.length;
           setPlaceholderIndex(nextIndex);
           setDisplayedText(placeholders[nextIndex]);
 
-          // Then fade back in
           Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 500,
@@ -73,7 +70,6 @@ const SearchBar = () => {
 
   return (
     <View style={styles.searchContainer}>
-      {/* <Search size={20} color="#666" /> */}
       <Ionicons
         size={20}
         style={[{ margin: "auto" }]}
