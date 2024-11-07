@@ -119,54 +119,29 @@ const HomePage: React.FC = () => {
 
         <View style={styles.grid}>
           <View style={styles.grid}>
-            {/* <FeatureCard
-              title="Live Personal Training"
-              subtitle=""
-              color="#FF4B4B"
-              style={styles.squareCard}
-              icon={<View style={styles.liveIndicator} />}
-              onPress={() => handleFeatureCardPress("Live Personal Training")}
-            /> */}
             <Image
-              source={require("@/assets/images/LivePersonalTraining2.svg")}
+              source={require("@/assets/images/LivePersonalTraining.svg")}
               style={styles.squareCard}
             />
-            <FeatureCard
-              title="Recorded Home Workout"
-              subtitle=""
-              color="#4B7BFF"
+            <Image
+              source={require("@/assets/images/RecordedHomeWorkout.svg")}
               style={styles.squareCard}
-              icon={<Text style={styles.freeTag}>Free!!</Text>}
-              onPress={() => handleFeatureCardPress("Recorded Home Workout")}
             />
-            <FeatureCard
-              title="Personal Training"
-              subtitle="@Nearby Gym"
-              icon=""
-              color="#8B4BFF"
+            <Image
+              source={require("@/assets/images/PersonalTraining.svg")}
               style={styles.squareCard}
-              onPress={() => handleFeatureCardPress("Personal Training")}
             />
-            <FeatureCard
-              title="Diet Planning"
-              color="#FF8B4B"
-              subtitle=""
+            <Image
+              source={require("@/assets/images/DietPlanning.svg")}
               style={styles.squareCard}
-              icon={<Text style={styles.freeTag}>Free!!</Text>}
-              onPress={() => handleFeatureCardPress("Diet Planning")}
             />
-            <FeatureCard
-              title="Calorie Counter"
-              color="#4BFF8B"
+            <Image
+              source={require("@/assets/images/CalorieCounter.svg")}
               style={styles.squareCard}
-              onPress={() => handleFeatureCardPress("Calorie Counter")}
             />
-            <FeatureCard
-              title="Decode Age"
-              subtitle="(Forever Young)"
-              color="#FFD700"
+            <Image
+              source={require("@/assets/images/DecodeAge.svg")}
               style={styles.squareCard}
-              onPress={() => handleFeatureCardPress("Decode Age")}
             />
           </View>
         </View>
@@ -239,7 +214,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logo: {
-    width: 80,
+    width: 120,
     height: 30,
   },
   searchContainer: {
@@ -268,12 +243,15 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 20,
     justifyContent: "space-between",
   },
   squareCard: {
-    width: "47%",
-    height: 180,
+    // width: "47%",
+    // height: 180,
+    aspectRatio: 1,
+    height: 170,
+    borderRadius: 20,
   },
   cardTitle: {
     color: "#fff",

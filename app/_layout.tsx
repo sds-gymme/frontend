@@ -8,7 +8,7 @@ import { Stack, Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
-
+import { Provider as PaperProvider } from "react-native-paper";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 
@@ -38,24 +38,28 @@ export default function RootLayout() {
 
   return (
     <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen
-            name="signin"
-            options={{ headerShown: false, title: "Sign In" }}
-          />
-          <Stack.Screen
-            name="verification"
-            options={{ title: "Verification", headerLeft: Blank }}
-          />
-          <Stack.Screen
-            name="registration"
-            options={{ title: "Basic Details" }}
-          />
-        </Stack>
-      </ThemeProvider>
+      <PaperProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen
+              name="signin"
+              options={{ headerShown: false, title: "Sign In" }}
+            />
+            <Stack.Screen
+              name="verification"
+              options={{ title: "Verification", headerLeft: Blank }}
+            />
+            <Stack.Screen
+              name="registration"
+              options={{ title: "Basic Details" }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </PaperProvider>
     </LoginContext.Provider>
   );
 }

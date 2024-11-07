@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput, Menu, Button } from "react-native-paper";
+import { Dropdown } from "react-native-paper-dropdown";
 import { StatusBar } from "expo-status-bar";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
@@ -16,6 +17,12 @@ import { router } from "expo-router";
 import { LoginContext } from "@/contexts/loginContext";
 
 type RegistrationScreenProps = StackScreenProps<ParamListBase>;
+
+const OPTIONS = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+  { label: "Other", value: "other" },
+];
 
 const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -144,20 +151,17 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
         )}
 
         <Text style={styles.fieldLabel}>Gender</Text>
-        <TextInput
+        <Dropdown
           mode="outlined"
           value={formData.gender}
-          onChangeText={(text) => setFormData({ ...formData, gender: text })}
-          placeholder="Male"
-          right={<TextInput.Icon icon="chevron-down" color="#666" size={35} />}
-          left={
-            <TextInput.Icon
-              icon="gender-male-female"
-              color="orange"
-              size={35}
-            />
+          onSelect={(text) =>
+            setFormData({ ...formData, gender: text || "male" })
           }
-          outlineColor="rgba(0, 0, 0, 0.2)"
+          options={OPTIONS}
+          placeholder="Male"
+          menuDownIcon={
+            <TextInput.Icon icon="chevron-down" color="#666" size={35} />
+          }
         />
 
         <View style={styles.rowContainer}>
@@ -247,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   fieldLabel: {
-    fontSize: 22,
+    fontSize: 16,
     marginBottom: 8,
     marginTop: 24,
   },
