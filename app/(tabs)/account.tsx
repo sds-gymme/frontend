@@ -9,7 +9,19 @@ import {
   StatusBar,
 } from "react-native";
 
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { 
+  Profile,
+  ArrowRight,
+  Timer1,
+  MessageQuestion,
+  Card,
+  Setting2,
+  Information,
+  Star1,
+  UserAdd,
+  UserOctagon,
+  LogoutCurve
+} from "iconsax-react-native";
 import { LoginContext } from "@/contexts/loginContext";
 
 interface MenuItemProps {
@@ -33,12 +45,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
       {icon}
       <Text style={styles.menuItemText}>{title}</Text>
     </View>
-    <Ionicons
-      size={20}
-      style={[{ marginVertical: "auto" }]}
-      name="arrow-forward"
-      color="#666"
-    />
+    <ArrowRight size={20} color="#666" variant="Linear" />
   </TouchableOpacity>
 );
 
@@ -59,120 +66,54 @@ const AccountPage: React.FC = () => {
             onPress={() => handlePress("Edit Profile")}
           >
             <View style={styles.profileLeft}>
-              <Ionicons
-                size={50}
-                style={[{ marginVertical: "auto" }]}
-                name="person"
-                color="#666"
-              />
+              <Profile size={50} color="#666" variant="Linear" />
               <View>
                 <Text style={styles.profileName}>Pravesh Mankar</Text>
                 <Text style={styles.profileEdit}>Edit Profile</Text>
               </View>
             </View>
-            <Ionicons
-              size={20}
-              style={[{ marginVertical: "auto" }]}
-              name="arrow-forward"
-              color="#666"
-            />
+            <ArrowRight size={20} color="#666" variant="Linear" />
           </TouchableOpacity>
         </View>
 
         <View style={[styles.card, styles.menuCard]}>
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="time"
-                color="#666"
-              />
-            }
+            icon={<Timer1 size={24} color="#666" variant="Linear" />}
             title="History"
             onPress={() => handlePress("History")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="help"
-                color="#666"
-              />
-            }
+            icon={<MessageQuestion size={24} color="#666" variant="Linear" />}
             title="Help Center"
             onPress={() => handlePress("Help Center")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="card"
-                color="#666"
-              />
-            }
+            icon={<Card size={24} color="#666" variant="Linear" />}
             title="Manage Payments"
             onPress={() => handlePress("Manage Payments")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="cog"
-                color="#666"
-              />
-            }
+            icon={<Setting2 size={24} color="#666" variant="Linear" />}
             title="Settings"
             onPress={() => handlePress("Settings")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="information-circle"
-                color="#666"
-              />
-            }
+            icon={<Information size={24} color="#666" variant="Linear" />}
             title="About Gymme"
             onPress={() => handlePress("About")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="star"
-                color="#666"
-              />
-            }
+            icon={<Star1 size={24} color="#666" variant="Linear" />}
             title="Ratings"
             onPress={() => handlePress("Ratings")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="person-add"
-                color="#666"
-              />
-            }
+            icon={<UserAdd size={24} color="#666" variant="Linear" />}
             title="Referral Programs"
             onPress={() => handlePress("Referral")}
           />
           <MenuItem
-            icon={
-              <Ionicons
-                size={24}
-                style={[{ marginVertical: "auto" }]}
-                name="person"
-                color="#666"
-              />
-            }
+            icon={<UserOctagon size={24} color="#666" variant="Linear" />}
             title="Switch to Trainer"
             onPress={() => handlePress("Switch to Trainer")}
             showBorder={false}
@@ -183,12 +124,7 @@ const AccountPage: React.FC = () => {
           style={styles.logoutButton}
           onPress={() => setIsLoggedIn(false)}
         >
-          <Ionicons
-            size={24}
-            style={[{ marginVertical: "auto" }]}
-            name="log-out"
-            color="#666"
-          />
+          <LogoutCurve size={24} color="#666" variant="Linear" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>
