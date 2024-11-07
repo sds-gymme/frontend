@@ -42,20 +42,22 @@ const SearchBar = () => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState(placeholders[0]);
   const fadeAnim = useRef(new Animated.Value(1)).current;
-  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
+      // First fade out
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
+          // Update the text when fully faded out
           const nextIndex = (placeholderIndex + 1) % placeholders.length;
           setPlaceholderIndex(nextIndex);
           setDisplayedText(placeholders[nextIndex]);
-
+          
+          // Then fade back in
           Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 500,
@@ -71,13 +73,12 @@ const SearchBar = () => {
   return (
     <View style={styles.searchContainer}>
       <Search size={20} color="#666" />
-      <TextInput
-        style={styles.searchInput}
-        placeholder={`Search for ${displayedText}`}
-        placeholderTextColor="#666"
-        value={searchText}
-        onChangeText={setSearchText}
-      />
+      <View style={styles.searchInput}>
+        <Text style={styles.staticText}>Search for </Text>
+        <Animated.Text style={[styles.animatedText, { opacity: fadeAnim }]}>
+          {displayedText}
+        </Animated.Text>
+      </View>
     </View>
   );
 };
@@ -94,7 +95,9 @@ const FeatureCard = ({ title, subtitle, color, icon, style, onPress }) => (
 );
 
 const HomePage: React.FC = () => {
-  const handleCouponPress = () => {};
+  const handleCouponPress = () => {
+    // Do nothing for now
+  };
 
   const handleFeatureCardPress = (title) => {
     console.log(`${title} card pressed`);
@@ -239,7 +242,7 @@ const styles = StyleSheet.create({
   searchInput: {
     marginLeft: 8,
     flex: 1,
-    color: "#000",
+    flexDirection: "row",
   },
   staticText: {
     color: "#666",

@@ -30,12 +30,10 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
 
-
   const foodPreferences = ["Vegetarian", "Non-Vegetarian", "Eggetarian"];
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
   const fitnessLevels = ["Beginner", "Intermediate", "Professional"];
   const fitnessGoals = ["Weight Loss", "Weight Gain", "Fitness"];
-  
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === "ios");
@@ -44,71 +42,71 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
     }
   };
 
-    const renderSelectionButtons = (
-      options: string[],
-      selectedValue: string,
-      field: keyof typeof formData
-    ) => {
-      return (
-        <View style={styles.buttonContainer}>
-          {options.map((option) => (
-            <TouchableOpacity
-              key={option}
+  const renderSelectionButtons = (
+    options: string[],
+    selectedValue: string,
+    field: keyof typeof formData,
+  ) => {
+    return (
+      <View style={styles.buttonContainer}>
+        {options.map((option) => (
+          <TouchableOpacity
+            key={option}
+            style={[
+              styles.selectionButton,
+              formData[field] === option && styles.selectedButton,
+              formData[field] === option &&
+                option === "Vegetarian" &&
+                styles.greenButton,
+              formData[field] == option &&
+                option === "Eggetarian" &&
+                styles.greenButton,
+              formData[field] == option &&
+                option === "Non-Vegetarian" &&
+                styles.greenButton,
+              // formData[field] === option &&
+              //   option === "Lean" &&
+              //   styles.grayButton,
+              // formData[field] == option &&
+              //   option === "Fit" &&
+              //   styles.greenButton,
+              // formData[field] == option &&
+              //   option === "Obsessed" &&
+              //   styles.redButton,
+              formData[field] === option &&
+                option === "Beginner" &&
+                styles.yellowButton,
+              formData[field] === option &&
+                option === "Intermediate" &&
+                styles.yellowButton,
+              formData[field] === option &&
+                option === "Professional" &&
+                styles.yellowButton,
+              formData[field] === option &&
+                option === "Weight Loss" &&
+                styles.purpleButton,
+              formData[field] === option &&
+                option === "Weight Gain" &&
+                styles.purpleButton,
+              formData[field] === option &&
+                option === "Fitness" &&
+                styles.purpleButton,
+            ]}
+            onPress={() => setFormData({ ...formData, [field]: option })}
+          >
+            <Text
               style={[
-                styles.selectionButton,
-                formData[field] === option && styles.selectedButton,
-                formData[field] === option &&
-                  option === "Vegetarian" &&
-                  styles.greenButton,
-                formData[field] == option &&
-                  option === "Eggetarian" &&
-                  styles.greenButton,
-                formData[field] == option &&
-                  option === "Non-Vegetarian" &&
-                  styles.greenButton,
-                // formData[field] === option &&
-                //   option === "Lean" &&
-                //   styles.grayButton,
-                // formData[field] == option &&
-                //   option === "Fit" &&
-                //   styles.greenButton,
-                // formData[field] == option &&
-                //   option === "Obsessed" &&
-                //   styles.redButton,
-                formData[field] === option &&
-                  option === "Beginner" &&
-                  styles.yellowButton,
-                formData[field] === option &&
-                  option === "Intermediate" &&
-                  styles.yellowButton,
-                formData[field] === option &&
-                  option === "Professional" &&
-                  styles.yellowButton,
-                formData[field] === option &&
-                  option === "Weight Loss" &&
-                  styles.purpleButton,
-                formData[field] === option &&
-                  option === "Weight Gain" &&
-                  styles.purpleButton,
-                formData[field] === option &&
-                  option === "Fitness" &&
-                  styles.purpleButton,
+                styles.buttonText,
+                formData[field] === option && styles.selectedButtonText,
               ]}
-              onPress={() => setFormData({ ...formData, [field]: option })}
             >
-              <Text
-                style={[
-                  styles.buttonText,
-                  formData[field] === option && styles.selectedButtonText,
-                ]}
-              >
-                {option}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      );
-    };
+              {option}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
 
   const handleSubmit = () => {
     console.log("Form submitted:", formData);
@@ -193,7 +191,7 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
         {renderSelectionButtons(
           foodPreferences,
           formData.foodPreference,
-          "foodPreference"
+          "foodPreference",
         )}
 
         <Text style={styles.fieldLabel}>Body type</Text>
@@ -203,13 +201,13 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
         {renderSelectionButtons(
           fitnessLevels,
           formData.fitnessLevel,
-          "fitnessLevel"
+          "fitnessLevel",
         )}
         <Text style={styles.fieldLabel}>Fitness Goals</Text>
         {renderSelectionButtons(
           fitnessGoals,
           formData.fitnessGoals,
-          "fitnessGoals"
+          "fitnessGoals",
         )}
       </ScrollView>
       <View style={styles.submitButtonContainer}>
