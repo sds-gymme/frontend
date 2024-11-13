@@ -6,22 +6,19 @@ import {
 import { useFonts } from "expo-font";
 import { Stack, Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
+import { UserRole } from "./types";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-function Blank() {
-  return <></>;
-}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<UserRole | null>("user");
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -37,7 +34,14 @@ export default function RootLayout() {
   }
 
   return (
-    <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <LoginContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        userRole,
+        setUserRole,
+      }}
+    >
       <PaperProvider>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
@@ -51,12 +55,13 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="verification"
-              options={{ title: "Verification", headerLeft: Blank }}
+              options={{ title: "Verification" }}
             />
             <Stack.Screen
               name="registration"
               options={{ title: "Basic Details" }}
             />
+            <Stack.Screen name="trainerReg" />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

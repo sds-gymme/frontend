@@ -1,8 +1,5 @@
 import { Tabs } from "expo-router";
 import React, { useContext } from "react";
-import { LoginContext } from "@/contexts/loginContext";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Colors } from "@/constants/Colors";
 import {
   Home2,
   Home,
@@ -11,20 +8,10 @@ import {
   Profile,
   ProfileCircle,
 } from "iconsax-react-native";
-
-export default function TabLayout() {
-  const { userRole } = useContext(LoginContext);
-  const colorScheme = useColorScheme();
-
-
-  if (userRole === "user") {
-    return <UserTabs />;
-  } else if (userRole === "trainer") {
-    return <TrainerTabs />;
-  }
-
-  return null;
-}
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { LoginContext } from "@/contexts/loginContext";
+import { Redirect, useRootNavigationState } from "expo-router";
 
 const TabBarIcon = ({
   focused,
@@ -47,8 +34,17 @@ const TabBarIcon = ({
   );
 };
 
-function UserTabs() {
+
+
+export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { isLoggedIn } = useContext(LoginContext);
+  const rootNavigationState = useRootNavigationState();
+  const { userRole } = useContext(LoginContext);
+  if (!rootNavigationState?.key) return null;
+  if (!isLoggedIn) {
+    return <Redirect href={"/signin"} />;
+  }
 
   return (
     <Tabs
@@ -129,28 +125,6 @@ function UserTabs() {
           ),
         }}
       />
-    </Tabs>
-  );
-}
-
-function TrainerTabs() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-      }}
-    >
-      <Tabs.Screen
-        name="trainer/trainerHome"
-        options={{
-          title: "Home",
-
-        }}
-      />
-      
     </Tabs>
   );
 }

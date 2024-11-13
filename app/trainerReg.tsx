@@ -31,6 +31,7 @@ const Trainer: React.FC = () => {
     mobileNumber: "",
     emailId: "",
     certificate: "",
+    rating: "",
   });
 
   const { setIsLoggedIn } = useContext(LoginContext);
@@ -47,14 +48,18 @@ const Trainer: React.FC = () => {
 
   const handleSubmit = () => {
     setIsLoggedIn(true);
-    router.replace("/choose");
+    router.replace("/");
   };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <StatusBar style="auto" />
-        <Avatar.Image size={88} style={styles.avatar} source={require("../assets/images/2.png")} />
+        <Avatar.Image
+          size={88}
+          style={styles.avatar}
+          source={require("../assets/images/2.png")}
+        />
         <Text style={styles.subtitle}>Upload Photo</Text>
         <Text style={styles.fieldLabel}>Name</Text>
         <TextInput
@@ -156,6 +161,16 @@ const Trainer: React.FC = () => {
             setFormData({ ...formData, certificate: text })
           }
           placeholder="Add certificate details"
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
+
+        <Text style={styles.fieldLabel}>Your Ratings</Text>
+        <TextInput
+          mode="outlined"
+          value={formData.rating}
+          onChangeText={(text) => setFormData({ ...formData, rating: text })}
+          placeholder="1 - 5"
+          keyboardType="phone-pad"
           outlineColor="rgba(0, 0, 0, 0.2)"
         />
       </ScrollView>

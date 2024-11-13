@@ -3,14 +3,19 @@ import { StyleSheet, View, Text } from "react-native";
 import { Card, Title, Paragraph, TouchableRipple } from "react-native-paper";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-
+import { LoginContext } from "@/contexts/loginContext";
+import { useContext } from "react";
 const UserTypeSelector = () => {
-  const handleNormalPress = () => {
-    router.replace("/registration");
-  };
-  const handleTrainerPress = () => {
-    router.replace("/trainerReg")
-  };
+    const { setUserRole } = useContext(LoginContext);
+
+    const handleNormalPress = () => {
+        setUserRole("user");
+        router.replace("/registration");
+    };
+    const handleTrainerPress = () => {
+        setUserRole("trainer");
+        router.replace("/trainerReg")
+    };
 
   return (
     <View style={styles.container}>
