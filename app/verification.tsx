@@ -82,7 +82,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   const handlePress = async () => {
     const isVerified = await handleVerify();
     if (isVerified) {
-      router.replace("/registration");
+      router.replace("/choose");
     } else {
       setError("Invalid verification code. Please try again.");
     }
