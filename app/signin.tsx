@@ -9,16 +9,13 @@ import {
   Image,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
 // import { RootStackParamList } from "../app/types";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { router } from "expo-router";
 
 const SignIn = () => {
@@ -43,9 +40,6 @@ const SignIn = () => {
       />
     );
   };
-
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");

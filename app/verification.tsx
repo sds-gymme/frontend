@@ -8,11 +8,9 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { router } from "expo-router";
 
 interface VerificationScreenProps {
-  navigation: StackNavigationProp<any>;
   phoneNumber?: string;
 }
 
@@ -21,7 +19,6 @@ interface InputRefType extends TextInput {
 }
 
 const VerificationScreen: React.FC<VerificationScreenProps> = ({
-  navigation,
   phoneNumber = "+91 98765****1",
 }) => {
   const [code, setCode] = useState<string[]>(["", "", "", ""]);

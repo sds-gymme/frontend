@@ -4,11 +4,9 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  TextInput,
   // Image,
   StyleSheet,
   StatusBar,
-  TouchableOpacity,
   Animated,
 } from "react-native";
 import ImageCarousel from "@/components/ImageCarousel";
@@ -86,26 +84,7 @@ const SearchBar = () => {
   );
 };
 
-const FeatureCard = ({ title, subtitle, color, icon, style, onPress }) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={[styles.card, { backgroundColor: color }, style]}
-  >
-    {icon}
-    <Text style={styles.cardTitle}>{title}</Text>
-    {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
-  </TouchableOpacity>
-);
-
 const HomePage: React.FC = () => {
-  const handleCouponPress = () => {
-    // Do nothing for now
-  };
-
-  const handleFeatureCardPress = (title) => {
-    console.log(`${title} card pressed`);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -169,11 +148,7 @@ const HomePage: React.FC = () => {
             },
           ]}
         />
-        <CouponCard
-          discount={50}
-          description="Get exclusive discount on your next purchase"
-          onPress={handleCouponPress}
-        />
+        <CouponCard />
         <ImageCarousel
           title="Your fitness and healthy lifestyle made easy"
           images={[

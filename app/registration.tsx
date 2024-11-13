@@ -8,15 +8,11 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextInput, Menu, Button } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { StatusBar } from "expo-status-bar";
-import { StackScreenProps } from "@react-navigation/stack";
-import { ParamListBase } from "@react-navigation/native";
 import { router } from "expo-router";
 import { LoginContext } from "@/contexts/loginContext";
-
-type RegistrationScreenProps = StackScreenProps<ParamListBase>;
 
 const OPTIONS = [
   { label: "Male", value: "male" },
@@ -24,7 +20,7 @@ const OPTIONS = [
   { label: "Other", value: "other" },
 ];
 
-const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
+const Registration: React.FC = () => {
   const [formData, setFormData] = useState({
     dob: new Date(),
     gender: "",
@@ -39,7 +35,6 @@ const Registration: React.FC<RegistrationScreenProps> = ({ navigation }) => {
   const { setIsLoggedIn } = useContext(LoginContext);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
 
   const foodPreferences = ["Vegetarian", "Non-Vegetarian", "Eggetarian"];
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
