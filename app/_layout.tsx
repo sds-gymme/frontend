@@ -51,16 +51,19 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="verification"
-              options={{ title: "Verification", headerLeft: Blank }}
+              options={{ title: "Verification", headerLeft: Blank, headerShown: false }}
             />
             <Stack.Screen
               name="registration"
               options={{ title: "Basic Details" }}
             />
-            {/* <Stack.Screen
-              name="trainerHome"
-              options={{ title: "Basic Details", headerShown: false }}
-            /> */}
+            <Stack.Screen name="choose" options={{ headerShown: false }} />
+            <Stack.Screen name="trainerReg" options={{ headerShown: false }} />
+            <Stack.Screen name="trainerHome" options={{ headerShown: false }} />
+            <Stack.Screen name="recordedHomeWorkout" options={{ title: "Recorded Home Workout" }} />
+            <Stack.Screen name="livePersonalTraining" options={{ title: "Live Personal Training" }} />
+            <Stack.Screen name="gymWorkout" options={{ title: "Gym Workout" }} />
+            <Stack.Screen name="excercisePage" options={{ headerShown: false }} />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

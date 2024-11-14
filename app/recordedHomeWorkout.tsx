@@ -1,83 +1,160 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ArrowLeft } from 'iconsax-react-native'
-import WorkoutCard from '../components/WorkoutCard'
+import React from 'react';
+import { View, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Text } from 'react-native';
+import { Image } from "expo-image";
+import { router } from "expo-router";
 
-export default function WorkoutScreen() {
-  const workouts = [
-    { id: '1', name: 'Gym Workout', image: require('../assets/images/GymWorkout.svg') },
-    { id: '2', name: 'Cardio', image: require('../assets/images/CardioWorkout.svg') },
-    { id: '3', name: 'Cross Fit', image: require('../assets/images/CrossFit.svg') },
-    { id: '4', name: 'Zumba', image: require('../assets/images/Zumba.svg') },
-    { id: '5', name: 'Aerobics', image: require('../assets/images/Aerobics.svg') },
-    { id: '6', name: 'Boxing', image: require('../assets/images/Boxing.svg') },
-    { id: '7', name: 'Martial Arts\n(MMA)', image: require('../assets/images/MMA.svg') },
-    { id: '8', name: 'Yoga', image: require('../assets/images/Yoga.svg') },
-  ]
+
+const RecordedHomeWorkout: React.FC = () => {
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <ArrowLeft size={24} color="#000" />
-        <Text style={styles.title}>Recorded Home Workout</Text>
-      </View>
-      <Text style={styles.subtitle}>Exercise you're looking for today?</Text>
-      <Text style={styles.description}>Select at least one option to get started.</Text>
-
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Exercise you're looking for today?</Text>
+          <Text style={styles.subtitle}>Select at least one option to get started.</Text>
+        </View>
         <View style={styles.grid}>
-          {workouts.map((workout) => (
-            <View key={workout.id} style={styles.cardContainer}>
-              <WorkoutCard
-                name={workout.name}
-                image={workout.image}
-                onPress={() => console.log(`Selected: ${workout.name}`)}
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/gymWorkout")}>
+              <Image
+                source={require("@/assets/images/GymWorkout.svg")}
+                style={styles.squareCard}
               />
-            </View>
-          ))}
+              <Text style={styles.cardText}>Gym Workout</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/recordedHomeWorkout")}>
+              <Image
+                source={require("@/assets/images/CardioWorkout.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>Cardio Workout</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
+              <Image
+                source={require("@/assets/images/CrossFit.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>CrossFit</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
+              <Image
+                source={require("@/assets/images/Zumba.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>Zumba</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
+              <Image
+                source={require("@/assets/images/Aerobics.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>Aerobics</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+              <Image
+                source={require("@/assets/images/Boxing.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>Boxing</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+              <Image
+                source={require("@/assets/images/MMA.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>MMA</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+              <Image
+                source={require("@/assets/images/Yoga.svg")}
+                style={styles.squareCard}
+              />
+              <Text style={styles.cardText}>Yoga</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    gap: 12,
+    backgroundColor: '#FFFFFF',
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
-  },
-  subtitle: {
     fontSize: 24,
-    fontWeight: '700',
-    color: '#000',
-    paddingHorizontal: 16,
+    fontWeight: 'bold',
+    color: '#000000',
     marginBottom: 8,
   },
-  description: {
-    fontSize: 14,
-    color: '#666',
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
-  scrollContent: {
-    padding: 8,
+  subtitle: {
+    fontSize: 16,
+    color: '#666666',
+    marginBottom: 20,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    padding: 10,
+    justifyContent: 'space-between',
   },
-  cardContainer: {
-    width: '50%',
+  exerciseCard: {
+    width: '48%',
+    aspectRatio: 1,
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-})
+  iconContainer: {
+    marginBottom: 10,
+  },
+  exerciseName: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#000000',
+  },
+  squareCard: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 20,
+  },
+  gridItem: {
+    width: "45%", // Adjust width for better alignment
+    padding: 8,
+    alignItems: 'center', // Center align items
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  cardText: {
+    marginTop: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#000000',
+  },
+});
+
+export default RecordedHomeWorkout;

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Card, Title, Paragraph, TouchableRipple } from "react-native-paper";
+import { Title, TouchableRipple } from "react-native-paper";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 

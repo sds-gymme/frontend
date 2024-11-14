@@ -85,15 +85,11 @@ const SearchBar = () => {
   );
 };
 
-<<<<<<< Updated upstream
-const TrainerHome: React.FC = () => {
-=======
 const HomePage: React.FC = () => {
   const handlePress = (route: string) => {
     router.push(route);
   };
 
->>>>>>> Stashed changes
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -280,4 +276,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainerHome;
+export default HomePage;
