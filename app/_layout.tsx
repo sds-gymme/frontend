@@ -63,7 +63,8 @@ export default function RootLayout() {
             <Stack.Screen name="recordedHomeWorkout" options={{ title: "Recorded Home Workout" }} />
             <Stack.Screen name="livePersonalTraining" options={{ title: "Live Personal Training" }} />
             <Stack.Screen name="gymWorkout" options={{ title: "Gym Workout" }} />
-            <Stack.Screen name="excercisePage" options={{ headerShown: false }} />
+            <Stack.Screen name="excercisePage" options={{ headerTitle: "" }} />
+            <Stack.Screen name="excerciseDetails" options={{ headerTitle: "Excercise Details" }} />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

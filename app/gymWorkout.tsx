@@ -31,7 +31,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/recordedHomeWorkout")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Back.svg")}
@@ -48,7 +48,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Shoulder.svg")}
@@ -65,7 +65,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Biceps.svg")}
@@ -82,7 +82,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Triceps.svg")}
@@ -99,7 +99,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Legs.svg")}
@@ -116,7 +116,7 @@ const GymWorkout: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+            <TouchableOpacity onPress={() => handlePress("/excercisePage")}>
               <View style={styles.imageContainer}>
                 <Image
                   source={require("@/assets/images/Abs.svg")}

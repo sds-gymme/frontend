@@ -5,27 +5,29 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  Image,
   StatusBar,
   Platform,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
+import { router } from "expo-router";
 
 interface Exercise {
   id: string;
   name: string;
   sets: number;
   reps: number;
-  image: any; // Replace with actual image type
+  image: any;
 }
 
-const ChestWorkoutScreen: React.FC = () => {
+const ExercisePage: React.FC = () => {
   const exercises: Exercise[] = [
     {
       id: '1',
       name: 'PUSHUPS',
       sets: 3,
       reps: 12,
-      image: require('@/assets/images/pushupBar.gif'), // Update with actual image path
+      image: require('@/assets/images/pushupBar.gif'),
     },
     {
       id: '2',
@@ -50,6 +52,10 @@ const ChestWorkoutScreen: React.FC = () => {
     },
   ];
 
+  const handlePress = () => {
+    router.push(`/excerciseDetails`);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -61,19 +67,21 @@ const ChestWorkoutScreen: React.FC = () => {
 
         <View style={styles.exerciseList}>
           {exercises.map((exercise) => (
-            <View key={exercise.id} style={styles.exerciseCard}>
-              <Image
-                source={exercise.image}
-                style={styles.exerciseImage}
-                resizeMode="contain"
-              />
-              <View style={styles.exerciseDetails}>
-                <Text style={styles.exerciseName}>{exercise.name}</Text>
-                <Text style={styles.exerciseReps}>
-                  {exercise.sets} Sets x {exercise.reps} Reps
-                </Text>
+            <TouchableOpacity key={exercise.id} onPress={() => handlePress(exercise.id)}>
+              <View style={styles.exerciseCard}>
+                <Image
+                  source={exercise.image}
+                  style={styles.exerciseImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.exerciseDetails}>
+                  <Text style={styles.exerciseName}>{exercise.name}</Text>
+                  <Text style={styles.exerciseReps}>
+                    {exercise.sets} Sets x {exercise.reps} Reps
+                  </Text>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
@@ -119,7 +127,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 16,
-    tintColor: '#000000',
   },
   exerciseDetails: {
     flex: 1,
@@ -136,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChestWorkoutScreen;
+export default ExercisePage;
