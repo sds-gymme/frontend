@@ -21,7 +21,7 @@ const Header = ({ username = "Pravesh" }) => (
       <Text style={styles.usernameText}>{username}!</Text>
     </View>
     <Image
-      source={require("../../assets/images/gymmeLogo.svg")}
+      source={require("@/assets/images/gymmeLogo.svg")}
       style={styles.logo}
     />
   </View>
@@ -84,7 +84,7 @@ const SearchBar = () => {
   );
 };
 
-const HomePage: React.FC = () => {
+const TrainerHome: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -135,15 +135,15 @@ const HomePage: React.FC = () => {
           title="Professional trainer's real life"
           images={[
             {
-              src: require("../../assets/images/1.png"),
+              src: require("@/assets/images/1.png"),
               alt: "Trainer demonstrating medicine ball exercise",
             },
             {
-              src: require("../../assets/images/2.png"),
+              src: require("@/assets/images/2.png"),
               alt: "Trainer demonstrating standing exercise",
             },
             {
-              src: require("../../assets/images/3.png"),
+              src: require("@/assets/images/3.png"),
               alt: "Trainer demonstrating workout routine",
             },
           ]}
@@ -153,15 +153,15 @@ const HomePage: React.FC = () => {
           title="Your fitness and healthy lifestyle made easy"
           images={[
             {
-              src: require("../../assets/images/1.png"),
+              src: require("@/assets/images/1.png"),
               alt: "Trainer demonstrating medicine ball exercise",
             },
             {
-              src: require("../../assets/images/2.png"),
+              src: require("@/assets/images/2.png"),
               alt: "Trainer demonstrating standing exercise",
             },
             {
-              src: require("../../assets/images/3.png"),
+              src: require("@/assets/images/3.png"),
               alt: "Trainer demonstrating workout routine",
             },
           ]}
@@ -259,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default TrainerHome;
