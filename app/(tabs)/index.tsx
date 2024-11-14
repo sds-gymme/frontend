@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
+            <TouchableOpacity >
               <Image
                 source={require("@/assets/images/PersonalTraining.svg")}
                 style={styles.squareCard}
@@ -123,7 +123,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
+            <TouchableOpacity >
               <Image
                 source={require("@/assets/images/DietPlanning.svg")}
                 style={styles.squareCard}
@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
+            <TouchableOpacity >
               <Image
                 source={require("@/assets/images/CalorieCounter.svg")}
                 style={styles.squareCard}
@@ -139,7 +139,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+            <TouchableOpacity >
               <Image
                 source={require("@/assets/images/DecodeAge.svg")}
                 style={styles.squareCard}
