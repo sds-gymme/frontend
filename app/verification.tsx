@@ -24,7 +24,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   const [code, setCode] = useState<string[]>(["", "", "", ""]);
   const [timer, setTimer] = useState<number>(60);
   const [error, setError] = useState<string>("");
-  const inputs = useRef<Array<InputRefType | null>>([]);
+  const inputs = useRef<(InputRefType | null)[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 20,
+    paddingTop: 70,
   },
   header: {
     marginTop: 0,

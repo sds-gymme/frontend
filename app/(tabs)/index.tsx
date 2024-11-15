@@ -4,11 +4,12 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  // Image,
   StyleSheet,
   StatusBar,
   Animated,
+  TouchableOpacity,
 } from "react-native";
+import { router } from "expo-router";
 import ImageCarousel from "@/components/ImageCarousel";
 import CouponCard from "@/components/CouponCard";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -84,7 +85,11 @@ const SearchBar = () => {
   );
 };
 
-const TrainerHome: React.FC = () => {
+const HomePage: React.FC = () => {
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -94,40 +99,52 @@ const TrainerHome: React.FC = () => {
 
         <View style={styles.grid}>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/LivePersonalTraining.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity onPress={() => handlePress("/livePersonalTraining")}>
+              <Image
+                source={require("@/assets/images/LivePersonalTraining.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/RecordedHomeWorkout.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity onPress={() => handlePress("/recordedHomeWorkout")}>
+              <Image
+                source={require("@/assets/images/RecordedHomeWorkout.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/PersonalTraining.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity >
+              <Image
+                source={require("@/assets/images/PersonalTraining.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/DietPlanning.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity >
+              <Image
+                source={require("@/assets/images/DietPlanning.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/CalorieCounter.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity >
+              <Image
+                source={require("@/assets/images/CalorieCounter.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <Image
-              source={require("@/assets/images/DecodeAge.svg")}
-              style={styles.squareCard}
-            />
+            <TouchableOpacity >
+              <Image
+                source={require("@/assets/images/DecodeAge.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -259,4 +276,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainerHome;
+export default HomePage;
