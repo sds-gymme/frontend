@@ -8,7 +8,7 @@ import {
   ScrollView,
   StatusBar,
 } from "react-native";
-
+import { router } from "expo-router";
 import { 
   Profile,
   ArrowRight,
@@ -30,6 +30,10 @@ interface MenuItemProps {
   onPress: () => void;
   showBorder?: boolean;
 }
+
+const handleTrainerPress = () => {
+  router.replace("/trainerReg");
+};
 
 const MenuItem: React.FC<MenuItemProps> = ({
   icon,
@@ -115,7 +119,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<UserOctagon size={24} color="#666" variant="Linear" />}
             title="Switch to Trainer"
-            onPress={() => handlePress("Switch to Trainer")}
+            onPress={() => handleTrainerPress()}
             showBorder={false}
           />
         </View>

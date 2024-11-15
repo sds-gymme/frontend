@@ -57,10 +57,10 @@ export default function RootLayout() {
               name="registration"
               options={{ title: "Basic Details" }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
               name="trainerHome"
-              options={{ title: "Basic Details", headerShown: false }}
-            /> */}
+              options={{ title: "Home", headerShown: true, headerLeft: Blank }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>
