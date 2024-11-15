@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { router } from "expo-router";
 
 // Import SVG contents
 import {
@@ -66,43 +67,54 @@ const Service: React.FC<ServiceProps> = ({
 );
 
 const ServicesScreen: React.FC = () => {
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
+
   const services: ServiceProps[] = [
     {
       icon: Services1,
       title: "Live Personal Training",
       description: "Start your training journey with expert guidance",
       isLive: true,
+      onPress: () => handlePress("/livePersonalTraining"),
     },
     {
       icon: Services2,
       title: "Recorded Home Workout",
       description: "Access premium workout videos for free!",
       isRecorded: true,
+      onPress: () => handlePress("/recordedHomeWorkout"),
     },
     {
       icon: Services3,
       title: "Personal Training @Nearby Gym",
       description: "Train with professionals at your local gym",
+      onPress: () => handlePress("/underdev"),
     },
     {
       icon: Services4,
       title: "Diet Planning",
       description: "Personalized nutrition plans for your goals",
+      onPress: () => handlePress("/underdev"),
     },
     {
       icon: Services5,
       title: "Calorie Counter",
       description: "Track your daily calorie intake easily",
+      onPress: () => handlePress("/underdev"),
     },
     {
       icon: Services6,
       title: "Decode Age (Forever Young)",
       description: "Age-specific fitness programs",
+      onPress: () => handlePress("/underdev"),
     },
     {
       icon: Services7,
       title: "Fitness Trainer @Home",
       description: "Expert training in the comfort of your home",
+      onPress: () => handlePress("/underdev"),
     },
   ];
 
@@ -115,11 +127,7 @@ const ServicesScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {services.map((service, index) => (
-          <Service
-            key={index}
-            {...service}
-            onPress={() => console.log(`Selected service: ${service.title}`)}
-          />
+          <Service key={index} {...service} />
         ))}
       </ScrollView>
     </View>

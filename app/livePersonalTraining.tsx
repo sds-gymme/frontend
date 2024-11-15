@@ -1,23 +1,28 @@
 import React from 'react';
 import { View, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Text } from 'react-native';
 import { Image } from "expo-image";
+import { router } from "expo-router";
 
 interface ExerciseSelectionScreenProps {
   navigation: any;
 }
 
 const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigation }) => {
-
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Text style={styles.title}>Exercise you're looking for today?</Text>
-          <Text style={styles.subtitle}>Select at least one option to get started.</Text>
+          <Text style={styles.subtitle}>
+            Select at least one option to get started.
+          </Text>
         </View>
         <View style={styles.grid}>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/GymWorkout.svg")}
                 style={styles.squareCard}
@@ -26,7 +31,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/CardioWorkout.svg")}
                 style={styles.squareCard}
@@ -35,7 +40,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/CrossFit.svg")}
                 style={styles.squareCard}
@@ -44,7 +49,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/Zumba.svg")}
                 style={styles.squareCard}
@@ -53,7 +58,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/Aerobics.svg")}
                 style={styles.squareCard}
@@ -62,7 +67,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/Boxing.svg")}
                 style={styles.squareCard}
@@ -71,7 +76,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/MMA.svg")}
                 style={styles.squareCard}
@@ -80,7 +85,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress("/underdev")}>
               <Image
                 source={require("@/assets/images/Yoga.svg")}
                 style={styles.squareCard}

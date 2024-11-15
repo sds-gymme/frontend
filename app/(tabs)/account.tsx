@@ -54,11 +54,11 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 const AccountPage: React.FC = () => {
-  const handlePress = (action: string) => {
-    console.log(`${action} pressed`);
+  const handlePress = (route: string) => {
+    router.push(route);
   };
   const { setIsLoggedIn } = useContext(LoginContext);
-
+ 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -67,7 +67,7 @@ const AccountPage: React.FC = () => {
         <View style={styles.card}>
           <TouchableOpacity
             style={styles.profileSection}
-            onPress={() => handlePress("Edit Profile")}
+            onPress={() => handlePress("/underdev")}
           >
             <View style={styles.profileLeft}>
               <Profile size={50} color="#666" variant="Linear" />
@@ -84,37 +84,37 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<Timer1 size={24} color="#666" variant="Linear" />}
             title="History"
-            onPress={() => handlePress("History")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<MessageQuestion size={24} color="#666" variant="Linear" />}
             title="Help Center"
-            onPress={() => handlePress("Help Center")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<Card size={24} color="#666" variant="Linear" />}
             title="Manage Payments"
-            onPress={() => handlePress("Manage Payments")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<Setting2 size={24} color="#666" variant="Linear" />}
             title="Settings"
-            onPress={() => handlePress("Settings")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<Information size={24} color="#666" variant="Linear" />}
             title="About Gymme"
-            onPress={() => handlePress("About")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<Star1 size={24} color="#666" variant="Linear" />}
             title="Ratings"
-            onPress={() => handlePress("Ratings")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<UserAdd size={24} color="#666" variant="Linear" />}
             title="Referral Programs"
-            onPress={() => handlePress("Referral")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<UserOctagon size={24} color="#666" variant="Linear" />}
