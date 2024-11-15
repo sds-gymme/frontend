@@ -98,13 +98,13 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.acceptButton}
-          onPress={() => handlePress("Accepted")}
+          onPress={() => handlePress("/underdev")}
         >
           <Text style={styles.acceptButtonText}>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.rejectButton}
-          onPress={() => handlePress("Rejected")}
+          onPress={() => handlePress("/underdev")}
         >
           <Text style={styles.rejectButtonText}>Reject</Text>
         </TouchableOpacity>
