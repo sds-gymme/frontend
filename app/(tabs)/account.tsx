@@ -54,8 +54,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 const AccountPage: React.FC = () => {
-  const handlePress = (action: string) => {
-    console.log(`${action} pressed`);
+  const handlePress = (route: string) => {
+    router.push(route);
   };
   const { setIsLoggedIn } = useContext(LoginContext);
 
@@ -84,7 +84,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<Timer1 size={24} color="#666" variant="Linear" />}
             title="History"
-            onPress={() => handlePress("History")}
+            onPress={() => handlePress("/underdev")}
           />
           <MenuItem
             icon={<MessageQuestion size={24} color="#666" variant="Linear" />}

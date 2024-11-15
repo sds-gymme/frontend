@@ -75,41 +75,48 @@ const appointments: Appointment[] = [
   },
 ];
 
-const renderAppointment = ({ item }: { item: Appointment }) => (
-  <View style={styles.appointmentCard}>
-    <Image
-      source={require("@/assets/images/Zumba.svg")}
-      style={styles.profileImage}
-      contentFit="cover"
-    />
-    <View style={styles.infoContainer}>
-      <Text style={styles.name}>{item.name}</Text>
-      <View style={styles.locationContainer}>
-        <MaterialIcons name="location-on" size={16} color="#666" />
-        <Text style={styles.location}>{item.location}</Text>
-        <Text style={styles.duration}>{item.duration}</Text>
+const renderAppointment = ({ item }: { item: Appointment }) => {
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
+
+  return (
+    <View style={styles.appointmentCard}>
+      <Image
+        source={require("@/assets/images/Zumba.svg")}
+        style={styles.profileImage}
+        contentFit="cover"
+      />
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>{item.name}</Text>
+        <View style={styles.locationContainer}>
+          <MaterialIcons name="location-on" size={16} color="#666" />
+          <Text style={styles.location}>{item.location}</Text>
+          <Text style={styles.duration}>{item.duration}</Text>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.acceptButton}
+          onPress={() => handlePress("Accepted")}
+        >
+          <Text style={styles.acceptButtonText}>Accept</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.rejectButton}
+          onPress={() => handlePress("Rejected")}
+        >
+          <Text style={styles.rejectButtonText}>Reject</Text>
+        </TouchableOpacity>
       </View>
     </View>
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={styles.acceptButton}
-        onPress={() => console.log("Accepted")}
-      >
-        <Text style={styles.acceptButtonText}>Accept</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.rejectButton}
-        onPress={() => console.log("Rejected")}
-      >
-        <Text style={styles.rejectButtonText}>Reject</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
+};
 
 const TrainerHome: React.FC = () => {
-  
-  const { setIsLoggedIn } = useContext(LoginContext);
+  const handlePress = (route: string) => {
+    router.push(route);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
