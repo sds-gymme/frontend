@@ -57,6 +57,10 @@ export default function RootLayout() {
               name="registration"
               options={{ title: "Basic Details" }}
             />
+            <Stack.Screen
+              name="trainerHome"
+              options={{ title: "Home", headerShown: true, headerLeft: Blank }}
+            />
             <Stack.Screen name="choose" options={{ headerShown: false }} />
             <Stack.Screen name="trainerReg" options={{ headerShown: false }} />
             <Stack.Screen name="trainerHome" options={{ headerShown: false }} />

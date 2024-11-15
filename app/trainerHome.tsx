@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,9 @@ import CouponCard from "@/components/CouponCard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LoginContext } from "@/contexts/loginContext";
+import {LogoutCurve} from "iconsax-react-native";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -30,6 +33,7 @@ const Header = ({ username = "Trainer Vaibhav" }) => (
     />
   </View>
 );
+
 
 interface Appointment {
   id: string;
@@ -104,6 +108,8 @@ const renderAppointment = ({ item }: { item: Appointment }) => (
 );
 
 const TrainerHome: React.FC = () => {
+  
+  const { setIsLoggedIn } = useContext(LoginContext);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -139,6 +145,13 @@ const TrainerHome: React.FC = () => {
               },
             ]}
           />
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => router.replace("/verification")}
+          >
+            <LogoutCurve size={24} color="#666" variant="Linear" />
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -249,6 +262,19 @@ const styles = StyleSheet.create({
     color: "#666",
     fontSize: 14,
     fontWeight: "500",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  logoutText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#666",
   },
 });
 
