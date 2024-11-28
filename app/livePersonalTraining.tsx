@@ -8,13 +8,13 @@ interface ExerciseSelectionScreenProps {
 }
 
 const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigation }) => {
-  const handlePress = (route: string) => {
+  const handlePress = (route: any) => {
     router.push(route);
   };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
+        <View>
           <Text style={styles.title}>Exercise you're looking for today?</Text>
           <Text style={styles.subtitle}>
             Select at least one option to get started.
@@ -22,7 +22,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
         </View>
         <View style={styles.grid}>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/GymWorkout.svg")}
                 style={styles.squareCard}

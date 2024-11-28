@@ -87,7 +87,7 @@ const SearchBar = () => {
 };
 
 const HomePage: React.FC = () => {
-  const handlePress = (route: string) => {
+  const handlePress = (route: any) => {
     router.push(route);
   };
 

@@ -16,8 +16,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LoginContext } from "@/contexts/loginContext";
-import {LogoutCurve} from "iconsax-react-native";
+import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
+import { Info } from "lucide-react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -34,86 +35,106 @@ const Header = ({ username = "Trainer Vaibhav" }) => (
   </View>
 );
 
-
-interface Appointment {
+interface TrainerInfo {
   id: string;
   name: string;
   location: string;
+  experience: string;
+  certified: string;
   duration: string;
+  rating: number;
 }
 
-const appointments: Appointment[] = [
+const info: TrainerInfo[] = [
   {
     id: "1",
     name: "Siddhartha Gaur",
     location: "Mumbai",
+    experience: "Exp: 5 years",
+    certified: "Certified",
+    rating: 4.5,
     duration: "45 Min",
   },
   {
     id: "2",
     name: "Siddhartha Gaur",
     location: "Mumbai",
+    experience: "5 years",
+    certified: "Certified",
+    rating: 4.5,
     duration: "45 Min",
   },
   {
     id: "3",
     name: "Siddhartha Gaur",
     location: "Mumbai",
+    experience: "5 years",
+    certified: "Certified",
+    rating: 4.5,
     duration: "45 Min",
   },
   {
     id: "4",
     name: "Siddhartha Gaur",
     location: "Mumbai",
+    experience: "5 years",
+    certified: "Certified",
+    rating: 4.5,
     duration: "45 Min",
   },
   {
     id: "5",
     name: "Siddhartha Gaur",
     location: "Mumbai",
+    experience: "5 years",
+    certified: "Certified",
+    rating: 4.5,
+    duration: "45 Min",
+  },
+  {
+    id: "6",
+    name: "Siddhartha Gaur",
+    location: "Mumbai",
+    experience: "5 years",
+    certified: "Certified",
+    rating: 4.5,
     duration: "45 Min",
   },
 ];
 
-const renderAppointment = ({ item }: { item: Appointment }) => {
+const renderTrainer = ({ item }: { item: TrainerInfo }) => {
   const handlePress = (route: any) => {
     router.push(route);
   };
 
   return (
-    <View style={styles.appointmentCard}>
+    <TouchableOpacity
+      onPress={() => handlePress("/trainerProfile")}
+      style={styles.appointmentCard}
+    >
       <Image
         source={require("@/assets/images/Zumba.svg")}
         style={styles.profileImage}
         contentFit="cover"
       />
+
       <View style={styles.infoContainer}>
+        <View style={styles.inlineContainer}>
+          <MaterialIcons name="stars" size={20} color="green" />
+          <Text style={styles.certified}>{item.certified}</Text>
+        </View>
         <Text style={styles.name}>{item.name}</Text>
         <View style={styles.locationContainer}>
-          <MaterialIcons name="location-on" size={16} color="#666" />
-          <Text style={styles.location}>{item.location}</Text>
-          <Text style={styles.duration}>{item.duration}</Text>
+          <Text style={styles.duration}>{item.experience}</Text>
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.acceptButton}
-          onPress={() => handlePress("/underdev")}
-        >
-          <Text style={styles.acceptButtonText}>Accept</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.rejectButton}
-          onPress={() => handlePress("/underdev")}
-        >
-          <Text style={styles.rejectButtonText}>Reject</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <MaterialIcons name="star" size={20} color="#fac81f" />
+      <Text style={styles.endContainer}>{item.rating}</Text>
+    </TouchableOpacity>
   );
 };
 
-const TrainerHome: React.FC = () => {
+const TrainerPage: React.FC = () => {
   const handlePress = (route: any) => {
     router.push(route);
   };
@@ -122,43 +143,23 @@ const TrainerHome: React.FC = () => {
       <StatusBar barStyle="dark-content" />
       <ScrollView>
         <View style={styles.scrollContent}>
-          <Header />
-
           <View style={styles.appointmentsSection}>
-            <Text style={styles.headerText}>Your Appointments</Text>
+            <View style={styles.inlineContainer}>
+              <Text style={styles.headerText}>Best Online Now</Text>
+              {/* <View>
+                <Text style={styles.live}>Live</Text>
+              </View> */}
+            </View> 
+
             <FlatList
-              data={appointments}
-              renderItem={renderAppointment}
+              data={info}
+              renderItem={renderTrainer}
               keyExtractor={(item) => item.id}
               scrollEnabled={false}
               contentContainerStyle={styles.appointmentsList}
             />
           </View>
 
-          <ImageCarousel
-            title="Customer Videos"
-            images={[
-              {
-                src: require("@/assets/images/1.png"),
-                alt: "Trainer demonstrating medicine ball exercise",
-              },
-              {
-                src: require("@/assets/images/2.png"),
-                alt: "Trainer demonstrating standing exercise",
-              },
-              {
-                src: require("@/assets/images/3.png"),
-                alt: "Trainer demonstrating workout routine",
-              },
-            ]}
-          />
-          <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={() => router.replace("/verification")}
-          >
-            <LogoutCurve size={24} color="#666" variant="Linear" />
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 24,
-    paddingTop: StatusBar.currentHeight || 0,
+    paddingTop: StatusBar.currentHeight || 4,
   },
   welcomeText: {
     fontSize: 16,
@@ -218,15 +219,39 @@ const styles = StyleSheet.create({
     height: 65,
     borderRadius: 10,
   },
+  live: {
+    fontSize: 20,
+    color: "#e02418",
+    top: -8,
+    left: 120,
+  },
   infoContainer: {
     flex: 1,
     marginLeft: 12,
+  },
+  inlineContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    left: 0,
+  },
+  endContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginLeft: 4,
+    fontWeight: "bold",
+    fontSize: 18,
   },
   name: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 4,
     color: "#000",
+  },
+  certified: {
+    fontSize: 14,
+    color: "#089a2f",
+    marginBottom: 2,
+    marginLeft: 4,
   },
   locationContainer: {
     flexDirection: "row",
@@ -285,4 +310,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainerHome;
+export default TrainerPage;
