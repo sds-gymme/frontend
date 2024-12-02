@@ -17,10 +17,13 @@ import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 // import { RootStackParamList } from "../app/types";
 import { router } from "expo-router";
+import { supabase } from "../lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
   const height = Dimensions.get("window").height;
+  const [loading, setLoading] = useState(false);
   const scrollOffsetValue = useSharedValue<number>(0);
 
   const carouselImages = [
@@ -46,19 +49,34 @@ const SignIn = () => {
 
   const handlePhoneNumberChange = (text: string) => {
     setPhoneNumber(text);
-    if (text.length === 10) {
+    if (text.length === 13) {
       setError("");
     } else {
       setError("Please enter a valid 10-digit phone number.");
     }
   };
 
-  const handleSignInPress = () => {
-    if (phoneNumber.length === 10) {
-      router.replace("/verification");
-    } else {
-      setError("Please enter a valid 10-digit phone number.");
+  
+
+
+  async function handleSignInPress() {
+    // if (phoneNumber.length === 10) {
+      
+    //   router.replace("/verification");
+    // } else {
+    //   setError("Please enter a valid 10-digit phone number.");
+    // }
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone: "+918369535159",
+      
+    });
+    if (error) {
+      console.error("Error signing in:", error.message);
+      return;
     }
+    console.log(data);
+    router.replace("/verification");
   };
 
   return (
@@ -122,11 +140,11 @@ const SignIn = () => {
                     styles.signInButton,
                     {
                       backgroundColor:
-                        phoneNumber.length === 10 ? "#000" : "#ccc",
+                        phoneNumber.length === 13 ? "#000" : "#ccc",
                     },
                   ]}
                   onPress={handleSignInPress}
-                  disabled={phoneNumber.length !== 10}
+                  disabled={phoneNumber.length !== 13}
                 >
                   <Text style={styles.signInText}>Sign In</Text>
                 </TouchableOpacity>

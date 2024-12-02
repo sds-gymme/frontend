@@ -9,6 +9,8 @@ import {
   TextInputKeyPressEventData,
 } from "react-native";
 import { router } from "expo-router";
+import { supabase } from "../lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
 interface VerificationScreenProps {
   phoneNumber?: string;
@@ -19,7 +21,7 @@ interface InputRefType extends TextInput {
 }
 
 const VerificationScreen: React.FC<VerificationScreenProps> = ({
-  phoneNumber = "+91 98765****1",
+  phoneNumber = "+918369535159",
 }) => {
   const [code, setCode] = useState<string[]>(["", "", "", ""]);
   const [timer, setTimer] = useState<number>(60);
@@ -64,20 +66,37 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       .padStart(2, "0")}`;
   };
 
-  const handleVerify = async (): Promise<boolean> => {
-    try {
-      const verificationCode = code.join("");
-      console.log("Verifying code:", verificationCode);
-      if (verificationCode === "1234") {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error("Verification error:", error);
+  // const handleVerify = async (): Promise<any> => {
+  //   try {
+  //     const {
+  //       data: { session },
+  //       error,
+  //     } = await supabase.auth.verifyOtp({
+  //       phone: "918369535159",
+  //       token: "4567",
+  //       type: "sms",
+  //     });
+  //   } catch (error) {
+  //     console.error("Verification error:", error);
+  //     return false;
+  //   }
+  // };
+
+  async function handleVerify() {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.verifyOtp({
+      phone: "+918369535159",
+      token: "4567",
+      type: "sms",
+    });
+    if (error) {
+      console.error("Error verifying code:", error.message);
       return false;
-    }
-  };
+    };
+    console.log(session);
+  }
 
   const handlePress = async () => {
     const isVerified = await handleVerify();
@@ -127,7 +146,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       </View>
 
       <View style={styles.inputContainer}>
-        {[0, 1, 2, 3].map((index) => renderInput(index))}
+        {[0, 1, 2, 3, 4, 5].map((index) => renderInput(index))}
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -212,3 +231,32 @@ const styles = StyleSheet.create({
 });
 
 export default VerificationScreen;
+
+
+// import "react-native-url-polyfill/auto";
+// import { useState, useEffect } from "react";
+// import { supabase } from "../lib/supabase";
+// import Auth from "../components/Auth";
+// import { View, Text } from "react-native";
+// import { Session } from "@supabase/supabase-js";
+
+// export default function App() {
+//   const [session, setSession] = useState<Session | null>(null);
+
+//   useEffect(() => {
+//     supabase.auth.getSession().then(({ data: { session } }) => {
+//       setSession(session);
+//     });
+
+//     supabase.auth.onAuthStateChange((_event, session) => {
+//       setSession(session);
+//     });
+//   }, []);
+
+//   return (
+//     <View>
+//       <Auth />
+//       {session && session.user && <Text>{session.user.id}</Text>}
+//     </View>
+//   );
+// }
