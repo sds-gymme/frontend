@@ -83,30 +83,43 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   // };
 
   async function handleVerify() {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.verifyOtp({
-      phone: "+918369535159",
-      token: "4567",
-      type: "sms",
-    });
-    if (error) {
-      console.error("Error verifying code:", error.message);
+    const verificationCode = code.join("");
+
+    if (verificationCode.length !== 4) {
+      setError("Please enter the complete 4-digit code");
       return false;
-    };
-    console.log(session);
+    }
+
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: phoneNumber, 
+        token: verificationCode,
+        type: "sms",
+      });
+
+      if (error) {
+        console.error("Error verifying OTP:", error.message);
+        setError(error.message || "Verification failed. Please try again.");
+        return false;
+      }
+
+      if (data.session) {
+        console.log("Verification successful:", data.session);
+        router.replace("/registration");
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      console.error("Unexpected error during verification:", err);
+      setError("An unexpected error occurred. Please try again.");
+      return false;
+    }
   }
 
   const handlePress = async () => {
-    const isVerified = await handleVerify();
-    if (isVerified) {
-      router.replace("/registration");
-    } else {
-      setError("Invalid verification code. Please try again.");
-    }
+    await handleVerify();
   };
-
   const handleKeyPress = (
     index: number,
     e: NativeSyntheticEvent<TextInputKeyPressEventData>,
@@ -146,7 +159,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       </View>
 
       <View style={styles.inputContainer}>
-        {[0, 1, 2, 3, 4, 5].map((index) => renderInput(index))}
+        {[0, 1, 2, 3].map((index) => renderInput(index))}
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
