@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
@@ -13,6 +14,7 @@ import { Dropdown } from "react-native-paper-dropdown";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { LoginContext } from "@/contexts/loginContext";
+import { supabase } from "@/lib/supabase";
 
 const OPTIONS = [
   { label: "Male", value: "male" },
@@ -70,15 +72,6 @@ const Registration: React.FC = () => {
               formData[field] == option &&
                 option === "Non-Vegetarian" &&
                 styles.greenButton,
-              // formData[field] === option &&
-              //   option === "Lean" &&
-              //   styles.grayButton,
-              // formData[field] == option &&
-              //   option === "Fit" &&
-              //   styles.greenButton,
-              // formData[field] == option &&
-              //   option === "Obsessed" &&
-              //   styles.redButton,
               formData[field] === option &&
                 option === "Beginner" &&
                 styles.yellowButton,
@@ -114,9 +107,53 @@ const Registration: React.FC = () => {
     );
   };
 
-  const handleSubmit = () => {
-    setIsLoggedIn(true);
-    router.replace("/");
+  const handleSubmit = async () => {
+    try {
+      // Get the current user from Supabase authentication
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      // Prepare the user data object to insert into the database
+      const userData = {
+        user_id: user.id, // Ensure this matches exactly with the authenticated user's ID
+        dob: formData.dob.toISOString(),
+        gender: formData.gender,
+        height: parseFloat(formData.height) || null, // Use null if parsing fails
+        weight: parseFloat(formData.weight) || null,
+        food_preference: formData.foodPreference,
+        body_type: formData.bodyType,
+        fitness_level: formData.fitnessLevel,
+        fitness_goals: formData.fitnessGoals,
+        created_at: new Date().toISOString(),
+      };
+
+      // Insert user details into the 'user_profiles' table
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .insert(userData)
+        .select();
+
+      if (error) {
+        console.error("Supabase insertion error:", error);
+        throw error;
+      }
+
+      // Update login state and navigate
+      setIsLoggedIn(true);
+      router.replace("/");
+
+      console.log("User profile created successfully:", data);
+    } catch (error) {
+      console.error("Error submitting user details:", error);
+      // Optional: Add more specific error handling
+      Alert.alert("Error", "Failed to submit user details. Please try again.");
+    }
   };
 
   return (

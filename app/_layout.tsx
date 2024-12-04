@@ -51,11 +51,19 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="verification"
-              options={{ title: "Verification", headerLeft: Blank, headerShown: false }}
+              options={{
+                title: "Verification",
+                headerLeft: Blank,
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="registration"
-              options={{ title: "Basic Details" }}
+              options={{
+                title: "Basic Details",
+                headerShown: true,
+                headerLeft: Blank,
+              }}
             />
             {/* <Stack.Screen
               name="trainerHome"
@@ -64,11 +72,23 @@ export default function RootLayout() {
             <Stack.Screen name="choose" options={{ headerShown: false }} />
             <Stack.Screen name="trainerReg" options={{ headerShown: false }} />
             <Stack.Screen name="trainerHome" options={{ headerShown: false }} />
-            <Stack.Screen name="recordedHomeWorkout" options={{ title: "Recorded Home Workout" }} />
-            <Stack.Screen name="livePersonalTraining" options={{ title: "Live Personal Training" }} />
-            <Stack.Screen name="gymWorkout" options={{ title: "Gym Workout" }} />
+            <Stack.Screen
+              name="recordedHomeWorkout"
+              options={{ title: "Recorded Home Workout" }}
+            />
+            <Stack.Screen
+              name="livePersonalTraining"
+              options={{ title: "Live Personal Training" }}
+            />
+            <Stack.Screen
+              name="gymWorkout"
+              options={{ title: "Gym Workout" }}
+            />
             <Stack.Screen name="excercisePage" options={{ headerTitle: "" }} />
-            <Stack.Screen name="excerciseDetails" options={{ headerTitle: "Excercise Details" }} />
+            <Stack.Screen
+              name="excerciseDetails"
+              options={{ headerTitle: "Excercise Details" }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

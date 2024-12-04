@@ -66,22 +66,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       .padStart(2, "0")}`;
   };
 
-  // const handleVerify = async (): Promise<any> => {
-  //   try {
-  //     const {
-  //       data: { session },
-  //       error,
-  //     } = await supabase.auth.verifyOtp({
-  //       phone: "918369535159",
-  //       token: "4567",
-  //       type: "sms",
-  //     });
-  //   } catch (error) {
-  //     console.error("Verification error:", error);
-  //     return false;
-  //   }
-  // };
-
   async function handleVerify() {
     const verificationCode = code.join("");
 
@@ -102,7 +86,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
         setError(error.message || "Verification failed. Please try again.");
         return false;
       }
-
       if (data.session) {
         console.log("Verification successful:", data.session);
         router.replace("/registration");
