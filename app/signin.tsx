@@ -49,7 +49,7 @@ const SignIn = () => {
 
   const handlePhoneNumberChange = (text: string) => {
     setPhoneNumber(text);
-    if (text.length === 13) {
+    if (text.length === 10) {
       setError("");
     } else {
       setError("Please enter a valid 10-digit phone number.");
@@ -60,23 +60,24 @@ const SignIn = () => {
 
 
   async function handleSignInPress() {
-    // if (phoneNumber.length === 10) {
-      
-    //   router.replace("/verification");
-    // } else {
-    //   setError("Please enter a valid 10-digit phone number.");
-    // }
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithOtp({
-      phone: "+918369535159",
+    if (phoneNumber.length === 10) {
       
-    });
-    if (error) {
-      console.error("Error signing in:", error.message);
-      return;
+      router.replace("/verification");
+    } else {
+      setError("Please enter a valid 10-digit phone number.");
     }
-    console.log(data);
-    router.replace("/verification");
+    
+    // const { data, error } = await supabase.auth.signInWithOtp({
+    //   phone: "+918369535159",
+      
+    // });
+    // if (error) {
+    //   console.error("Error signing in:", error.message);
+    //   return;
+    // }
+    // console.log(data);
+    // router.replace("/verification");
   };
 
   return (
@@ -140,11 +141,11 @@ const SignIn = () => {
                     styles.signInButton,
                     {
                       backgroundColor:
-                        phoneNumber.length === 13 ? "#000" : "#ccc",
+                        phoneNumber.length === 10 ? "#000" : "#ccc",
                     },
                   ]}
                   onPress={handleSignInPress}
-                  disabled={phoneNumber.length !== 13}
+                  disabled={phoneNumber.length !== 10}
                 >
                   <Text style={styles.signInText}>Sign In</Text>
                 </TouchableOpacity>

@@ -109,7 +109,6 @@ const Registration: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      // Get the current user from Supabase authentication
       const {
         data: { user },
         error: authError,
@@ -119,12 +118,11 @@ const Registration: React.FC = () => {
         throw new Error("No authenticated user found");
       }
 
-      // Prepare the user data object to insert into the database
       const userData = {
-        user_id: user.id, // Ensure this matches exactly with the authenticated user's ID
+        user_id: user.id,
         dob: formData.dob.toISOString(),
         gender: formData.gender,
-        height: parseFloat(formData.height) || null, // Use null if parsing fails
+        height: parseFloat(formData.height) || null, 
         weight: parseFloat(formData.weight) || null,
         food_preference: formData.foodPreference,
         body_type: formData.bodyType,
@@ -133,7 +131,6 @@ const Registration: React.FC = () => {
         created_at: new Date().toISOString(),
       };
 
-      // Insert user details into the 'user_profiles' table
       const { data, error } = await supabase
         .from("user_profiles")
         .insert(userData)
@@ -144,14 +141,12 @@ const Registration: React.FC = () => {
         throw error;
       }
 
-      // Update login state and navigate
       setIsLoggedIn(true);
       router.replace("/");
 
       console.log("User profile created successfully:", data);
     } catch (error) {
       console.error("Error submitting user details:", error);
-      // Optional: Add more specific error handling
       Alert.alert("Error", "Failed to submit user details. Please try again.");
     }
   };

@@ -67,41 +67,61 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   };
 
   async function handleVerify() {
-    const verificationCode = code.join("");
+    // to be done after dev
 
-    if (verificationCode.length !== 4) {
-      setError("Please enter the complete 4-digit code");
-      return false;
-    }
+    // const verificationCode = code.join("");
 
+    // if (verificationCode.length !== 4) {
+    //   setError("Please enter the complete 4-digit code");
+    //   return false;
+    // }
+
+    // try {
+    //   const { data, error } = await supabase.auth.verifyOtp({
+    //     phone: phoneNumber, 
+    //     token: verificationCode,
+    //     type: "sms",
+    //   });
+
+    //   if (error) {
+    //     console.error("Error verifying OTP:", error.message);
+    //     setError(error.message || "Verification failed. Please try again.");
+    //     return false;
+    //   }
+    //   if (data.session) {
+    //     console.log("Verification successful:", data.session);
+    //     router.replace("/registration");
+    //     return true;
+    //   }
+
+    //   return false;
+    // } catch (err) {
+    //   console.error("Unexpected error during verification:", err);
+    //   setError("An unexpected error occurred. Please try again.");
+    //   return false;
+    // }
     try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        phone: phoneNumber, 
-        token: verificationCode,
-        type: "sms",
-      });
-
-      if (error) {
-        console.error("Error verifying OTP:", error.message);
-        setError(error.message || "Verification failed. Please try again.");
+      const verificationCode = code.join("");
+      console.log("Verifying code:", verificationCode);
+      if (verificationCode === "1234") {
+        return true;
+      } else {
         return false;
       }
-      if (data.session) {
-        console.log("Verification successful:", data.session);
-        router.replace("/registration");
-        return true;
-      }
-
-      return false;
-    } catch (err) {
-      console.error("Unexpected error during verification:", err);
-      setError("An unexpected error occurred. Please try again.");
+    } catch (error) {
+      console.error("Verification error:", error);
       return false;
     }
   }
 
   const handlePress = async () => {
-    await handleVerify();
+    // await handleVerify();
+        const isVerified = await handleVerify();
+        if (isVerified) {
+          router.replace("/registration");
+        } else {
+          setError("Invalid verification code. Please try again.");
+        }
   };
   const handleKeyPress = (
     index: number,
