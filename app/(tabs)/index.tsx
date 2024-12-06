@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
               <Image
                 source={require("@/assets/images/PersonalTraining.svg")}
                 style={styles.squareCard}

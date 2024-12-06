@@ -12,7 +12,7 @@ const RecordedHomeWorkout: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
+        <View>
           <Text style={styles.title}>Exercise you're looking for today?</Text>
           <Text style={styles.subtitle}>Select at least one option to get started.</Text>
         </View>

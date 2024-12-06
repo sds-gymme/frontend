@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { Activity } from 'iconsax-react-native';
 
 const GymWorkout: React.FC = () => {
-  const handlePress = (route: string) => {
+  const handlePress = (route: any) => {
     router.push(route);
   };
 

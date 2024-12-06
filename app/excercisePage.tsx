@@ -66,7 +66,7 @@ const ExercisePage: React.FC = () => {
         </View>
 
         <View style={styles.exerciseList}> {exercises.map((exercise : any) => (
-            <TouchableOpacity key={exercise.id} onPress={() => handlePress(exercise.id)}>
+            <TouchableOpacity key={exercise.id} onPress={() => handlePress()}>
               <View style={styles.exerciseCard}>
                 <Image
                   source={exercise.image}
