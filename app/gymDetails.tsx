@@ -51,7 +51,7 @@ const gymData: GymDetails = {
 const GymDetailsScreen = () => {
   const theme = useTheme();
     const handleSubmit = () => {
-      router.replace("/trainerProfile");
+      router.replace("/nearbyGym");
     };
   return (
     <SafeAreaView style={styles.container}>
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: "600",
     color: "#000",
+    bottom: 16
   },
   section: {
     padding: 16,
