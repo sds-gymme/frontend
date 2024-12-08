@@ -25,6 +25,7 @@ const OPTIONS = [
 const Registration: React.FC = () => {
   const [formData, setFormData] = useState({
     dob: new Date(),
+    name: "",
     gender: "",
     height: "",
     weight: "",
