@@ -47,7 +47,8 @@
     "react-native-svg": "15.8.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.10",
-    "supabase": "^1.226.3"
+    "supabase": "^1.226.3",
+    "expo-build-properties": "~0.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
