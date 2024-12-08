@@ -54,7 +54,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 const AccountPage: React.FC = () => {
-  const handlePress = (route: string) => {
+  const handlePress = (route: any) => {
     router.push(route);
   };
   const { setIsLoggedIn } = useContext(LoginContext);
@@ -89,7 +89,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<MessageQuestion size={24} color="#666" variant="Linear" />}
             title="Help Center"
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/helpCenter")}
           />
           <MenuItem
             icon={<Card size={24} color="#666" variant="Linear" />}

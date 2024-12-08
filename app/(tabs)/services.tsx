@@ -67,7 +67,7 @@ const Service: React.FC<ServiceProps> = ({
 );
 
 const ServicesScreen: React.FC = () => {
-  const handlePress = (route: string) => {
+  const handlePress = (route: any) => {
     router.push(route);
   };
 
