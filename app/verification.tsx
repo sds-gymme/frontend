@@ -67,7 +67,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   };
 
   async function handleVerify() {
-    // to be done after dev
+    // RLS disabled for now, to be done after dev
 
     // const verificationCode = code.join("");
 
@@ -100,6 +100,8 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
     //   setError("An unexpected error occurred. Please try again.");
     //   return false;
     // }
+
+
     try {
       const verificationCode = code.join("");
       console.log("Verifying code:", verificationCode);
