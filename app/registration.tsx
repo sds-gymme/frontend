@@ -121,6 +121,7 @@ const Registration: React.FC = () => {
 
       const userData = {
         user_id: user.id,
+        user_name: formData.name,
         dob: formData.dob.toISOString(),
         gender: formData.gender,
         height: parseFloat(formData.height) || null, 
@@ -132,15 +133,49 @@ const Registration: React.FC = () => {
         created_at: new Date().toISOString(),
       };
 
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .insert(userData)
-        .select();
-
+      const {data, error} = await supabase
+      .from("user_profiles")
+      .select()
+      .eq("user_id", user.id);
       if (error) {
-        console.error("Supabase insertion error:", error);
+        console.error("Supabase fetch error:", error);
         throw error;
       }
+      if (data.length > 0) {
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .update(userData)
+          .eq("user_id", user.id)
+          .select();
+
+        if (error) {
+          console.error("Supabase update error:", error);
+          throw error;
+        }
+      }
+      else {
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .insert(userData)
+          .select();
+
+        if (error) {
+          console.error("Supabase insertion error:", error);
+          throw error;
+        }
+      }
+
+
+      // const { data, error } = await supabase
+      //   .from("user_profiles")
+
+      //   .insert(userData)
+      //   .select();
+
+      // if (error) {
+      //   console.error("Supabase insertion error:", error);
+      //   throw error;
+      // }
 
       setIsLoggedIn(true);
       router.replace("/");
@@ -157,9 +192,18 @@ const Registration: React.FC = () => {
       <ScrollView>
         <StatusBar style="auto" />
         <Text style={styles.title}>Add details</Text>
-        <Text style={styles.subtitle}>Enter height, weight, dob etc.</Text>
-        <Text style={styles.fieldLabel}>DOB</Text>
+        <Text style={styles.subtitle}>Enter name, height, weight, dob etc.</Text>
+        <Text style={styles.fieldLabel}>Name</Text>
+        <TextInput
+          mode="outlined"
+          value={formData.name}
+          onChangeText={(text) => setFormData({ ...formData, name: text })}
+          placeholder="Enter your name"
+          keyboardType="default"
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
 
+        <Text style={styles.fieldLabel}>DOB</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <TextInput
             mode="outlined"
@@ -227,7 +271,7 @@ const Registration: React.FC = () => {
         {renderSelectionButtons(
           foodPreferences,
           formData.foodPreference,
-          "foodPreference",
+          "foodPreference"
         )}
 
         <Text style={styles.fieldLabel}>Body type</Text>
@@ -237,13 +281,13 @@ const Registration: React.FC = () => {
         {renderSelectionButtons(
           fitnessLevels,
           formData.fitnessLevel,
-          "fitnessLevel",
+          "fitnessLevel"
         )}
         <Text style={styles.fieldLabel}>Fitness Goals</Text>
         {renderSelectionButtons(
           fitnessGoals,
           formData.fitnessGoals,
-          "fitnessGoals",
+          "fitnessGoals"
         )}
       </ScrollView>
       <View style={styles.submitButtonContainer}>

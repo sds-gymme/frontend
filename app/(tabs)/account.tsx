@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import {
   LogoutCurve
 } from "iconsax-react-native";
 import { LoginContext } from "@/contexts/loginContext";
+import { supabase } from "@/lib/supabase";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -34,6 +35,7 @@ interface MenuItemProps {
 const handleTrainerPress = () => {
   router.replace("/trainerReg");
 };
+
 
 const MenuItem: React.FC<MenuItemProps> = ({
   icon,
@@ -54,6 +56,42 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 const AccountPage: React.FC = () => {
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+          throw new Error("No authenticated user found");
+        }
+
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .select("user_name")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+
+        setUsername(data.user_name);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+    
+
   const handlePress = (route: any) => {
     router.push(route);
   };
@@ -72,7 +110,7 @@ const AccountPage: React.FC = () => {
             <View style={styles.profileLeft}>
               <Profile size={50} color="#666" variant="Linear" />
               <View>
-                <Text style={styles.profileName}>Pravesh Mankar</Text>
+                <Text style={styles.profileName}>{username}</Text>
                 <Text style={styles.profileEdit}>Edit Profile</Text>
               </View>
             </View>

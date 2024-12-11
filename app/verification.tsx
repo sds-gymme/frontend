@@ -69,37 +69,37 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   async function handleVerify() {
     // RLS disabled for now, to be done after dev
 
-    // const verificationCode = code.join("");
+    const verificationCode = code.join("");
 
-    // if (verificationCode.length !== 4) {
-    //   setError("Please enter the complete 4-digit code");
-    //   return false;
-    // }
+    if (verificationCode.length !== 4) {
+      setError("Please enter the complete 4-digit code");
+      return false;
+    }
 
-    // try {
-    //   const { data, error } = await supabase.auth.verifyOtp({
-    //     phone: phoneNumber, 
-    //     token: verificationCode,
-    //     type: "sms",
-    //   });
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: phoneNumber, 
+        token: verificationCode,
+        type: "sms",
+      });
 
-    //   if (error) {
-    //     console.error("Error verifying OTP:", error.message);
-    //     setError(error.message || "Verification failed. Please try again.");
-    //     return false;
-    //   }
-    //   if (data.session) {
-    //     console.log("Verification successful:", data.session);
-    //     router.replace("/registration");
-    //     return true;
-    //   }
+      if (error) {
+        console.error("Error verifying OTP:", error.message);
+        setError(error.message || "Verification failed. Please try again.");
+        return false;
+      }
+      if (data.session) {
+        console.log("Verification successful:", data.session);
+        router.replace("/registration");
+        return true;
+      }
 
-    //   return false;
-    // } catch (err) {
-    //   console.error("Unexpected error during verification:", err);
-    //   setError("An unexpected error occurred. Please try again.");
-    //   return false;
-    // }
+      return false;
+    } catch (err) {
+      console.error("Unexpected error during verification:", err);
+      setError("An unexpected error occurred. Please try again.");
+      return false;
+    }
 
 
     try {

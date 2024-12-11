@@ -14,6 +14,9 @@ import ImageCarousel from "@/components/ImageCarousel";
 import CouponCard from "@/components/CouponCard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
+import { supabase } from "@/lib/supabase";
+
+
 
 
 const Header = ({ username = "Pravesh" }) => (

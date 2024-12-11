@@ -68,16 +68,16 @@ const SignIn = () => {
       setError("Please enter a valid 10-digit phone number.");
     }
     
-    // const { data, error } = await supabase.auth.signInWithOtp({
-    //   phone: "+918369535159",
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone: "+918369535159",
       
-    // });
-    // if (error) {
-    //   console.error("Error signing in:", error.message);
-    //   return;
-    // }
-    // console.log(data);
-    // router.replace("/verification");
+    });
+    if (error) {
+      console.error("Error signing in:", error.message);
+      return;
+    }
+    console.log(data);
+    router.replace("/verification");
   };
 
   return (
