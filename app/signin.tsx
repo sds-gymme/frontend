@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,13 +18,22 @@ import { useSharedValue } from "react-native-reanimated";
 // import { RootStackParamList } from "../app/types";
 import { router } from "expo-router";
 import { supabase } from "../lib/supabase";
-import { Session } from "@supabase/supabase-js";
+import { LoginContext } from "@/contexts/loginContext";
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
   const height = Dimensions.get("window").height;
   const [loading, setLoading] = useState(false);
   const scrollOffsetValue = useSharedValue<number>(0);
+  const { setIsLoggedIn } = useContext(LoginContext);
+
+  useEffect(() => {
+    async function logout() {
+      await supabase.auth.signOut();
+      setIsLoggedIn(false);
+    }
+    logout();
+  }, []);
 
   const carouselImages = [
     require("@/assets/images/1.png"),
@@ -56,21 +65,16 @@ const SignIn = () => {
     }
   };
 
-  
-
-
   async function handleSignInPress() {
     setLoading(true);
     if (phoneNumber.length === 10) {
-      
       router.replace("/verification");
     } else {
       setError("Please enter a valid 10-digit phone number.");
     }
-    
+
     const { data, error } = await supabase.auth.signInWithOtp({
       phone: "+918369535159",
-      
     });
     if (error) {
       console.error("Error signing in:", error.message);
@@ -78,7 +82,7 @@ const SignIn = () => {
     }
     console.log(data);
     router.replace("/verification");
-  };
+  }
 
   return (
     <KeyboardAvoidingView style={styles.mainContainer}>
