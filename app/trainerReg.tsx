@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
@@ -14,6 +15,8 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { LoginContext } from "@/contexts/loginContext";
 import { Avatar } from "react-native-paper";
+import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OPTIONS = [
   { label: "Male", value: "male" },
@@ -37,7 +40,6 @@ const Trainer: React.FC = () => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === "ios");
     if (selectedDate) {
@@ -45,16 +47,96 @@ const Trainer: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
-    setIsLoggedIn(true);
-    router.replace("/trainerHome");
+  const handleSubmit = async () => {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      const userData = {
+        user_id: user.id,
+        name: formData.name,
+        dob: formData.dob.toISOString(),
+        gender: formData.gender,
+        height: parseFloat(formData.height) || null,
+        weight: parseFloat(formData.weight) || null,
+        mobile_number: formData.mobileNumber,
+        email_id: formData.emailId,
+        certificate: formData.certificate,
+        created_at: new Date().toISOString(),
+      };
+
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select()
+        .eq("user_id", user.id);
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      if (data.length > 0) {
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .update(userData)
+          .eq("user_id", user.id)
+          .select();
+
+        if (error) {
+          console.error("Supabase update error:", error);
+          throw error;
+        }
+      } else {
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .insert(userData)
+          .select();
+
+        if (error) {
+          console.error("Supabase insertion error:", error);
+          throw error;
+        }
+      }
+
+      // const { data, error } = await supabase
+      //   .from("user_profiles")
+
+      //   .insert(userData)
+      //   .select();
+
+      // if (error) {
+      //   console.error("Supabase insertion error:", error);
+      //   throw error;
+      // }
+
+      setIsLoggedIn(true);
+      router.replace("/trainerHome");
+      try {
+        await AsyncStorage.setItem("userType", "trainer");
+      } catch (e) {
+        console.error("Error storing user type in async storage:", e);
+      }
+
+      console.log("User profile created successfully:", data);
+    } catch (error) {
+      console.error("Error submitting user details:", error);
+      Alert.alert("Error", "Failed to submit user details. Please try again.");
+    }
   };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <StatusBar style="auto" />
-        <Avatar.Image size={88} style={styles.avatar} source={require("../assets/images/2.png")} />
+        <Avatar.Image
+          size={88}
+          style={styles.avatar}
+          source={require("../assets/images/2.png")}
+        />
         <Text style={styles.subtitle}>Upload Photo</Text>
         <Text style={styles.fieldLabel}>Name</Text>
         <TextInput

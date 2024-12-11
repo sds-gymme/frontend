@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Home2,
   Home,
@@ -12,6 +12,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { Redirect, useRootNavigationState } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Custom TabBarIcon component using Iconsax
 const TabBarIcon = ({
@@ -39,10 +40,25 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { isLoggedIn } = useContext(LoginContext);
   const rootNavigationState = useRootNavigationState();
+  const [userType, setUserType] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("LOGGED IN 1 - ", isLoggedIn);
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    async function checkUserType() {
+      try {
+        const value = await AsyncStorage.getItem("userType");
+        setUserType(value);
+      } catch (e) {
+        console.log("Error getting userType - ", e);
+        await AsyncStorage.setItem("userType", "user");
+        setUserType("user");
+      }
+    }
+    checkUserType();
+  }, []);
 
   if (!rootNavigationState?.key) return null;
 
@@ -53,6 +69,10 @@ export default function TabLayout() {
   if (isLoggedIn === false) {
     console.log("LOGGED IN 2 - ", isLoggedIn);
     return <Redirect href={"/signin"} />;
+  }
+
+  if (userType === "trainer") {
+    return <Redirect href={"/trainerHome"} />;
   }
 
   return (

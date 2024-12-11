@@ -16,7 +16,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LoginContext } from "@/contexts/loginContext";
-import {LogoutCurve} from "iconsax-react-native";
+import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
@@ -33,7 +33,6 @@ const Header = ({ username = "Trainer Vaibhav" }) => (
     />
   </View>
 );
-
 
 interface Appointment {
   id: string;
@@ -154,7 +153,7 @@ const TrainerHome: React.FC = () => {
           />
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => router.replace("/verification")}
+            onPress={() => router.replace("/signin")}
           >
             <LogoutCurve size={24} color="#666" variant="Linear" />
             <Text style={styles.logoutText}>Logout</Text>
