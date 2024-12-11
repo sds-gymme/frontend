@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Home2,
   Home,
@@ -40,8 +40,18 @@ export default function TabLayout() {
   const { isLoggedIn } = useContext(LoginContext);
   const rootNavigationState = useRootNavigationState();
 
+  useEffect(() => {
+    console.log("LOGGED IN 1 - ", isLoggedIn);
+  }, [isLoggedIn]);
+
   if (!rootNavigationState?.key) return null;
-  if (!isLoggedIn) {
+
+  if (isLoggedIn === null) {
+    return null;
+  }
+
+  if (isLoggedIn === false) {
+    console.log("LOGGED IN 2 - ", isLoggedIn);
     return <Redirect href={"/signin"} />;
   }
 

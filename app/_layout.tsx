@@ -11,6 +11,7 @@ import "react-native-reanimated";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
+import { supabase } from "@/lib/supabase";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,10 +22,19 @@ function Blank() {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  useEffect(() => {
+    async function checkUser() {
+      const resp = await supabase.auth.getUser();
+      setIsLoggedIn(resp.data.user ? true : false);
+      console.log(resp.data.user);
+    }
+    checkUser();
+  }, []);
 
   useEffect(() => {
     if (loaded) {
@@ -33,6 +43,10 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
+    return <Slot />;
+  }
+
+  if (isLoggedIn === null) {
     return <Slot />;
   }
 
@@ -51,43 +65,11 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="verification"
-              options={{
-                title: "Verification",
-                headerLeft: Blank,
-                headerShown: false,
-              }}
+              options={{ title: "Verification", headerLeft: Blank }}
             />
             <Stack.Screen
               name="registration"
-              options={{
-                title: "Basic Details",
-                headerShown: true,
-                headerLeft: Blank,
-              }}
-            />
-            {/* <Stack.Screen
-              name="trainerHome"
-              options={{ title: "Home", headerShown: true, headerLeft: Blank }}
-            /> */}
-            <Stack.Screen name="choose" options={{ headerShown: false }} />
-            <Stack.Screen name="trainerReg" options={{ headerShown: false }} />
-            <Stack.Screen name="trainerHome" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="recordedHomeWorkout"
-              options={{ title: "Recorded Home Workout" }}
-            />
-            <Stack.Screen
-              name="livePersonalTraining"
-              options={{ title: "Live Personal Training" }}
-            />
-            <Stack.Screen
-              name="gymWorkout"
-              options={{ title: "Gym Workout" }}
-            />
-            <Stack.Screen name="excercisePage" options={{ headerTitle: "" }} />
-            <Stack.Screen
-              name="excerciseDetails"
-              options={{ headerTitle: "Excercise Details" }}
+              options={{ title: "Basic Details" }}
             />
           </Stack>
         </ThemeProvider>
