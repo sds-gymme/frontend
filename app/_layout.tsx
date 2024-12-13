@@ -13,7 +13,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { supabase } from "@/lib/supabase";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function Blank() {

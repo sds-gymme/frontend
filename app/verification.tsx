@@ -8,7 +8,7 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
 
@@ -20,9 +20,9 @@ interface InputRefType extends TextInput {
   focus(): void;
 }
 
-const VerificationScreen: React.FC<VerificationScreenProps> = ({
-  phoneNumber = "+918369535159",
-}) => {
+const VerificationScreen: React.FC<VerificationScreenProps> = () => {
+  const { phoneNumber } = useLocalSearchParams();
+  const formattedPhoneNumber = (phoneNumber as string) || "";
   const [code, setCode] = useState<string[]>(["", "", "", ""]);
   const [timer, setTimer] = useState<number>(60);
   const [error, setError] = useState<string>("");
@@ -67,8 +67,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
   };
 
   async function handleVerify() {
-    // RLS disabled for now, to be done after dev
-
     const verificationCode = code.join("");
 
     if (verificationCode.length !== 4) {
@@ -78,7 +76,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
 
     try {
       const { data, error } = await supabase.auth.verifyOtp({
-        phone: phoneNumber, 
+        phone: formattedPhoneNumber,
         token: verificationCode,
         type: "sms",
       });
@@ -88,6 +86,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
         setError(error.message || "Verification failed. Please try again.");
         return false;
       }
+
       if (data.session) {
         console.log("Verification successful:", data.session);
         router.replace("/registration");
@@ -100,30 +99,15 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       setError("An unexpected error occurred. Please try again.");
       return false;
     }
-
-
-    try {
-      const verificationCode = code.join("");
-      console.log("Verifying code:", verificationCode);
-      if (verificationCode === "1234") {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error("Verification error:", error);
-      return false;
-    }
   }
 
   const handlePress = async () => {
-    // await handleVerify();
-        const isVerified = await handleVerify();
-        if (isVerified) {
-          router.replace("/registration");
-        } else {
-          setError("Invalid verification code. Please try again.");
-        }
+    const isVerified = await handleVerify();
+    if (isVerified) {
+      router.replace("/registration");
+    } else {
+      setError("Invalid verification code. Please try again.");
+    }
   };
   const handleKeyPress = (
     index: number,
