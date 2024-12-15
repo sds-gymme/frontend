@@ -78,7 +78,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
 
     try {
       const { data, error } = await supabase.auth.verifyOtp({
-        phone: phoneNumber, 
+        phone: phoneNumber,
         token: verificationCode,
         type: "sms",
       });
@@ -118,12 +118,12 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
 
   const handlePress = async () => {
     // await handleVerify();
-        const isVerified = await handleVerify();
-        if (isVerified) {
-          router.replace("/registration");
-        } else {
-          setError("Invalid verification code. Please try again.");
-        }
+    const isVerified = await handleVerify();
+    if (isVerified) {
+      router.replace("/registration");
+    } else {
+      setError("Invalid verification code. Please try again.");
+    }
   };
   const handleKeyPress = (
     index: number,
@@ -153,7 +153,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = ({
       />
     );
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>

@@ -13,6 +13,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { supabase } from "@/lib/supabase";
 
+import "../global.css"
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -70,6 +72,10 @@ export default function RootLayout() {
             <Stack.Screen
               name="registration"
               options={{ title: "Basic Details" }}
+            />
+            <Stack.Screen
+              name="decodeAge"
+              options={{ headerShown: false }}
             />
           </Stack>
         </ThemeProvider>
