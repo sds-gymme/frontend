@@ -4,16 +4,16 @@ import { Card, Switch, Text, useTheme, IconButton } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const OnlineOfflineToggle = ({
-  onToggle,
+  isOnline,
+  setIsOnline,
 }: {
-  onToggle: (isOnline: boolean) => void;
+  isOnline: boolean;
+  setIsOnline: (isOnline: boolean) => void;
 }) => {
-  const [isOnline, setIsOnline] = useState(false);
   const theme = useTheme();
 
   const onToggleSwitch = () => {
     setIsOnline(!isOnline);
-    onToggle(!isOnline);
   };
 
   return (

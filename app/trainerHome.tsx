@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
 import OnlineOfflineToggle from "@/components/TrainerToggle";
 import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -115,6 +116,8 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
 };
 
 const TrainerHome: React.FC = () => {
+  const [isOnline, setIsOnline] = useState(false);
+
   const handlePress = (route: any) => {
     router.push(route);
   };
@@ -139,10 +142,44 @@ const TrainerHome: React.FC = () => {
         .update(values)
         .eq("user_id", user.id)
         .select();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      setIsOnline(isOnline);
     } catch (error) {
       console.error("Error updating online status:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchOnlineStatus = async () => {
+      try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+          throw new Error("No authenticated user found");
+        }
+
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .select("online")
+          .eq("user_id", user.id)
+          .single();
+        if (error) {
+          console.error("Supabase fetch error:", error);
+          throw error;
+        }
+        setIsOnline(data.online);
+      } catch (error) {
+        console.error("Error fetching online status:", error);
+      }
+    };
+    fetchOnlineStatus();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -151,7 +188,10 @@ const TrainerHome: React.FC = () => {
         <View style={styles.scrollContent}>
           <Header />
           <View style={styles.appointmentsSection}>
-            <OnlineOfflineToggle onToggle={handleOnlineToggle} />
+            <OnlineOfflineToggle
+              isOnline={isOnline}
+              setIsOnline={handleOnlineToggle}
+            />
             <Text style={styles.headerText}>Your Appointments</Text>
             <FlatList
               data={appointments}
@@ -181,7 +221,10 @@ const TrainerHome: React.FC = () => {
           />
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => router.replace("/signin")}
+            onPress={async () => {
+              await AsyncStorage.setItem("userType", "user");
+              router.replace("/");
+            }}
           >
             <LogoutCurve size={24} color="#666" variant="Linear" />
             <Text style={styles.logoutText}>Logout</Text>
