@@ -18,6 +18,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LoginContext } from "@/contexts/loginContext";
 import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
+import OnlineOfflineToggle from "@/components/TrainerToggle";
+import { supabase } from "@/lib/supabase";
 
 const { width } = Dimensions.get("window");
 
@@ -116,14 +118,40 @@ const TrainerHome: React.FC = () => {
   const handlePress = (route: any) => {
     router.push(route);
   };
+
+  const handleOnlineToggle = async (isOnline: boolean) => {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      const values = {
+        online: isOnline,
+      };
+      console.log(values);
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .update(values)
+        .eq("user_id", user.id)
+        .select();
+    } catch (error) {
+      console.error("Error updating online status:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <ScrollView>
         <View style={styles.scrollContent}>
           <Header />
-
           <View style={styles.appointmentsSection}>
+            <OnlineOfflineToggle onToggle={handleOnlineToggle} />
             <Text style={styles.headerText}>Your Appointments</Text>
             <FlatList
               data={appointments}
