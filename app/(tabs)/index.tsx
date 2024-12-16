@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
               <Image
                 source={require("@/assets/images/DietPlanning.svg")}
                 style={styles.squareCard}
@@ -139,7 +139,7 @@ const HomePage: React.FC = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
               <Image
                 source={require("@/assets/images/CalorieCounter.svg")}
                 style={styles.squareCard}
