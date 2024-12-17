@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import {
   Appbar,
@@ -17,57 +18,71 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 
-
+// Gym interface for TypeScript
 interface Gym {
   id: string;
   name: string;
-  logo: string;
+  logo: string; // Use the `icon` URL from API
   rating: number;
-  price: string;
-  timings: string;
-  location: string;
+  timings?: string; // This can map to `opening_hours`
+  location: string; // Use `vicinity` from API
 }
 
-const gyms: Gym[] = [
-  {
-    id: "1",
-    name: "Let's Play Academy",
-    logo: "dumbbell",
-    rating: 4.9,
-    price: "₹169/hr",
-    timings: "07:00 - 11:00PM",
-    location: "Sector 5, Kandivali (West), Mumbai",
-  },
-  {
-    id: "2",
-    name: "Xersize",
-    logo: "weight-lifter",
-    rating: 4.9,
-    price: "₹169/hr",
-    timings: "05:00 - 10:30PM",
-    location: "Sector 5, Kandivali (West), Mumbai",
-  },
-];
-
-
-
+// The NearbyGymScreen component
 const NearbyGymScreen = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [gyms, setGyms] = useState<Gym[]>([]); // Gyms from the API
+  const [loading, setLoading] = useState<boolean>(true);
+  const theme = useTheme();
+
+  // Function to fetch gyms from Google Places API
+  const fetchNearbyGyms = async () => {
+    try {
+      const YOUR_LATITUDE = 37.7749; // Replace with dynamic latitude
+      const YOUR_LONGITUDE = -122.4194; // Replace with dynamic longitude
+      const API_KEY = "AIzaSyBc9oIi1Hi9hQJrz5ud172Zv4_6GUmTDnw"; // Replace with your actual API Key
+
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${YOUR_LATITUDE},${YOUR_LONGITUDE}&radius=5000&type=gym&key=${API_KEY}`
+      );
+
+      const data = await response.json();
+      console.log("Fetched Gyms Data:", data.results); // Debugging purposes
+
+      // Map API data to Gym interface
+      const gymsData: Gym[] = data.results.map((gym: any) => ({
+        id: gym.place_id,
+        name: gym.name,
+        logo: gym.icon, // Use the `icon` URL from the API
+        rating: gym.rating || 0,
+        timings: gym.opening_hours?.open_now ? "Open Now" : "Closed",
+        location: gym.vicinity,
+      }));
+
+      setGyms(gymsData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching nearby gyms", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNearbyGyms();
+  }, []);
+
   const handlePress = (route: any) => {
     router.push(route);
   };
-  
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const theme = useTheme();
 
   const GymCard = ({ gym }: { gym: Gym }) => (
     <TouchableOpacity onPress={() => handlePress("/gymDetails")}>
       <Surface style={styles.gymCard} elevation={1}>
         <View style={styles.gymInfo}>
-          <Avatar.Icon
+          <Avatar.Image
             size={50}
-            icon={gym.logo}
+            source={{ uri: gym.logo }}
             style={styles.logo}
-            color={theme.colors.primary}
           />
           <View style={styles.gymDetails}>
             <Text variant="titleMedium" style={styles.gymName}>
@@ -97,11 +112,8 @@ const NearbyGymScreen = () => {
           <View style={styles.priceRating}>
             <View style={styles.rating}>
               <Icon name="star" size={16} color="#FFD700" />
-              <Text variant="bodyMedium">{gym.rating}</Text>
+              <Text variant="bodyMedium">{gym.rating.toFixed(1)}</Text>
             </View>
-            <Text variant="titleMedium" style={styles.price}>
-              {gym.price}
-            </Text>
           </View>
         </View>
       </Surface>
@@ -129,11 +141,15 @@ const NearbyGymScreen = () => {
           Gyms near you
         </Text>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {gyms.map((gym) => (
-            <GymCard key={gym.id} gym={gym} />
-          ))}
-        </ScrollView>
+        {loading ? (
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        ) : (
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {gyms.map((gym) => (
+              <GymCard key={gym.id} gym={gym} />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -167,14 +183,13 @@ const styles = StyleSheet.create({
   },
   gymInfo: {
     flexDirection: "row",
-
     padding: 12,
   },
   logo: {
     backgroundColor: "#f0f0f0",
     borderRadius: 6,
     height: 60,
-    width: 60
+    width: 60,
   },
   gymDetails: {
     flex: 1,
@@ -201,11 +216,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-  },
-  price: {
-    fontWeight: "600",
-    color: "#000",
-    bottom: 15,
   },
 });
 
