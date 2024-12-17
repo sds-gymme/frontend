@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   ScrollView,
@@ -17,6 +18,7 @@ import {
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
+import * as Location from "expo-location"; // Import expo-location
 
 // Gym interface for TypeScript
 interface Gym {
@@ -33,17 +35,37 @@ const NearbyGymScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState<Gym[]>([]); // Gyms from the API
   const [loading, setLoading] = useState<boolean>(true);
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const theme = useTheme();
 
-  // Function to fetch gyms from Google Places API
-  const fetchNearbyGyms = async () => {
+  const CACHE_KEY = "nearby_gyms";
+  const CACHE_EXPIRY = 3600 * 1000;
+  const fetchNearbyGyms = async (latitude: number, longitude: number) => {
     try {
-      const YOUR_LATITUDE = 37.7749; // Replace with dynamic latitude
-      const YOUR_LONGITUDE = -122.4194; // Replace with dynamic longitude
-      const API_KEY = "AIzaSyBc9oIi1Hi9hQJrz5ud172Zv4_6GUmTDnw"; // Replace with your actual API Key
+      setLoading(true);
+      const cachedData = await AsyncStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        const currentTime = new Date().getTime();
+
+        // Check if the cached data is still fresh
+        if (currentTime - parsedData.timestamp < CACHE_EXPIRY) {
+          console.log("Using cached gym data");
+          setGyms(parsedData.data);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Fetch new data if no valid cache exists
+      console.log("Fetching new gym data from API");
+      const API_KEY = "AIzaSyBc9oIi1Hi9hQJrz5ud172Zv4_6GUmTDnw"; 
 
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${YOUR_LATITUDE},${YOUR_LONGITUDE}&radius=5000&type=gym&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`
       );
 
       const data = await response.json();
@@ -59,6 +81,13 @@ const NearbyGymScreen = () => {
         location: gym.vicinity,
       }));
 
+      const cachePayload = {
+        data: gymsData,
+        timestamp: new Date().getTime(),
+      };
+      await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(cachePayload));
+
+
       setGyms(gymsData);
       setLoading(false);
     } catch (error) {
@@ -67,8 +96,32 @@ const NearbyGymScreen = () => {
     }
   };
 
+  const getLocation = async () => {
+    try {
+      setLoading(true);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        setLoading(false);
+        return;
+      }
+
+      const userLocation = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = userLocation.coords;
+
+      setLocation({ latitude, longitude });
+      console.log("User Location:", latitude, longitude);
+
+      fetchNearbyGyms(latitude, longitude);
+    } catch (error) {
+      console.error("Error getting location", error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchNearbyGyms();
+    getLocation();
   }, []);
 
   const handlePress = (route: any) => {
