@@ -60,7 +60,7 @@ const NearbyGymScreen = () => {
       }
 
       console.log("Fetching new gym data from API");
-      const API_KEY = "AIzaSyBc9oIi1Hi9hQJrz5ud172Zv4_6GUmTDnw"; 
+      const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`
@@ -119,17 +119,15 @@ const NearbyGymScreen = () => {
         throw new Error("No authenticated user found");
       }
 
-      const { error: upsertError } = await supabase
+      const {} = await supabase
         .from("user_profiles")
-        .upsert({
-          user_id: user.id,
-          user_location: `[${longitude} ${latitude}]`,
-        });
+        .update({
+          longitude: longitude,
+          latitude: latitude,
+        })
+        .eq("user_id", user.id);
 
         
-        if (upsertError) {
-          throw upsertError;
-        }
 
       fetchNearbyGyms(latitude, longitude);
     } catch (error) {
@@ -147,7 +145,7 @@ const NearbyGymScreen = () => {
   };
 
   const GymCard = ({ gym }: { gym: Gym }) => (
-    <TouchableOpacity onPress={() => handlePress("/gymDetails")}>
+    <TouchableOpacity onPress={() => handlePress(`/gymDetails/${gym.id}`)}>
       <Surface style={styles.gymCard} elevation={1}>
         <View style={styles.gymInfo}>
           <Avatar.Image
