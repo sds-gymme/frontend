@@ -90,7 +90,7 @@ const ServicesScreen: React.FC = () => {
       icon: Services3,
       title: "Personal Training @Nearby Gym",
       description: "Train with professionals at your local gym",
-      onPress: () => handlePress("/underdev"),
+      onPress: () => handlePress("/nearbyGym"),
     },
     {
       icon: Services4,

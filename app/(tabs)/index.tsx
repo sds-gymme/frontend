@@ -8,6 +8,7 @@ import {
   StatusBar,
   Animated,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { router } from "expo-router";
 import ImageCarousel from "@/components/ImageCarousel";
@@ -16,68 +17,90 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { supabase } from "@/lib/supabase";
 
-
-
-const SearchBar = () => {
-  const placeholders = [
-    "gym workout",
-    "cardio",
-    "crossfit",
-    "zumba",
-    "aerobics",
-    "boxing",
-    "martial arts",
-    "expertise",
-  ];
-  const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState(placeholders[0]);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start(({ finished }) => {
-        if (finished) {
-          const nextIndex = (placeholderIndex + 1) % placeholders.length;
-          setPlaceholderIndex(nextIndex);
-          setDisplayedText(placeholders[nextIndex]);
-
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }).start();
-        }
-      });
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [fadeAnim, placeholderIndex]);
-
-  return (
-    <View style={styles.searchContainer}>
-      <Ionicons
-        size={20}
-        style={[{ margin: "auto" }]}
-        name="search"
-        color="#666"
-      />
-      <View style={styles.searchInput}>
-        <Text style={styles.staticText}>Search for </Text>
-        <Animated.Text style={[styles.animatedText, { opacity: fadeAnim }]}>
-          {displayedText}
-        </Animated.Text>
-      </View>
-    </View>
-  );
-};
+interface GridItem {
+  id: string;
+  source: any;
+  route: string;
+  tags: string[];
+  title: string;
+}
 
 const HomePage: React.FC = () => {
-
   const [username, setUsername] = useState("User");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(""); 
+  const [filteredGridItems, setFilteredGridItems] = useState<GridItem[]>([]);
+
+  const gridItems: GridItem[] = [
+    {
+      id: "live-training",
+      source: require("@/assets/images/LivePersonalTraining.svg"),
+      route: "/livePersonalTraining",
+      tags: ["live", "training", "personal", "fitness"],
+      title: "Live Personal Training",
+    },
+    {
+      id: "home-workout",
+      source: require("@/assets/images/RecordedHomeWorkout.svg"),
+      route: "/recordedHomeWorkout",
+      tags: ["workout", "home", "recorded", "exercise"],
+      title: "Recorded Home Workout",
+    },
+    {
+      id: "nearby-gym",
+      source: require("@/assets/images/PersonalTraining.svg"),
+      route: "/nearbyGym",
+      tags: ["gym", "nearby", "location", "training"],
+      title: "Nearby Gym",
+    },
+    {
+      id: "diet-planning",
+      source: require("@/assets/images/DietPlanning.svg"),
+      route: "/underdev",
+      tags: ["diet", "nutrition", "planning", "health"],
+      title: "Diet Planning",
+    },
+    {
+      id: "calorie-counter",
+      source: require("@/assets/images/CalorieCounter.svg"),
+      route: "/underdev",
+      tags: ["calories", "counter", "nutrition", "health"],
+      title: "Calorie Counter",
+    },
+    {
+      id: "decode-age",
+      source: require("@/assets/images/DecodeAge.svg"),
+      route: "/underdev",
+      tags: ["age", "health", "fitness", "tracking"],
+      title: "Decode Age",
+    },
+  ];
+
+  const searchGridItems = (query: string) => {
+    if (!query) {
+      return gridItems;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+    return gridItems.filter(
+      (item) =>
+
+        item.tags.some((tag) => tag.toLowerCase().includes(lowercaseQuery)) ||
+        item.title.toLowerCase().includes(lowercaseQuery)
+    );
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 1500); 
+
+    return () => clearTimeout(handler); 
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setFilteredGridItems(searchGridItems(debouncedQuery));
+  }, [debouncedQuery]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -122,10 +145,30 @@ const HomePage: React.FC = () => {
       />
     </View>
   );
+
+  // Enhanced SearchBar with TextInput but still not fucking working for two strokes bitvh
+  const SearchBar = () => (
+    <View style={styles.searchContainer}>
+      <Ionicons
+        size={20}
+        style={[{ margin: "auto" }]}
+        name="search"
+        color="#666"
+      />
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search features..."
+        placeholderTextColor="#666"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+    </View>
+  );
+
   const handlePress = (route: any) => {
     router.push(route);
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -134,58 +177,14 @@ const HomePage: React.FC = () => {
         <SearchBar />
 
         <View style={styles.grid}>
-          <View style={styles.gridItem}>
-            <TouchableOpacity
-              onPress={() => handlePress("/livePersonalTraining")}
-            >
-              <Image
-                source={require("@/assets/images/LivePersonalTraining.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity
-              onPress={() => handlePress("/recordedHomeWorkout")}
-            >
-              <Image
-                source={require("@/assets/images/RecordedHomeWorkout.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
-              <Image
-                source={require("@/assets/images/PersonalTraining.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
-              <Image
-                source={require("@/assets/images/DietPlanning.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
-              <Image
-                source={require("@/assets/images/CalorieCounter.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
-              <Image
-                source={require("@/assets/images/DecodeAge.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
+          {filteredGridItems.map((item) => (
+            <View key={item.id} style={styles.gridItem}>
+              <TouchableOpacity onPress={() => handlePress(item.route)}>
+                <Image source={item.source} style={styles.squareCard} />
+                <Text style={styles.gridItemTitle}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
 
         <ImageCarousel
@@ -236,6 +235,36 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
   },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  searchInput: {
+    marginLeft: 8,
+    flex: 1,
+    color: "#333",
+  },
+  searchButton: {
+    marginLeft: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: "#089f30",
+    borderRadius: 8,
+  },
+  searchButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  gridItemTitle: {
+    marginTop: 8,
+    textAlign: "center",
+    fontSize: 12,
+    color: "#333",
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -255,19 +284,19 @@ const styles = StyleSheet.create({
     width: 120,
     height: 30,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  searchInput: {
-    marginLeft: 8,
-    flex: 1,
-    flexDirection: "row",
-  },
+  // searchContainer: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   backgroundColor: "#f5f5f5",
+  //   padding: 12,
+  //   borderRadius: 12,
+  //   marginBottom: 16,
+  // },
+  // searchInput: {
+  //   marginLeft: 8,
+  //   flex: 1,
+  //   flexDirection: "row",
+  // },
   staticText: {
     color: "#666",
   },
@@ -277,16 +306,22 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginHorizontal: -8, // Compensate for gridItem margin
+    marginHorizontal: -8, 
   },
   gridItem: {
-    width: "50%", // Two columns
+    width: "50%", 
     padding: 8,
   },
   squareCard: {
     width: "100%",
     aspectRatio: 1,
     borderRadius: 20,
+  },
+  calorieCard: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 20,
+    backgroundColor: "#089f30",
   },
   card: {
     padding: 16,
