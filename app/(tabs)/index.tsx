@@ -18,20 +18,6 @@ import { supabase } from "@/lib/supabase";
 
 
 
-
-const Header = ({ username = "Pravesh" }) => (
-  <View style={styles.header}>
-    <View>
-      <Text style={styles.welcomeText}>Welcome back,</Text>
-      <Text style={styles.usernameText}>{username}!</Text>
-    </View>
-    <Image
-      source={require("@/assets/images/gymmeLogo.svg")}
-      style={styles.logo}
-    />
-  </View>
-);
-
 const SearchBar = () => {
   const placeholders = [
     "gym workout",
@@ -90,15 +76,61 @@ const SearchBar = () => {
 };
 
 const HomePage: React.FC = () => {
+
+  const [username, setUsername] = useState("User");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+          throw new Error("No authenticated user found");
+        }
+
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .select("user_name")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        setUsername(data.user_name);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const Header = ({ username }: { username: string }) => (
+    <View style={styles.header}>
+      <View>
+        <Text style={styles.welcomeText}>Welcome back,</Text>
+        <Text style={styles.usernameText}>{username}!</Text>
+      </View>
+      <Image
+        source={require("@/assets/images/gymmeLogo.svg")}
+        style={styles.logo}
+      />
+    </View>
+  );
   const handlePress = (route: any) => {
     router.push(route);
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Header />
+        <Header username={username} />
         <SearchBar />
 
         <View style={styles.grid}>
@@ -172,7 +204,6 @@ const HomePage: React.FC = () => {
               alt: "Trainer demonstrating workout routine",
             },
           ]}
-          
         />
         <CouponCard />
         <ImageCarousel

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
-  Image,
   Dimensions,
   KeyboardAvoidingView,
   ScrollView,
@@ -19,6 +18,7 @@ import { useSharedValue } from "react-native-reanimated";
 import { router } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { LoginContext } from "@/contexts/loginContext";
+import { Image } from "expo-image";
 
 const SignIn = () => {
   const width = Dimensions.get("window").width;
@@ -57,8 +57,10 @@ const SignIn = () => {
   const [error, setError] = useState("");
 
   const handlePhoneNumberChange = (text: string) => {
-    setPhoneNumber(text);
-    if (text.length === 10) {
+    const cleanedText = text.replace(/\D/g, "");
+    setPhoneNumber(cleanedText);
+
+    if (cleanedText.length === 10) {
       setError("");
     } else {
       setError("Please enter a valid 10-digit phone number.");
@@ -67,21 +69,63 @@ const SignIn = () => {
 
   async function handleSignInPress() {
     setLoading(true);
-    if (phoneNumber.length === 10) {
-      router.replace("/verification");
-    } else {
-      setError("Please enter a valid 10-digit phone number.");
-    }
 
-    const { data, error } = await supabase.auth.signInWithOtp({
-      phone: "+918369535159",
-    });
-    if (error) {
-      console.error("Error signing in:", error.message);
+    if (phoneNumber.length !== 10) {
+      setError("Please enter a valid 10-digit phone number.");
+      setLoading(false);
       return;
     }
-    console.log(data);
-    router.replace("/verification");
+
+    try {
+      const { data: existingUser, error: checkError } = await supabase
+        .from("user_profiles")
+        .select("*")
+        .eq("phone_number", phoneNumber)
+        .single();
+
+      if (checkError && checkError.code !== "PGRST116") {
+        console.error("Error checking existing user:", checkError);
+        setError("Failed to verify phone number. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      if (!existingUser) {
+        const { error: insertError } = await supabase
+          .from("user_profiles")
+          .insert({ phone_number: phoneNumber });
+
+        if (insertError) {
+          console.error("Error creating user profile:", insertError);
+          setError("Failed to create user profile. Please try again.");
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Send OTP to the inputted phone number
+      const { data, error } = await supabase.auth.signInWithOtp({
+        phone: `+91${phoneNumber}`,
+      });
+
+      if (error) {
+        console.error("Error sending OTP:", error.message);
+        setError(error.message || "Failed to send OTP. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Navigate to verification, passing the phone number
+      router.replace({
+        pathname: "/verification",
+        params: { phoneNumber: `+91${phoneNumber}` },
+      });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

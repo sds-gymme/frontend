@@ -47,7 +47,7 @@ const Trainer: React.FC = () => {
 
   const handleSubmit = () => {
     setIsLoggedIn(true);
-    router.replace("/trainerHome");
+    router.replace("/");
   };
 
   return (

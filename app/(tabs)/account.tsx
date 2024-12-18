@@ -160,6 +160,12 @@ const AccountPage: React.FC = () => {
             onPress={() => handleTrainerPress()}
             showBorder={false}
           />
+          {/* <MenuItem
+            icon={<UserAdd size={24} color="#666" variant="Linear" />}
+            title="Gym Enrollment"
+            onPress={() => handleTrainerPress()}
+            showBorder={false}
+          /> */}
         </View>
 
         <TouchableOpacity
