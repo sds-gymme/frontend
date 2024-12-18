@@ -7,15 +7,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from "react-native";
-import {
-  Appbar,
-  Searchbar,
-  Text,
-  Avatar,
-  useTheme,
-  Surface,
-} from "react-native-paper";
+import { Appbar, Text, Avatar, useTheme, Surface } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import * as Location from "expo-location";
@@ -31,7 +25,6 @@ interface Gym {
 }
 
 const NearbyGymScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState<Gym[]>([]); // Gyms from the API
   const [loading, setLoading] = useState<boolean>(true);
   const [location, setLocation] = useState<{
@@ -51,12 +44,12 @@ const NearbyGymScreen = () => {
         const currentTime = new Date().getTime();
 
         // Cache check system
-        // if (currentTime - parsedData.timestamp < CACHE_EXPIRY) {
-        //   console.log("Using cached gym data");
-        //   setGyms(parsedData.data);
-        //   setLoading(false);
-        //   return;
-        // }
+        if (currentTime - parsedData.timestamp < CACHE_EXPIRY) {
+          console.log("Using cached gym data");
+          setGyms(parsedData.data);
+          setLoading(false);
+          return;
+        }
       }
 
       console.log("Fetching new gym data from API");
@@ -189,21 +182,16 @@ const NearbyGymScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => {}} />
-        <Appbar.Content title="Nearby Gym" />
-        <Appbar.Action icon="tune-variant" onPress={() => {}} />
+      <Appbar.Header statusBarHeight={Platform.OS === "ios" ? 0 : undefined}>
+        <Appbar.BackAction
+          onPress={() => {
+            router.back();
+          }}
+        />
+        <Appbar.Content title="Nearby Gyms" />
       </Appbar.Header>
 
       <View style={styles.content}>
-        <Searchbar
-          placeholder="Search here"
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          style={styles.searchBar}
-          elevation={0}
-        />
-
         <Text variant="titleLarge" style={styles.sectionTitle}>
           Gyms near you
         </Text>

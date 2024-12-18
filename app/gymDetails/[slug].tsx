@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import {
   Appbar,
@@ -48,6 +49,11 @@ const sampleData = {
     compound_code: "QHFH+QH Civic Center, San Francisco, CA, USA",
     global_code: "849VQHFH+QH",
   },
+  photos: [
+    {
+      photo_reference: "",
+    },
+  ],
 };
 
 const CACHE_KEY = "nearby_gyms";
@@ -66,15 +72,10 @@ const GymDetailsScreen = () => {
         if (gym) {
           setGymData(gym);
         }
-        console.log(gym);
       }
     };
     fetchData();
   }, [slug]);
-
-  useEffect(() => {
-    console.log(gymData);
-  }, [gymData]);
 
   const handleSubmit = () => {
     router.replace("/nearbyGym");
@@ -82,7 +83,7 @@ const GymDetailsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header style={styles.header}>
+      <Appbar.Header statusBarHeight={Platform.OS === "ios" ? 0 : undefined}>
         <Appbar.BackAction color="black" onPress={() => router.back()} />
         <Appbar.Content title={"Gym Details"} color="black" />
       </Appbar.Header>

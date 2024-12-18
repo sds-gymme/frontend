@@ -30,7 +30,6 @@ export default function RootLayout() {
     async function checkUser() {
       const resp = await supabase.auth.getUser();
       setIsLoggedIn(resp.data.user ? true : false);
-      console.log(resp.data.user);
     }
     checkUser();
   }, []);
@@ -56,7 +55,10 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false, title: "Home" }}
+            />
             <Stack.Screen name="+not-found" />
             <Stack.Screen
               name="signin"
@@ -69,6 +71,37 @@ export default function RootLayout() {
             <Stack.Screen
               name="registration"
               options={{ title: "Basic Details" }}
+            />
+            <Stack.Screen
+              name="nearbyGym"
+              options={{ title: "Nearby Gyms", headerShown: false }}
+            />
+            <Stack.Screen
+              name="gymDetails/[slug]"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="livePersonalTraining"
+              options={{ title: "Live Personal Training" }}
+            />
+            <Stack.Screen
+              name="trainerPage"
+              options={{ title: "Online Trainers" }}
+            />
+            <Stack.Screen
+              name="recordedHomeWorkout"
+              options={{ title: "Recorded Workouts" }}
+            />
+            <Stack.Screen
+              name="gymWorkout"
+              options={{ title: "Gym Workout" }}
+            />
+            <Stack.Screen name="excercisePage" options={{ title: "Workout" }} />
+            <Stack.Screen
+              name="excerciseDetails"
+              options={{ title: "Exercise" }}
             />
           </Stack>
         </ThemeProvider>
