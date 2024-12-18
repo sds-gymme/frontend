@@ -18,16 +18,16 @@ import {
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import * as Location from "expo-location"; 
+import * as Location from "expo-location";
 import { supabase } from "@/lib/supabase";
 
 interface Gym {
   id: string;
   name: string;
-  logo: string; 
+  logo: string;
   rating: number;
-  timings?: string; 
-  location: string; 
+  timings?: string;
+  location: string;
 }
 
 const NearbyGymScreen = () => {
@@ -51,25 +51,24 @@ const NearbyGymScreen = () => {
         const currentTime = new Date().getTime();
 
         // Cache check system
-        if (currentTime - parsedData.timestamp < CACHE_EXPIRY) {
-          console.log("Using cached gym data");
-          setGyms(parsedData.data);
-          setLoading(false);
-          return;
-        }
+        // if (currentTime - parsedData.timestamp < CACHE_EXPIRY) {
+        //   console.log("Using cached gym data");
+        //   setGyms(parsedData.data);
+        //   setLoading(false);
+        //   return;
+        // }
       }
 
       console.log("Fetching new gym data from API");
       const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`,
       );
 
       const data = await response.json();
-      console.log("Fetched Gyms Data:", data.results); 
+      console.log("Fetched Gyms Data:", JSON.stringify(data.results));
 
-    
       const gymsData: Gym[] = data.results.map((gym: any) => ({
         id: gym.place_id,
         name: gym.name,
@@ -77,6 +76,8 @@ const NearbyGymScreen = () => {
         rating: gym.rating || 0,
         timings: gym.opening_hours?.open_now ? "Open Now" : "Closed",
         location: gym.vicinity,
+        photos: gym.photos,
+        geometry: gym.geometry,
       }));
 
       const cachePayload = {
@@ -113,7 +114,6 @@ const NearbyGymScreen = () => {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
-    
 
       if (authError || !user) {
         throw new Error("No authenticated user found");
@@ -126,8 +126,6 @@ const NearbyGymScreen = () => {
           latitude: latitude,
         })
         .eq("user_id", user.id);
-
-        
 
       fetchNearbyGyms(latitude, longitude);
     } catch (error) {

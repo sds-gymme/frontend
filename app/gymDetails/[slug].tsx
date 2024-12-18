@@ -39,8 +39,8 @@ const sampleData = {
   businessStatus: "OPERATIONAL",
   geometry: {
     location: {
-      lat: 37.7743983,
-      lng: -122.4210577,
+      lat: 100.7743983,
+      lng: 122.4210577,
     },
   },
   userRatingsTotal: 4,
@@ -66,10 +66,15 @@ const GymDetailsScreen = () => {
         if (gym) {
           setGymData(gym);
         }
+        console.log(gym);
       }
     };
     fetchData();
   }, [slug]);
+
+  useEffect(() => {
+    console.log(gymData);
+  }, [gymData]);
 
   const handleSubmit = () => {
     router.replace("/nearbyGym");
@@ -84,16 +89,18 @@ const GymDetailsScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
-          <Image
-            source={{
-              uri:
-                gymData.photos && gymData.photos.length > 0
-                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${gymData.photos[0].photo_reference}&key=${process.env.EXPO_PUBLIC_API_KEY}`
-                  : gymData.heroImage,
-            }}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
+          {gymData.photos && gymData.photos.length > 0 && (
+            <Image
+              source={{
+                uri:
+                  gymData.photos && gymData.photos.length > 0
+                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${gymData.photos[0].photo_reference}&key=${process.env.EXPO_PUBLIC_API_KEY}`
+                    : gymData.heroImage,
+              }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          )}
 
           <Surface style={styles.infoCard} elevation={1}>
             <View style={styles.gymInfo}>
