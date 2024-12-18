@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { ArrowLeft2, Coffee, Cake, MessageCircle, Apple, Home2, Add } from 'iconsax-react-native';
+import { router } from 'expo-router';
 
 const days = [
   { day: 'Sun', date: '20', active: true },
@@ -44,7 +45,7 @@ const CalorieCounter: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { router.back() }}>
           <ArrowLeft2 size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Calorie Counter</Text>

@@ -114,6 +114,12 @@ export default function RootLayout() {
               name="excerciseDetails"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="gymDetails/[slug]"
+              options={{
+                headerShown: false,
+              }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>
