@@ -25,4 +25,4 @@ android
 .vscode/
 %ProgramData%
 
-.env
+/.env

@@ -1,4 +1,4 @@
-import React , {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -19,76 +19,78 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-const { width } = Dimensions.get("window");
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MapView, { Marker } from "react-native-maps";
 
-interface GymDetails {
-  id: string;
-  name: string;
-  logo: string;
-  rating: number;
-  price: string;
-  timings: string;
-  location: string;
-  details: string;
-  fullAddress: string;
-  heroImage: string;
-}
+const { width } = Dimensions.get("window");
 
-const sampleData: GymDetails = {
-  id: "1",
-  name: "Let's Play Academy",
-  logo: "https://placeholder.com/logo.png",
-  rating: 4.9,
+const sampleData = {
+  id: "ChIJg1RmA5-AhYARaMlu7BcvyAw",
+  name: "Pilates on Page, POP!",
+  logo: "https://ui-avatars.com/api/?name=Pilates+on+Page",
+  rating: 5,
   price: "₹169/hr",
-  timings: "05:00 - 10:30PM",
-  location: "Sector 5, Kandivali (West), Mumbai",
+  timings: "Open Now",
+  location: "Civic Center, San Francisco",
   details:
-    "Dr. Patricia Ahoy specialist in Ear, Nose & Throat, and work in RS. Hermina Malang. It is a long established fact that a reader will be distracted by the readable content.",
-  fullAddress:
-    "Jl. Tangkuban Perahu No.31-33, Kauman, Kec. Klojen, Kota Malang, Jawa Timur 65119",
+    "A specialized Pilates studio located in the heart of San Francisco, offering personalized fitness experiences.",
+  fullAddress: "10 Page Street, San Francisco",
   heroImage: "/placeholder.svg?height=200&width=400",
+  businessStatus: "OPERATIONAL",
+  geometry: {
+    location: {
+      lat: 37.7743983,
+      lng: -122.4210577,
+    },
+  },
+  userRatingsTotal: 4,
+  plusCode: {
+    compound_code: "QHFH+QH Civic Center, San Francisco, CA, USA",
+    global_code: "849VQHFH+QH",
+  },
 };
 
 const CACHE_KEY = "nearby_gyms";
 
-
-
 const GymDetailsScreen = () => {
   const theme = useTheme();
-  const [gymData, setGymData] = React.useState<GymDetails>(sampleData);
+  const [gymData, setGymData] = React.useState(sampleData);
   const { slug } = useLocalSearchParams();
-  useEffect(
-    () => {
-      const fetchData = async () => {
-        const cachedData = await AsyncStorage.getItem(CACHE_KEY);
-        if (cachedData) {
-          const parsedData = JSON.parse(cachedData);
-          const gym = parsedData.data.find((gym: any) => gym.id === slug);
-          if (gym) {
-            setGymData(gym);
-          }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const cachedData = await AsyncStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        const gym = parsedData.data.find((gym: any) => gym.id === slug);
+        if (gym) {
+          setGymData(gym);
         }
-      };
-      fetchData();
-    },
-    [slug]
-  )
- 
+      }
+    };
+    fetchData();
+  }, [slug]);
+
   const handleSubmit = () => {
     router.replace("/nearbyGym");
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={styles.header}>
-        <Appbar.BackAction color="black" onPress={() => {}} />
-        <Appbar.Content title={gymData.name} color="black" />
+        <Appbar.BackAction color="black" onPress={() => router.back()} />
+        <Appbar.Content title={"Gym Details"} color="black" />
       </Appbar.Header>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <Image
-            source={{ uri: gymData.heroImage }}
+            source={{
+              uri:
+                gymData.photos && gymData.photos.length > 0
+                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${gymData.photos[0].photo_reference}&key=${process.env.EXPO_PUBLIC_API_KEY}`
+                  : gymData.heroImage,
+            }}
             style={styles.heroImage}
             resizeMode="cover"
           />
@@ -97,12 +99,16 @@ const GymDetailsScreen = () => {
             <View style={styles.gymInfo}>
               <Avatar.Image
                 size={50}
-                source={{ uri: gymData.logo }}
+                source={{
+                  uri:
+                    "https://ui-avatars.com/api/?name=" +
+                    encodeURIComponent(gymData.name),
+                }}
                 style={styles.logo}
               />
               <View style={styles.gymDetails}>
                 <Text variant="titleMedium" style={styles.gymName}>
-                  Xersize
+                  {gymData.name}
                 </Text>
                 <View style={styles.timeLocation}>
                   <Icon
@@ -137,15 +143,6 @@ const GymDetailsScreen = () => {
             </View>
           </Surface>
 
-          <View style={styles.section}>
-            <Text variant="titleLarge" style={styles.sectionTitle}>
-              Details
-            </Text>
-            <Text variant="bodyMedium" style={styles.detailsText}>
-              {gymData.details}
-            </Text>
-          </View>
-
           <Divider />
 
           <View style={styles.section}>
@@ -155,19 +152,45 @@ const GymDetailsScreen = () => {
             <Text variant="bodyMedium" style={styles.addressText}>
               {gymData.fullAddress}
             </Text>
-            <Image
-              source={{ uri: "https://placeholder.com/map.png" }}
-              style={styles.mapImage}
-              resizeMode="cover"
-            />
+            {gymData.plusCode && (
+              <View style={styles.locationDescription}>
+                <Text
+                  variant="bodySmall"
+                  style={styles.locationDescriptionText}
+                >
+                  Located in the {gymData.plusCode.compound_code.split(",")[0]}{" "}
+                  area. Global Location Code: {gymData.plusCode.global_code}
+                </Text>
+              </View>
+            )}
+            {gymData.geometry && (
+              <MapView
+                style={styles.mapImage}
+                initialRegion={{
+                  latitude: gymData.geometry.location.lat,
+                  longitude: gymData.geometry.location.lng,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: gymData.geometry.location.lat,
+                    longitude: gymData.geometry.location.lng,
+                  }}
+                  title={gymData.name}
+                  description={gymData.fullAddress}
+                />
+              </MapView>
+            )}
           </View>
         </View>
+
         <View style={styles.footer}>
           <View style={styles.priceContainer}>
             <Text style={styles.priceLabel}>Total</Text>
             <Text style={styles.price}>{gymData.price}</Text>
           </View>
-
           <TouchableOpacity style={styles.payButton} onPress={handleSubmit}>
             <Text style={styles.payButtonText}>Pay Now</Text>
           </TouchableOpacity>
@@ -250,10 +273,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 12,
   },
-  detailsText: {
-    lineHeight: 20,
-    color: "#666",
-  },
   addressText: {
     marginBottom: 12,
     color: "#666",
@@ -270,7 +289,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
-
   payButton: {
     backgroundColor: "#000",
     paddingVertical: 16,
@@ -281,6 +299,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  locationDescription: {
+    marginVertical: 8,
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 8,
+  },
+  locationDescriptionText: {
+    color: "#666",
+    fontStyle: "italic",
   },
 });
 

@@ -18,8 +18,6 @@ import { supabase } from "@/lib/supabase";
 
 
 
-
-
 const SearchBar = () => {
   const placeholders = [
     "gym workout",
