@@ -56,21 +56,21 @@ const HomePage: React.FC = () => {
     {
       id: "diet-planning",
       source: require("@/assets/images/DietPlanning.svg"),
-      route: "/underdev",
+      route: "/dietPlanning",
       tags: ["diet", "nutrition", "planning", "health"],
       title: "Diet Planning",
     },
     {
       id: "calorie-counter",
       source: require("@/assets/images/CalorieCounter.svg"),
-      route: "/underdev",
+      route: "/calorieCounter",
       tags: ["calories", "counter", "nutrition", "health"],
       title: "Calorie Counter",
     },
     {
       id: "decode-age",
       source: require("@/assets/images/DecodeAge.svg"),
-      route: "/underdev",
+      route: "/decodeAge",
       tags: ["age", "health", "fitness", "tracking"],
       title: "Decode Age",
     },
@@ -185,58 +185,6 @@ const HomePage: React.FC = () => {
               </TouchableOpacity>
             </View>
           ))}
-          <View style={styles.gridItem}>
-            <TouchableOpacity
-              onPress={() => handlePress("/livePersonalTraining")}
-            >
-              <Image
-                source={require("@/assets/images/LivePersonalTraining.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity
-              onPress={() => handlePress("/recordedHomeWorkout")}
-            >
-              <Image
-                source={require("@/assets/images/RecordedHomeWorkout.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
-              <Image
-                source={require("@/assets/images/PersonalTraining.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
-              <Image
-                source={require("@/assets/images/DietPlanning.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
-              <Image
-                source={require("@/assets/images/CalorieCounter.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
-              <Image
-                source={require("@/assets/images/DecodeAge.svg")}
-                style={styles.squareCard}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
 
         <ImageCarousel
