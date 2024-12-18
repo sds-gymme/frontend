@@ -181,7 +181,7 @@ const NearbyGymScreen = () => {
           <View style={styles.priceRating}>
             <View style={styles.rating}>
               <Icon name="star" size={16} color="#FFD700" />
-              <Text variant="bodyMedium">{gym.rating.toFixed(1)}</Text>
+              <Text variant="bodyMedium">{gym.rating}</Text>
             </View>
           </View>
         </View>
