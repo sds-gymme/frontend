@@ -21,6 +21,7 @@ expo-env.d.ts
 
 android
 .idea
+ios
 
 .vscode/
 %ProgramData%
