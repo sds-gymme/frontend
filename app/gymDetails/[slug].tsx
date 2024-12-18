@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import {
   Appbar,
@@ -39,8 +40,8 @@ const sampleData = {
   businessStatus: "OPERATIONAL",
   geometry: {
     location: {
-      lat: 37.7743983,
-      lng: -122.4210577,
+      lat: 100.7743983,
+      lng: 122.4210577,
     },
   },
   userRatingsTotal: 4,
@@ -48,6 +49,11 @@ const sampleData = {
     compound_code: "QHFH+QH Civic Center, San Francisco, CA, USA",
     global_code: "849VQHFH+QH",
   },
+  photos: [
+    {
+      photo_reference: "",
+    },
+  ],
 };
 
 const CACHE_KEY = "nearby_gyms";
@@ -77,23 +83,25 @@ const GymDetailsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header style={styles.header}>
+      <Appbar.Header statusBarHeight={Platform.OS === "ios" ? 0 : undefined}>
         <Appbar.BackAction color="black" onPress={() => router.back()} />
         <Appbar.Content title={"Gym Details"} color="black" />
       </Appbar.Header>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
-          <Image
-            source={{
-              uri:
-                gymData.photos && gymData.photos.length > 0
-                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${gymData.photos[0].photo_reference}&key=${process.env.EXPO_PUBLIC_API_KEY}`
-                  : gymData.heroImage,
-            }}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
+          {gymData.photos && gymData.photos.length > 0 && (
+            <Image
+              source={{
+                uri:
+                  gymData.photos && gymData.photos.length > 0
+                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${gymData.photos[0].photo_reference}&key=${process.env.EXPO_PUBLIC_API_KEY}`
+                    : gymData.heroImage,
+              }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          )}
 
           <Surface style={styles.infoCard} elevation={1}>
             <View style={styles.gymInfo}>

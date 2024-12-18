@@ -7,31 +7,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from "react-native";
-import {
-  Appbar,
-  Searchbar,
-  Text,
-  Avatar,
-  useTheme,
-  Surface,
-} from "react-native-paper";
+import { Appbar, Text, Avatar, useTheme, Surface } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import * as Location from "expo-location"; 
+import * as Location from "expo-location";
 import { supabase } from "@/lib/supabase";
 
 interface Gym {
   id: string;
   name: string;
-  logo: string; 
+  logo: string;
   rating: number;
-  timings?: string; 
-  location: string; 
+  timings?: string;
+  location: string;
 }
 
 const NearbyGymScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [gyms, setGyms] = useState<Gym[]>([]); // Gyms from the API
   const [loading, setLoading] = useState<boolean>(true);
   const [location, setLocation] = useState<{
@@ -63,13 +56,12 @@ const NearbyGymScreen = () => {
       const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`,
       );
 
       const data = await response.json();
-      console.log("Fetched Gyms Data:", data.results); 
+      console.log("Fetched Gyms Data:", JSON.stringify(data.results));
 
-    
       const gymsData: Gym[] = data.results.map((gym: any) => ({
         id: gym.place_id,
         name: gym.name,
@@ -77,6 +69,8 @@ const NearbyGymScreen = () => {
         rating: gym.rating || 0,
         timings: gym.opening_hours?.open_now ? "Open Now" : "Closed",
         location: gym.vicinity,
+        photos: gym.photos,
+        geometry: gym.geometry,
       }));
 
       const cachePayload = {
@@ -113,7 +107,6 @@ const NearbyGymScreen = () => {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
-    
 
       if (authError || !user) {
         throw new Error("No authenticated user found");
@@ -126,8 +119,6 @@ const NearbyGymScreen = () => {
           latitude: latitude,
         })
         .eq("user_id", user.id);
-
-        
 
       fetchNearbyGyms(latitude, longitude);
     } catch (error) {
@@ -191,21 +182,16 @@ const NearbyGymScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => {}} />
-        <Appbar.Content title="Nearby Gym" />
-        <Appbar.Action icon="tune-variant" onPress={() => {}} />
+      <Appbar.Header statusBarHeight={Platform.OS === "ios" ? 0 : undefined}>
+        <Appbar.BackAction
+          onPress={() => {
+            router.back();
+          }}
+        />
+        <Appbar.Content title="Nearby Gyms" />
       </Appbar.Header>
 
       <View style={styles.content}>
-        <Searchbar
-          placeholder="Search here"
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          style={styles.searchBar}
-          elevation={0}
-        />
-
         <Text variant="titleLarge" style={styles.sectionTitle}>
           Gyms near you
         </Text>

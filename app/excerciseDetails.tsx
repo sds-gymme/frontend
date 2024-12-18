@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -9,15 +9,17 @@ import {
   StatusBar,
   Platform,
   Dimensions,
-} from 'react-native';
-import { Image } from 'expo-image';
-import { Play } from 'lucide-react-native';
+} from "react-native";
+import { Image } from "expo-image";
+import { Play } from "lucide-react-native";
 
 interface ExerciseDetailProps {
   navigation: any; // Replace with your navigation type
 }
 
-const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({ navigation }) => {
+const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({
+  navigation,
+}) => {
   const steps = [
     "Load the barbell and lie on the bench.",
     "Reach up and grab the bar with an even overhand grip. Your hands should be slightly more than shoulder-width apart.",
@@ -25,24 +27,23 @@ const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({ navigation }) => 
     "Plant both feet on the floor, retract your shoulder blades, engage your abs, and inhale.",
     "Unrack the bar by locking out your elbows and move it over your chest.",
     "Take another breath and lower the bar to your chest.",
-    "Press the bar to the top position and exhale."
+    "Press the bar to the top position and exhale.",
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
-
       <ScrollView style={styles.scrollView}>
         <View style={styles.videoContainer}>
           <Image
-            source={require('@/assets/images/dumbellFly.gif')}
+            source={require("@/assets/images/dumbellFly.gif")}
             style={styles.videoPreview}
             contentFit="contain"
           />
-          <TouchableOpacity style={styles.playButton}>
+          {/* <TouchableOpacity style={styles.playButton}>
             <Play size={32} color="#FFF" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Instructions */}
@@ -61,20 +62,20 @@ const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({ navigation }) => 
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: "#F0F0F0",
   },
   backButton: {
     padding: 8,
@@ -82,8 +83,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
   },
   scrollView: {
     flex: 1,
@@ -91,47 +92,47 @@ const styles = StyleSheet.create({
   videoContainer: {
     width: width,
     height: width * 0.75,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   videoPreview: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   playButton: {
-    position: 'absolute',
+    position: "absolute",
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   instructionsContainer: {
     padding: 20,
   },
   instructionsTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
     marginBottom: 16,
   },
   stepContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 16,
     paddingRight: 16,
   },
   stepNumber: {
     fontSize: 16,
-    color: '#000000',
+    color: "#000000",
     marginRight: 8,
     minWidth: 20,
   },
   stepText: {
     fontSize: 16,
-    color: '#333333',
+    color: "#333333",
     flex: 1,
     lineHeight: 22,
   },
