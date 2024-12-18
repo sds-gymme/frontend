@@ -105,7 +105,7 @@ const AccountPage: React.FC = () => {
         <View style={styles.card}>
           <TouchableOpacity
             style={styles.profileSection}
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/registration")}
           >
             <View style={styles.profileLeft}>
               <Profile size={50} color="#666" variant="Linear" />
@@ -122,7 +122,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<Timer1 size={24} color="#666" variant="Linear" />}
             title="History"
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/history")}
           />
           <MenuItem
             icon={<MessageQuestion size={24} color="#666" variant="Linear" />}

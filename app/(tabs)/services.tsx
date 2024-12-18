@@ -96,25 +96,25 @@ const ServicesScreen: React.FC = () => {
       icon: Services4,
       title: "Diet Planning",
       description: "Personalized nutrition plans for your goals",
-      onPress: () => handlePress("/underdev"),
+      onPress: () => handlePress("/dietPlanning"),
     },
     {
       icon: Services5,
       title: "Calorie Counter",
       description: "Track your daily calorie intake easily",
-      onPress: () => handlePress("/underdev"),
+      onPress: () => handlePress("/calorieCounter"),
     },
     {
       icon: Services6,
       title: "Decode Age (Forever Young)",
       description: "Age-specific fitness programs",
-      onPress: () => handlePress("/underdev"),
+      onPress: () => handlePress("/decodeAge"),
     },
     {
       icon: Services7,
       title: "Fitness Trainer @Home",
       description: "Expert training in the comfort of your home",
-      onPress: () => handlePress("/underdev"),
+      onPress: () => handlePress("/livePersonalTraining"),
     },
   ];
 
