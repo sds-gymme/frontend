@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import { LoginContext } from "@/contexts/loginContext";
 import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
 import { Info } from "lucide-react-native";
+import { supabase } from "@/lib/supabase";
 
 const { width } = Dimensions.get("window");
 
@@ -44,63 +45,6 @@ interface TrainerInfo {
   duration: string;
   rating: number;
 }
-
-const info: TrainerInfo[] = [
-  {
-    id: "1",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "Exp: 5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-  {
-    id: "2",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-  {
-    id: "3",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-  {
-    id: "4",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-  {
-    id: "5",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-  {
-    id: "6",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    experience: "5 years",
-    certified: "Certified",
-    rating: 4.5,
-    duration: "45 Min",
-  },
-];
 
 const renderTrainer = ({ item }: { item: TrainerInfo }) => {
   const handlePress = (route: any) => {
@@ -138,6 +82,30 @@ const TrainerPage: React.FC = () => {
   const handlePress = (route: any) => {
     router.push(route);
   };
+  const [onlineTrainers, setOnlineTrainers] = useState<TrainerInfo[]>([]);
+
+  useEffect(() => {
+    const fetchOnlineTrainers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .select()
+          .eq("online", true);
+        if (error) {
+          console.error("Supabase fetch error:", error);
+          throw error;
+        }
+
+        if (data) {
+          setOnlineTrainers(data);
+        }
+      } catch (error) {
+        console.error("Error fetching online status:", error);
+      }
+    };
+    fetchOnlineTrainers();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -149,17 +117,16 @@ const TrainerPage: React.FC = () => {
               {/* <View>
                 <Text style={styles.live}>Live</Text>
               </View> */}
-            </View> 
+            </View>
 
             <FlatList
-              data={info}
+              data={onlineTrainers}
               renderItem={renderTrainer}
               keyExtractor={(item) => item.id}
               scrollEnabled={false}
               contentContainerStyle={styles.appointmentsList}
             />
           </View>
-
         </View>
       </ScrollView>
     </SafeAreaView>
