@@ -185,6 +185,58 @@ const HomePage: React.FC = () => {
               </TouchableOpacity>
             </View>
           ))}
+          <View style={styles.gridItem}>
+            <TouchableOpacity
+              onPress={() => handlePress("/livePersonalTraining")}
+            >
+              <Image
+                source={require("@/assets/images/LivePersonalTraining.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity
+              onPress={() => handlePress("/recordedHomeWorkout")}
+            >
+              <Image
+                source={require("@/assets/images/RecordedHomeWorkout.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/nearbyGym")}>
+              <Image
+                source={require("@/assets/images/PersonalTraining.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/dietPlanning")}>
+              <Image
+                source={require("@/assets/images/DietPlanning.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/calorieCounter")}>
+              <Image
+                source={require("@/assets/images/CalorieCounter.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.gridItem}>
+            <TouchableOpacity onPress={() => handlePress("/decodeAge")}>
+              <Image
+                source={require("@/assets/images/DecodeAge.svg")}
+                style={styles.squareCard}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <ImageCarousel
@@ -203,6 +255,7 @@ const HomePage: React.FC = () => {
               alt: "Trainer demonstrating workout routine",
             },
           ]}
+          
         />
         <CouponCard />
         <ImageCarousel

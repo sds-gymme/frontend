@@ -137,7 +137,6 @@ const VerificationScreen: React.FC<VerificationScreenProps> = () => {
       />
     );
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>

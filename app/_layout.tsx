@@ -13,6 +13,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { supabase } from "@/lib/supabase";
 
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function Blank() {
@@ -69,6 +71,46 @@ export default function RootLayout() {
             <Stack.Screen
               name="registration"
               options={{ title: "Basic Details" }}
+            />
+            <Stack.Screen
+              name="decodeAge"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="dietPlanning"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="calorieCounter"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="nearbyGym"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="recordedHomeWorkout"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="livePersonalTraining"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="trainerReg"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="helpCenter"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="excercisePage"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="excerciseDetails"
+              options={{ headerShown: false }}
             />
           </Stack>
         </ThemeProvider>
