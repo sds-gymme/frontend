@@ -84,6 +84,34 @@ export default function RootLayout() {
               name="calorieCounter"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="nearbyGym"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="recordedHomeWorkout"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="livePersonalTraining"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="trainerReg"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="helpCenter"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="excercisePage"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="excerciseDetails"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

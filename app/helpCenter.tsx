@@ -66,7 +66,7 @@ const HelpCenter = () => {
             /> */}
           </TouchableOpacity>
           <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}>Header Title</Text>
+            <Text style={styles.headerTitle}>Help Center</Text>
           </View>
         </View>
 
