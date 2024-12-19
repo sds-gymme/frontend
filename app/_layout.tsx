@@ -76,21 +76,25 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="decodeAge"
-              options={{ headerShown: false }}
+              options={{
+                title: "Decode Age"
+              }}
             />
-            <Stack.Screen
+            < Stack.Screen
               name="dietPlanning"
-              options={{ headerShown: false }}
+              options={{ title: "Diet Planning" }}
             />
             <Stack.Screen
               name="calorieCounter"
-              options={{ headerShown: false }}
+              options={{ title: "Calorie Counter" }}
             />
             <Stack.Screen
               name="nearbyGym"
-              options={{ headerShown: false }}
+              options={{
+                title: "Nearby Gym"
+              }}
             />
-            <Stack.Screen
+            < Stack.Screen
               name="recordedHomeWorkout"
               options={{ headerShown: false }}
             />
@@ -104,7 +108,7 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="helpCenter"
-              options={{ headerShown: false }}
+              options={{ title: "Help Center" }}
             />
             <Stack.Screen
               name="excercisePage"
@@ -113,6 +117,10 @@ export default function RootLayout() {
             <Stack.Screen
               name="excerciseDetails"
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="gymWorkout"
+              options={{ title: "Gym Workout" }}
             />
             <Stack.Screen
               name="gymDetails/[slug]"

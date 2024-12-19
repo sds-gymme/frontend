@@ -34,19 +34,9 @@ const DecodeAge = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <ArrowLeft2 size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Decode Age</Text>
-      </View>
-
       <View style={styles.imageContainer}>
         <Image
-          source={require('../assets/images/react-logo.png')}
+          source={require('../assets/images/DecodeAgeFood.png')}
           style={styles.foodImage}
         />
         <View style={styles.playButton}>
@@ -106,7 +96,6 @@ const styles = StyleSheet.create({
   foodImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   playButton: {
     position: 'absolute',

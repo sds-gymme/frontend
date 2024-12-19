@@ -112,7 +112,7 @@ const NearbyGymScreen = () => {
         throw new Error("No authenticated user found");
       }
 
-      const {} = await supabase
+      const { } = await supabase
         .from("user_profiles")
         .update({
           longitude: longitude,
@@ -182,15 +182,6 @@ const NearbyGymScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header statusBarHeight={Platform.OS === "ios" ? 0 : undefined}>
-        <Appbar.BackAction
-          onPress={() => {
-            router.back();
-          }}
-        />
-        <Appbar.Content title="Nearby Gyms" />
-      </Appbar.Header>
-
       <View style={styles.content}>
         <Text variant="titleLarge" style={styles.sectionTitle}>
           Gyms near you

@@ -115,18 +115,6 @@ const CalorieCounter: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <ArrowLeft2 size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Calorie Counter</Text>
-      </View>
-
       <ScrollView style={styles.scrollView}>
         <ScrollView
           horizontal

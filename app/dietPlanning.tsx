@@ -20,7 +20,7 @@ const mealData: MealItem[] = [
     title: 'Green beans, tomatoes, eggs',
     calories: 135,
     duration: 30,
-    image: require('../assets/images/react-logo.png'),
+    image: require('../assets/images/DietPlanningImage1.png'),
     category: 'Breakfast'
   },
   {
@@ -28,7 +28,7 @@ const mealData: MealItem[] = [
     title: 'Healthy balanced vegetarian food',
     calories: 145,
     duration: 30,
-    image: require('../assets/images/react-logo.png'),
+    image: require('../assets/images/DecodeAgeFood.png'),
     category: 'Lunch'
   },
   {
@@ -36,7 +36,7 @@ const mealData: MealItem[] = [
     title: 'Broccoli and eggs breakfast',
     calories: 165,
     duration: 25,
-    image: require('../assets/images/react-logo.png'),
+    image: require('../assets/images/DietPlanningImage2.png'),
     category: 'Breakfast'
   },
   {
@@ -44,7 +44,7 @@ const mealData: MealItem[] = [
     title: 'Grilled chicken salad',
     calories: 180,
     duration: 35,
-    image: require('../assets/images/react-logo.png'),
+    image: require('../assets/images/DietPlanningImage2.png'),
     category: 'Dinner'
   }
 ];
@@ -55,13 +55,6 @@ export default function DietPlanning() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Link href="../" style={styles.backButton}>
-          <ArrowLeft2 size={24} color="#000" />
-        </Link>
-        <Text style={styles.headerTitle}>Diet Planning</Text>
-      </View>
-
       <View style={styles.categoryContainer}>
         {['Breakfast', 'Lunch', 'Dinner'].map((category) => (
           <TouchableOpacity
@@ -113,6 +106,7 @@ export default function DietPlanning() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingVertical: 16,
     backgroundColor: '#fff',
   },
   header: {

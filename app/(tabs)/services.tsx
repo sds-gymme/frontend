@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingBottom: 16,
   },
   title: {
     fontSize: 24,
@@ -150,7 +151,6 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#E0E0E0",
-    marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

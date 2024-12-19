@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   StatusBar,
-  Animated,
   TouchableOpacity,
   TextInput,
 } from "react-native";
@@ -28,7 +27,7 @@ interface GridItem {
 const HomePage: React.FC = () => {
   const [username, setUsername] = useState("User");
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState(""); 
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [filteredGridItems, setFilteredGridItems] = useState<GridItem[]>([]);
 
   const gridItems: GridItem[] = [
@@ -93,9 +92,9 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 1500); 
+    }, 1500);
 
-    return () => clearTimeout(handler); 
+    return () => clearTimeout(handler);
   }, [searchQuery]);
 
   useEffect(() => {
@@ -203,7 +202,7 @@ const HomePage: React.FC = () => {
               alt: "Trainer demonstrating workout routine",
             },
           ]}
-          
+
         />
         <CouponCard />
         <ImageCarousel
@@ -307,10 +306,10 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginHorizontal: -8, 
+    marginHorizontal: -8,
   },
   gridItem: {
-    width: "50%", 
+    width: "50%",
     padding: 8,
   },
   squareCard: {
