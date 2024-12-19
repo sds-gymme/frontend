@@ -7,12 +7,13 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  Dimensions,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import RazorpayCheckout, { CheckoutOptions } from "react-native-razorpay";
 
 interface TrainerInfo {
   id: string;
@@ -36,7 +37,7 @@ const info: TrainerInfo = {
   certificate: "Certified",
   rating: 4.5,
   duration: "45 Min",
-  price: "₹169",
+  price: "169",
   languages: "English, Hindi",
   qualification: "Diploma in personal training",
   about: "Strength training expert. Let's build your dream physique!",
@@ -48,6 +49,50 @@ const TrainerProfile = () => {
   };
   const { id } = useLocalSearchParams();
   const [trainer, setTrainer] = useState<TrainerInfo>(info);
+
+  const handlePayment = async () => {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      throw new Error("No authenticated user found");
+    }
+
+    const { data, error } = await supabase.functions.invoke("new-order", {
+      body: {
+        amount: parseInt(trainer.price),
+        currency: "INR",
+        receipt: "" + trainer.id + ":" + user.id,
+      },
+    });
+    console.log(data, error);
+    const options: CheckoutOptions = {
+      description: "Trainer Fee", // Adding the required description field
+      key: "rzp_test_GYHF9s4PYt6ahc",
+      amount: trainer.price,
+      currency: "INR",
+      name: "Gymme",
+      order_id: data.id,
+      prefill: {
+        email: user.email,
+        contact: user.phone,
+        name: "John Doe",
+      },
+      theme: { color: "#F37254" },
+    };
+    try {
+      const d = await RazorpayCheckout.open(options)
+      // Handle success
+      Alert.alert("Success", `Payment ID: ${d.razorpay_payment_id}`);
+      router.replace("/")
+    } catch (error: any) {
+      // Handle failure
+      console.log(error);
+      Alert.alert("Error", error.code + " " + error.description);
+    }
+  };
 
   useEffect(() => {
     const fetchTrainer = async () => {
@@ -137,7 +182,7 @@ const TrainerProfile = () => {
           <Text style={styles.priceLabel}>Total</Text>
           <Text style={styles.price}>{trainer.price || "₹169"}</Text>
         </View>
-        <TouchableOpacity style={styles.payButton} onPress={handleSubmit}>
+        <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
           <Text style={styles.payButtonText}>Pay Now</Text>
         </TouchableOpacity>
       </View>

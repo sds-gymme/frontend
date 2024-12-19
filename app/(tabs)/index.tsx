@@ -56,7 +56,7 @@ const HomePage: React.FC = () => {
     {
       id: "diet-planning",
       source: require("@/assets/images/DietPlanning.svg"),
-      route: "/dietPlanning",
+      route: "/pay",
       tags: ["diet", "nutrition", "planning", "health"],
       title: "Diet Planning",
     },
