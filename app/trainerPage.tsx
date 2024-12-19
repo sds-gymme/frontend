@@ -41,9 +41,10 @@ interface TrainerInfo {
   name: string;
   location: string;
   experience: string;
-  certified: string;
+  certificate: string;
   duration: string;
   rating: number;
+  about: string;
 }
 
 const renderTrainer = ({ item }: { item: TrainerInfo }) => {
@@ -53,7 +54,7 @@ const renderTrainer = ({ item }: { item: TrainerInfo }) => {
 
   return (
     <TouchableOpacity
-      onPress={() => handlePress("/trainerProfile")}
+      onPress={() => handlePress("/trainerProfile/" + item.id)}
       style={styles.appointmentCard}
     >
       <Image
@@ -65,15 +66,15 @@ const renderTrainer = ({ item }: { item: TrainerInfo }) => {
       <View style={styles.infoContainer}>
         <View style={styles.inlineContainer}>
           <MaterialIcons name="stars" size={20} color="green" />
-          <Text style={styles.certified}>{item.certified}</Text>
+          <Text style={styles.certified}>{item.certificate || "Certified"}</Text>
         </View>
         <Text style={styles.name}>{item.name}</Text>
         <View style={styles.locationContainer}>
-          <Text style={styles.duration}>{item.experience}</Text>
+          <Text style={styles.duration}>{item.about.slice(0, 10)}</Text>
         </View>
       </View>
       <MaterialIcons name="star" size={20} color="#fac81f" />
-      <Text style={styles.endContainer}>{item.rating}</Text>
+      <Text style={styles.endContainer}>{item.rating || 4.4}</Text>
     </TouchableOpacity>
   );
 };

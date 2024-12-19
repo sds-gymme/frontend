@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,45 +11,59 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 interface TrainerInfo {
   id: string;
   name: string;
   location: string;
-  experience: string;
-  certified: string;
+  years: string;
+  certificate: string;
   duration: string;
   rating: number;
   price: string;
-  languages: string[];
+  languages: string;
   qualification: string;
-  about: string[];
+  about: string;
 }
 
 const info: TrainerInfo = {
   id: "1",
   name: "Siddhartha Gaur",
   location: "Mumbai",
-  experience: "3",
-  certified: "Certified",
+  years: "3",
+  certificate: "Certified",
   rating: 4.5,
   duration: "45 Min",
   price: "₹169",
-  languages: ["English", "Hindi"],
+  languages: "English, Hindi",
   qualification: "Diploma in personal training",
-  about: [
-    "Strength training expert. Let's build your dream physique!",
-    "A track record of success in helping clients of all ages and fitness levels reach their goals.",
-    "I create customized training plans based on your unique needs and experience level.",
-    "Your progress is my priority. I'll be there to support and challenge you every step of the way.",
-  ],
+  about: "Strength training expert. Let's build your dream physique!",
 };
 
 const TrainerProfile = () => {
   const handleSubmit = () => {
-    router.replace("/trainerProfile");
+    router.back();
   };
+  const { id } = useLocalSearchParams();
+  const [trainer, setTrainer] = useState<TrainerInfo>(info);
+
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) {
+        console.error("Error fetching trainer", error);
+        return;
+      }
+      setTrainer({ ...trainer, ...data });
+    }
+    fetchTrainer();
+  }, [id]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,12 +78,12 @@ const TrainerProfile = () => {
           <View style={styles.headerInfo}>
             <View style={styles.certifiedBadge}>
               <MaterialIcons name="stars" size={20} color="green" />
-              <Text style={styles.certified}>{info.certified}</Text>
+              <Text style={styles.certified}>{trainer.certificate ? "Certified" : "Not Certified"}</Text>
             </View>
-            <Text style={styles.name}>{info.name}</Text>
+            <Text style={styles.name}>{trainer.name}</Text>
             <View style={styles.locationContainer}>
               <MaterialIcons name="location-on" size={20} />
-              <Text style={styles.location}>{info.location}</Text>
+              <Text style={styles.location}>{trainer.location}</Text>
             </View>
           </View>
         </View>
@@ -80,7 +94,7 @@ const TrainerProfile = () => {
               <MaterialIcons name="military-tech" size={24} color="#FF4B55" />
             </View>
             <View style={styles.statText}>
-              <Text style={styles.statNumber}>{info.experience}</Text>
+              <Text style={styles.statNumber}>{trainer.years}</Text>
               <Text style={styles.statLabel}>Years</Text>
             </View>
           </View>
@@ -90,7 +104,7 @@ const TrainerProfile = () => {
               <MaterialIcons name="star" size={24} color="#4CAF50" />
             </View>
             <View style={styles.statText}>
-              <Text style={styles.statNumber}>{info.rating}</Text>
+              <Text style={styles.statNumber}>{trainer.rating}</Text>
               <Text style={styles.statLabel}>Ratings</Text>
             </View>
           </View>
@@ -100,30 +114,28 @@ const TrainerProfile = () => {
           <View style={styles.sectionRow}>
             <Text style={styles.sectionLabel}>Speak :</Text>
             <Text style={styles.sectionContent}>
-              {info.languages.join(" & ")}
+              {trainer.languages}
             </Text>
           </View>
 
           <View style={styles.sectionRow}>
             <Text style={styles.sectionLabel}>Qualification :</Text>
-            <Text style={styles.sectionContent}>{info.qualification}</Text>
+            <Text style={styles.sectionContent}>{trainer.qualification}</Text>
           </View>
         </View>
 
         <View style={styles.aboutSection}>
           <Text style={styles.aboutTitle}>About</Text>
-          {info.about.map((item, index) => (
-            <Text key={index} style={styles.aboutText}>
-              • {item}
-            </Text>
-          ))}
+          <Text style={styles.aboutText}>
+            {trainer.about}
+          </Text>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
         <View style={styles.priceContainer}>
           <Text style={styles.priceLabel}>Total</Text>
-          <Text style={styles.price}>{info.price}</Text>
+          <Text style={styles.price}>{trainer.price || "₹169"}</Text>
         </View>
         <TouchableOpacity style={styles.payButton} onPress={handleSubmit}>
           <Text style={styles.payButtonText}>Pay Now</Text>

@@ -120,6 +120,18 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="trainerProfile/[id]"
+              options={{
+                title: "Trainer Profile",
+              }}
+            />
+            <Stack.Screen
+              name="trainerPage"
+              options={{
+                title: "Trainers",
+              }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

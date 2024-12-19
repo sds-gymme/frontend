@@ -117,6 +117,7 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
 
 const TrainerHome: React.FC = () => {
   const [isOnline, setIsOnline] = useState(false);
+  const [name, setName] = useState("Vaibhav");
 
   const handlePress = (route: any) => {
     router.push(route);
@@ -166,7 +167,7 @@ const TrainerHome: React.FC = () => {
 
         const { data, error } = await supabase
           .from("trainer_profiles")
-          .select("online")
+          .select("online, name")
           .eq("user_id", user.id)
           .single();
         if (error) {
@@ -174,6 +175,7 @@ const TrainerHome: React.FC = () => {
           throw error;
         }
         setIsOnline(data.online);
+        setName(data.name);
       } catch (error) {
         console.error("Error fetching online status:", error);
       }
@@ -186,7 +188,7 @@ const TrainerHome: React.FC = () => {
       <StatusBar barStyle="dark-content" />
       <ScrollView>
         <View style={styles.scrollContent}>
-          <Header />
+          <Header username={"Trainer " + name} />
           <View style={styles.appointmentsSection}>
             <OnlineOfflineToggle
               isOnline={isOnline}

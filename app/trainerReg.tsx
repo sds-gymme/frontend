@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -28,12 +28,15 @@ const Trainer: React.FC = () => {
   const [formData, setFormData] = useState({
     dob: new Date(),
     gender: "",
-    height: "",
-    weight: "",
+    expertise: "",
+    years: "",
     name: "",
-    mobileNumber: "",
-    emailId: "",
+    mobile_number: "",
+    email_id: "",
     certificate: "",
+    about: "",
+    price: "0",
+    location: "",
   });
 
   const { setIsLoggedIn } = useContext(LoginContext);
@@ -63,11 +66,14 @@ const Trainer: React.FC = () => {
         name: formData.name,
         dob: formData.dob.toISOString(),
         gender: formData.gender,
-        height: parseFloat(formData.height) || null,
-        weight: parseFloat(formData.weight) || null,
-        mobile_number: formData.mobileNumber,
-        email_id: formData.emailId,
+        expertise: formData.expertise,
+        years: formData.years,
+        mobile_number: formData.mobile_number,
+        email_id: formData.email_id,
         certificate: formData.certificate,
+        about: formData.about,
+        price: formData.price,
+        location: formData.location,
         created_at: new Date().toISOString(),
       };
 
@@ -128,6 +134,40 @@ const Trainer: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select()
+        .eq("user_id", user.id)
+        .single();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+
+      if (data) {
+        let { dob, price, years, mobile_number, ...rest } = data;
+        dob = new Date(dob);
+        price = price.toString();
+        years = years.toString();
+        mobile_number = mobile_number.toString();
+        setFormData({ ...rest, dob, price, years, mobile_number });
+      }
+
+    };
+    fetchTrainer();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -169,9 +209,9 @@ const Trainer: React.FC = () => {
         <Text style={styles.fieldLabel}>Mobile Number</Text>
         <TextInput
           mode="outlined"
-          value={formData.mobileNumber}
+          value={formData.mobile_number}
           onChangeText={(text) =>
-            setFormData({ ...formData, mobileNumber: text })
+            setFormData({ ...formData, mobile_number: text })
           }
           placeholder="+91"
           keyboardType="phone-pad"
@@ -181,8 +221,8 @@ const Trainer: React.FC = () => {
         <Text style={styles.fieldLabel}>Email</Text>
         <TextInput
           mode="outlined"
-          value={formData.emailId}
-          onChangeText={(text) => setFormData({ ...formData, emailId: text })}
+          value={formData.email_id}
+          onChangeText={(text) => setFormData({ ...formData, email_id: text })}
           placeholder="abc@gmail.com"
           outlineColor="rgba(0, 0, 0, 0.2)"
         />
@@ -206,12 +246,11 @@ const Trainer: React.FC = () => {
             <Text style={styles.fieldLabel}>Expertise</Text>
             <TextInput
               mode="outlined"
-              value={formData.height}
+              value={formData.expertise}
               onChangeText={(text) =>
-                setFormData({ ...formData, height: text })
+                setFormData({ ...formData, expertise: text })
               }
               placeholder=" "
-              keyboardType="numeric"
               outlineColor="rgba(0, 0, 0, 0.2)"
             />
           </View>
@@ -219,9 +258,9 @@ const Trainer: React.FC = () => {
             <Text style={styles.fieldLabel}>Years of experience</Text>
             <TextInput
               mode="outlined"
-              value={formData.weight}
+              value={formData.years}
               onChangeText={(text) =>
-                setFormData({ ...formData, weight: text })
+                setFormData({ ...formData, years: text })
               }
               placeholder=" "
               keyboardType="numeric"
@@ -238,6 +277,40 @@ const Trainer: React.FC = () => {
             setFormData({ ...formData, certificate: text })
           }
           placeholder="Add certificate details"
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
+
+        <Text style={styles.fieldLabel}>About</Text>
+        <TextInput
+          mode="outlined"
+          value={formData.about}
+          onChangeText={(text) =>
+            setFormData({ ...formData, about: text })
+          }
+          placeholder="Add about"
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
+
+        <Text style={styles.fieldLabel}>Price</Text>
+        <TextInput
+          mode="outlined"
+          value={formData.price}
+          onChangeText={(text) =>
+            setFormData({ ...formData, price: text })
+          }
+          placeholder="Add price"
+          keyboardType="numeric"
+          outlineColor="rgba(0, 0, 0, 0.2)"
+        />
+
+        <Text style={styles.fieldLabel}>Location</Text>
+        <TextInput
+          mode="outlined"
+          value={formData.location}
+          onChangeText={(text) =>
+            setFormData({ ...formData, location: text })
+          }
+          placeholder="Your Location"
           outlineColor="rgba(0, 0, 0, 0.2)"
         />
       </ScrollView>
