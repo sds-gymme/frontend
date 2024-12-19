@@ -7,19 +7,25 @@ import { useFonts } from "expo-font";
 import { Stack, Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
-// import "react-native-reanimated";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LoginContext } from "@/contexts/loginContext";
 import { supabase } from "@/lib/supabase";
 
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function Blank() {
   return <></>;
 }
+
+const customDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    card: DefaultTheme.colors.card,
+    text: DefaultTheme.colors.text,
+  },
+};
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -54,9 +60,16 @@ export default function RootLayout() {
     <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       <PaperProvider>
         <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          value={colorScheme === "dark" ? customDarkTheme : DefaultTheme}
         >
-          <Stack>
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: DefaultTheme.colors.card,
+              },
+              headerTintColor: DefaultTheme.colors.text,
+            }}
+          >
             <Stack.Screen
               name="(tabs)"
               options={{ headerShown: false, title: "Home" }}

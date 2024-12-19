@@ -120,8 +120,6 @@ const ServicesScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Services</Text>
-      <View style={styles.separator} />
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -147,18 +145,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 50,
     marginBottom: 20,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "#E0E0E0",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
   },
   scrollView: {
     flex: 1,

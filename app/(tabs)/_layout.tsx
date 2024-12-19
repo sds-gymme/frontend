@@ -14,7 +14,6 @@ import { LoginContext } from "@/contexts/loginContext";
 import { Redirect, useRootNavigationState } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Custom TabBarIcon component using Iconsax
 const TabBarIcon = ({
   focused,
   color,
@@ -78,14 +77,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        tabBarActiveTintColor: '#000000',
+        tabBarInactiveTintColor: '#A8A8A8',
+        headerTitleStyle: {
+          fontSize: 28,
+          fontWeight: '600',
+        },
+        headerTitleAlign: 'center',
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               focused={focused}

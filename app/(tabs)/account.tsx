@@ -100,7 +100,6 @@ const AccountPage: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.headerText}>Account</Text>
       <ScrollView style={styles.scrollView}>
         <View style={styles.card}>
           <TouchableOpacity
@@ -178,13 +177,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    padding: 16,
-    paddingTop: (StatusBar.currentHeight || 0) + 16,
-    textAlign: "center",
   },
   scrollView: {
     flex: 1,

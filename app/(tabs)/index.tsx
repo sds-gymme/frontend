@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   scrollContent: {
-    padding: 16,
+    paddingHorizontal: 16,
   },
   searchContainer: {
     flexDirection: "row",
