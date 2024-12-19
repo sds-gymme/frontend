@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from "react-native";
 import { router } from "expo-router";
-import { 
+import {
   Profile,
   ArrowRight,
   Timer1,
@@ -90,13 +90,13 @@ const AccountPage: React.FC = () => {
 
     fetchUserData();
   }, []);
-    
+
 
   const handlePress = (route: any) => {
     router.push(route);
   };
   const { setIsLoggedIn } = useContext(LoginContext);
- 
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -137,18 +137,18 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<Setting2 size={24} color="#666" variant="Linear" />}
             title="Settings"
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/registration")}
           />
           <MenuItem
             icon={<Information size={24} color="#666" variant="Linear" />}
             title="About Gymme"
             onPress={() => handlePress("/underdev")}
           />
-          <MenuItem
-            icon={<Star1 size={24} color="#666" variant="Linear" />}
-            title="Ratings"
-            onPress={() => handlePress("/underdev")}
-          />
+          {/* <MenuItem */}
+          {/*   icon={<Star1 size={24} color="#666" variant="Linear" />} */}
+          {/*   title="Ratings" */}
+          {/*   onPress={() => handlePress("/underdev")} */}
+          {/* /> */}
           <MenuItem
             icon={<UserAdd size={24} color="#666" variant="Linear" />}
             title="Referral Programs"
@@ -160,12 +160,6 @@ const AccountPage: React.FC = () => {
             onPress={() => handleTrainerPress()}
             showBorder={false}
           />
-          {/* <MenuItem
-            icon={<UserAdd size={24} color="#666" variant="Linear" />}
-            title="Gym Enrollment"
-            onPress={() => handleTrainerPress()}
-            showBorder={false}
-          /> */}
         </View>
 
         <TouchableOpacity
