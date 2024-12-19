@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "types": [
-      "@svgr/webpack"
+      // "@svgr/webpack"
     ],
     "paths": {
       "@/*": [
