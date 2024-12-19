@@ -14,6 +14,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
+    "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "^7.0.0",
     "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.46.2",
@@ -49,8 +50,7 @@
     "react-native-svg": "15.8.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.10",
-    "supabase": "^1.226.3",
-    "@react-native-masked-view/masked-view": "0.3.2"
+    "supabase": "^1.226.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
