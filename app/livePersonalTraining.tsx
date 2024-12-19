@@ -31,7 +31,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/CardioWorkout.svg")}
                 style={styles.squareCard}
@@ -40,7 +40,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/CrossFit.svg")}
                 style={styles.squareCard}
@@ -49,7 +49,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/Zumba.svg")}
                 style={styles.squareCard}
@@ -58,7 +58,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/Aerobics.svg")}
                 style={styles.squareCard}
@@ -67,7 +67,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/Boxing.svg")}
                 style={styles.squareCard}
@@ -76,7 +76,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/MMA.svg")}
                 style={styles.squareCard}
@@ -85,7 +85,7 @@ const LivePersonalTraining: React.FC<ExerciseSelectionScreenProps> = ({ navigati
             </TouchableOpacity>
           </View>
           <View style={styles.gridItem}>
-            <TouchableOpacity onPress={() => handlePress("/underdev")}>
+            <TouchableOpacity onPress={() => handlePress("/trainerPage")}>
               <Image
                 source={require("@/assets/images/Yoga.svg")}
                 style={styles.squareCard}
