@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useEvent } from 'expo';
 import {
   View,
   Text,
@@ -10,7 +11,7 @@ import {
   TextInput,
 } from "react-native";
 import { router } from "expo-router";
-import ImageCarousel from "@/components/ImageCarousel";
+import VideoCarousel from "@/components/VideoCarousel";
 import CouponCard from "@/components/CouponCard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
@@ -145,7 +146,6 @@ const HomePage: React.FC = () => {
     </View>
   );
 
-  // Enhanced SearchBar with TextInput but still not fucking working for two strokes bitvh
   const SearchBar = () => (
     <View style={styles.searchContainer}>
       <Ionicons
@@ -186,39 +186,32 @@ const HomePage: React.FC = () => {
           ))}
         </View>
 
-        <ImageCarousel
+        <VideoCarousel
           title="Professional trainer's real life"
-          images={[
+          videos={[
             {
-              src: require("@/assets/images/1.png"),
-              alt: "Trainer demonstrating medicine ball exercise",
+              src: "https://videos.pexels.com/video-files/3209068/3209068-uhd_3840_2160_25fps.mp4",
             },
             {
-              src: require("@/assets/images/2.png"),
-              alt: "Trainer demonstrating standing exercise",
+              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             },
             {
-              src: require("@/assets/images/3.png"),
-              alt: "Trainer demonstrating workout routine",
+              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
             },
           ]}
-
         />
         <CouponCard />
-        <ImageCarousel
+        <VideoCarousel
           title="Your fitness and healthy lifestyle made easy"
-          images={[
+          videos={[
             {
-              src: require("@/assets/images/1.png"),
-              alt: "Trainer demonstrating medicine ball exercise",
+              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
             },
             {
-              src: require("@/assets/images/2.png"),
-              alt: "Trainer demonstrating standing exercise",
+              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
             },
             {
-              src: require("@/assets/images/3.png"),
-              alt: "Trainer demonstrating workout routine",
+              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
             },
           ]}
         />
