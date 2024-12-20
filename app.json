@@ -18,6 +18,11 @@
       "bundleIdentifier": "com.unchanted.gymme"
     },
     "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.EXPO_PUBLIC_API_KEY"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
