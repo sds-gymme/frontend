@@ -129,11 +129,6 @@ const AccountPage: React.FC = () => {
             onPress={() => handlePress("/helpCenter")}
           />
           <MenuItem
-            icon={<Card size={24} color="#666" variant="Linear" />}
-            title="Manage Payments"
-            onPress={() => handlePress("/underdev")}
-          />
-          <MenuItem
             icon={<Setting2 size={24} color="#666" variant="Linear" />}
             title="Settings"
             onPress={() => handlePress("/registration")}
@@ -141,7 +136,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<Information size={24} color="#666" variant="Linear" />}
             title="About Gymme"
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/aboutGymme")}
           />
           {/* <MenuItem */}
           {/*   icon={<Star1 size={24} color="#666" variant="Linear" />} */}
