@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useEvent } from 'expo';
+import { useEvent } from "expo";
 import {
   View,
   Text,
@@ -23,6 +23,8 @@ interface GridItem {
   route: string;
   tags: string[];
   title: string;
+  style: any;
+  size?: number;
 }
 
 const HomePage: React.FC = () => {
@@ -38,6 +40,7 @@ const HomePage: React.FC = () => {
       route: "/livePersonalTraining",
       tags: ["live", "training", "personal", "fitness"],
       title: "Live Personal Training",
+      style: styles.card,
     },
     {
       id: "home-workout",
@@ -45,6 +48,7 @@ const HomePage: React.FC = () => {
       route: "/recordedHomeWorkout",
       tags: ["workout", "home", "recorded", "exercise"],
       title: "Recorded Home Workout",
+      style: styles.card,
     },
     {
       id: "nearby-gym",
@@ -52,6 +56,7 @@ const HomePage: React.FC = () => {
       route: "/nearbyGym",
       tags: ["gym", "nearby", "location", "training"],
       title: "Nearby Gym",
+      style: styles.card,
     },
     {
       id: "diet-planning",
@@ -59,6 +64,7 @@ const HomePage: React.FC = () => {
       route: "/dietPlanning",
       tags: ["diet", "nutrition", "planning", "health"],
       title: "Diet Planning",
+      style: styles.card,
     },
     {
       id: "calorie-counter",
@@ -66,6 +72,8 @@ const HomePage: React.FC = () => {
       route: "/calorieCounter",
       tags: ["calories", "counter", "nutrition", "health"],
       title: "Calorie Counter",
+      style: styles.card,
+      size: 1.5,
     },
     {
       id: "decode-age",
@@ -73,6 +81,7 @@ const HomePage: React.FC = () => {
       route: "/decodeAge",
       tags: ["age", "health", "fitness", "tracking"],
       title: "Decode Age",
+      style: styles.card,
     },
   ];
 
@@ -84,7 +93,6 @@ const HomePage: React.FC = () => {
     const lowercaseQuery = query.toLowerCase();
     return gridItems.filter(
       (item) =>
-
         item.tags.some((tag) => tag.toLowerCase().includes(lowercaseQuery)) ||
         item.title.toLowerCase().includes(lowercaseQuery)
     );
@@ -178,9 +186,40 @@ const HomePage: React.FC = () => {
         <View style={styles.grid}>
           {filteredGridItems.map((item) => (
             <View key={item.id} style={styles.gridItem}>
-              <TouchableOpacity onPress={() => handlePress(item.route)}>
-                <Image source={item.source} style={styles.squareCard} />
-                <Text style={styles.gridItemTitle}>{item.title}</Text>
+              <TouchableOpacity
+                style={[
+                  styles.gridItemTouchable,
+                  {
+                    backgroundColor:
+                      item.id === "calorie-counter" ? "#fff" : "transparent",
+                  },
+                ]}
+                onPress={() => handlePress(item.route)}
+              >
+                <Image
+                  source={item.source}
+                  style={[
+                    styles.squareCard,
+                    {
+                      backgroundColor:
+                        item.id === "calorie-counter"
+                          ? "transparent"
+                          : "transparent",
+                      transform: [{ scale: item.size || 1 }],
+                    },
+                  ]}
+                  contentFit="contain"
+                />
+                <Text
+                  style={[
+                    styles.gridItemTitle,
+                    {
+                      color: item.id === "calorie-counter" ? "#000" : "#333",
+                    },
+                  ]}
+                >
+                  {item.title}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -255,8 +294,9 @@ const styles = StyleSheet.create({
   gridItemTitle: {
     marginTop: 8,
     textAlign: "center",
-    fontSize: 12,
-    color: "#333",
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#ffffff",
   },
   header: {
     flexDirection: "row",
@@ -277,19 +317,6 @@ const styles = StyleSheet.create({
     width: 120,
     height: 30,
   },
-  // searchContainer: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   backgroundColor: "#f5f5f5",
-  //   padding: 12,
-  //   borderRadius: 12,
-  //   marginBottom: 16,
-  // },
-  // searchInput: {
-  //   marginLeft: 8,
-  //   flex: 1,
-  //   flexDirection: "row",
-  // },
   staticText: {
     color: "#666",
   },
@@ -299,46 +326,48 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
     marginHorizontal: -8,
   },
   gridItem: {
-    width: "50%",
-    padding: 8,
+    width: "48%",
+    marginBottom: 16,
   },
   squareCard: {
     width: "100%",
     aspectRatio: 1,
-    borderRadius: 20,
   },
-  calorieCard: {
+  gridItemTouchable: {
     width: "100%",
-    aspectRatio: 1,
+    alignItems: "center",
+    backgroundColor: "#000",
     borderRadius: 20,
-    backgroundColor: "#089f30",
+    overflow: "hidden",
   },
   card: {
     padding: 16,
     borderRadius: 20,
     justifyContent: "space-between",
   },
+
   cardTitle: {
-    color: "#fff",
+    color: "transparent",
     fontSize: 18,
     fontWeight: "bold",
   },
   cardSubtitle: {
-    color: "#fff",
+    color: "transparent",
     fontSize: 14,
-    marginTop: 4,
+    marginTop: 2,
   },
   liveIndicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#fff",
+    backgroundColor: "#eeee",
   },
   freeTag: {
-    color: "#fff",
+    color: "black",
     fontSize: 12,
     fontWeight: "bold",
   },

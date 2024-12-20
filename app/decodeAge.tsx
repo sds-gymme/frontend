@@ -1,70 +1,93 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView } from 'react-native';
-import { ArrowLeft2, Activity } from 'iconsax-react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
+import { ArrowLeft2, Activity } from "iconsax-react-native";
+import { Image } from "expo-image";
+import { router } from "expo-router";
 
-const DecodeAge = () => {
-  const navigation = useNavigation();
+// Define type for menu item
+type MenuItem = {
+  icon: React.FC<any>;
+  title: string;
+  subtitle: string;
+  route: string;
+};
 
-  const MenuButton = ({
-    icon: Icon,
-    title,
-    subtitle
-  }: {
-    icon: React.FC<any>,
-    title: string,
-    subtitle: string
-  }) => (
-    <TouchableOpacity style={styles.menuButton}>
-      <View style={styles.menuIconContainer}>
-        <Icon size={24} color="#FFF" variant="Bold" />
-      </View>
-      <View style={styles.menuTextContainer}>
-        <Text style={styles.menuTitle}>{title}</Text>
-        <Text style={styles.menuSubtitle}>{subtitle}</Text>
-      </View>
-      <ArrowLeft2
-        size={20}
-        color="#666"
-        variant="Linear"
-        style={styles.arrowIcon}
-      />
-    </TouchableOpacity>
-  );
+// Menu items data
+const MENU_ITEMS: MenuItem[] = [
+  {
+    icon: Activity,
+    title: "Diet Plan",
+    subtitle: "Explore Diet Plans",
+    route: "/dietPlanning",
+  },
+  {
+    icon: Activity,
+    title: "Exercise",
+    subtitle: "Explore Workout Videos",
+    route: "/livePersonalTraining",
+  },
+];
 
+const MenuButton: React.FC<MenuItem> = ({
+  icon: Icon,
+  title,
+  subtitle,
+  route,
+}) => (
+  <TouchableOpacity
+    style={styles.menuButton}
+    onPress={() => router.push(route)}
+  >
+    <View style={styles.menuIconContainer}>
+      <Icon size={24} color="#FFF" variant="Bold" />
+    </View>
+    <View style={styles.menuTextContainer}>
+      <Text style={styles.menuTitle}>{title}</Text>
+      <Text style={styles.menuSubtitle}>{subtitle}</Text>
+    </View>
+    <ArrowLeft2
+      size={20}
+      color="#666"
+      variant="Linear"
+      style={styles.arrowIcon}
+    />
+  </TouchableOpacity>
+);
+
+const DecodeAge: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={require('../assets/images/DecodeAgeFood.png')}
+          source={require("../assets/images/DecodeAgeFood.png")}
           style={styles.foodImage}
+          contentFit="cover"
         />
-        <View style={styles.playButton}>
+        <TouchableOpacity style={styles.playButton}>
           <View style={styles.playIcon} />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.content}>
         <Text style={styles.description}>
           Lorem Ipsum Dolor Sit Amet, Consectetur Apicing Elit. Sed Do Eiusmod
           Tempor Incididunt Ut Labore Et Dolore Magna Aliqua. Ut Enim Ad Veniam,
-          Quis Nostrud Exercitation Ullamco Laboris Nisi Aliquip Ea Commodo Consequat.
+          Quis Nostrud Exercitation Ullamco Laboris Nisi Aliquip Ea Commodo
+          Consequat.
         </Text>
-        <View style={styles.separator} />
 
+        <View style={styles.separator} />
         <Text style={styles.stepsTitle}>STEPS TO DECODE AGE:</Text>
 
-        <MenuButton
-          icon={Activity}
-          title="Diet Plan"
-          subtitle="Explore Diet Plans"
-        />
-
-        <MenuButton
-          icon={Activity}
-          title="Exercise"
-          subtitle="Explore Workout Videos"
-        />
+        {MENU_ITEMS.map((item, index) => (
+          <MenuButton key={index} {...item} />
+        ))}
       </View>
     </SafeAreaView>
   );
@@ -73,52 +96,38 @@ const DecodeAge = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 16,
+    backgroundColor: "#fff",
   },
   imageContainer: {
-    width: '100%',
+    width: "100%",
     height: 290,
-    position: 'relative',
   },
   foodImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   playButton: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     transform: [{ translateX: -25 }, { translateY: -25 }],
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   playIcon: {
     width: 0,
     height: 0,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderTopWidth: 10,
     borderBottomWidth: 10,
     borderLeftWidth: 15,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderLeftColor: '#000',
+    borderTopColor: "transparent",
+    borderBottomColor: "transparent",
+    borderLeftColor: "#000",
     marginLeft: 5,
   },
   content: {
@@ -126,28 +135,21 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 22,
-    width: '100%',
-    zIndex: 1,
     padding: 14,
-    marginBottom: 16,
-    marginTop: 16,
-    shadowColor: '#1b1b1b',
+    marginVertical: 16,
+    shadowColor: "#1b1b1b",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, // for android
+    elevation: 5,
     borderRadius: 12,
-    backgroundColor: '#FFF',
-  }
-
-
-
-  ,
+    backgroundColor: "#FFF",
+  },
   stepsTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 16,
   },
   separator: {
@@ -164,25 +166,25 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   menuButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#1b1b1b',
+    shadowColor: "#1b1b1b",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, //for andorid 
+    elevation: 5,
   },
   menuIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 8,
-    backgroundColor: '#4285F4',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#4285F4",
+    justifyContent: "center",
+    alignItems: "center",
   },
   menuTextContainer: {
     flex: 1,
@@ -190,15 +192,15 @@ const styles = StyleSheet.create({
   },
   menuTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   menuSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 2,
   },
   arrowIcon: {
-    transform: [{ rotate: '180deg' }],
+    transform: [{ rotate: "180deg" }],
   },
 });
 
