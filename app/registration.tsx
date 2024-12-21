@@ -65,32 +65,32 @@ const Registration: React.FC = () => {
               styles.selectionButton,
               formData[field] === option && styles.selectedButton,
               formData[field] === option &&
-                option === "Vegetarian" &&
-                styles.greenButton,
+              option === "Vegetarian" &&
+              styles.greenButton,
               formData[field] == option &&
-                option === "Eggetarian" &&
-                styles.greenButton,
+              option === "Eggetarian" &&
+              styles.greenButton,
               formData[field] == option &&
-                option === "Non-Vegetarian" &&
-                styles.greenButton,
+              option === "Non-Vegetarian" &&
+              styles.greenButton,
               formData[field] === option &&
-                option === "Beginner" &&
-                styles.yellowButton,
+              option === "Beginner" &&
+              styles.yellowButton,
               formData[field] === option &&
-                option === "Intermediate" &&
-                styles.yellowButton,
+              option === "Intermediate" &&
+              styles.yellowButton,
               formData[field] === option &&
-                option === "Professional" &&
-                styles.yellowButton,
+              option === "Professional" &&
+              styles.yellowButton,
               formData[field] === option &&
-                option === "Weight Loss" &&
-                styles.purpleButton,
+              option === "Weight Loss" &&
+              styles.purpleButton,
               formData[field] === option &&
-                option === "Weight Gain" &&
-                styles.purpleButton,
+              option === "Weight Gain" &&
+              styles.purpleButton,
               formData[field] === option &&
-                option === "Fitness" &&
-                styles.purpleButton,
+              option === "Fitness" &&
+              styles.purpleButton,
             ]}
             onPress={() => setFormData({ ...formData, [field]: option })}
           >
@@ -110,82 +110,94 @@ const Registration: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !user) {
-        throw new Error("No authenticated user found");
-      }
-
-      const userData = {
-        user_id: user.id,
-        user_name: formData.name,
-        dob: formData.dob.toISOString(),
-        gender: formData.gender,
-        height: parseFloat(formData.height) || null, 
-        weight: parseFloat(formData.weight) || null,
-        food_preference: formData.foodPreference,
-        body_type: formData.bodyType,
-        fitness_level: formData.fitnessLevel,
-        fitness_goals: formData.fitnessGoals,
-        created_at: new Date().toISOString(),
-      };
-
-      const {data, error} = await supabase
-      .from("user_profiles")
-      .select()
-      .eq("user_id", user.id);
-      if (error) {
-        console.error("Supabase fetch error:", error);
-        throw error;
-      }
-      if (data.length > 0) {
-        const { data, error } = await supabase
-          .from("user_profiles")
-          .update(userData)
-          .eq("user_id", user.id)
-          .select();
-
-        if (error) {
-          console.error("Supabase update error:", error);
-          throw error;
-        }
-      }
-      else {
-        const { data, error } = await supabase
-          .from("user_profiles")
-          .insert(userData)
-          .select();
-
-        if (error) {
-          console.error("Supabase insertion error:", error);
-          throw error;
-        }
-      }
-
-
-      // const { data, error } = await supabase
-      //   .from("user_profiles")
-
-      //   .insert(userData)
-      //   .select();
-
-      // if (error) {
-      //   console.error("Supabase insertion error:", error);
-      //   throw error;
-      // }
-
+      // Directly set the user as logged in
       setIsLoggedIn(true);
       router.replace("/");
 
-      console.log("User profile created successfully:", data);
+      console.log("User profile created successfully");
     } catch (error) {
       console.error("Error submitting user details:", error);
       Alert.alert("Error", "Failed to submit user details. Please try again.");
     }
   };
+  // const handleSubmit = async () => {
+  //   try {
+  //     const {
+  //       data: { user },
+  //       error: authError,
+  //     } = await supabase.auth.getUser();
+  //
+  //     if (authError || !user) {
+  //       throw new Error("No authenticated user found");
+  //     }
+  //
+  //     const userData = {
+  //       user_id: user.id,
+  //       user_name: formData.name,
+  //       dob: formData.dob.toISOString(),
+  //       gender: formData.gender,
+  //       height: parseFloat(formData.height) || null,
+  //       weight: parseFloat(formData.weight) || null,
+  //       food_preference: formData.foodPreference,
+  //       body_type: formData.bodyType,
+  //       fitness_level: formData.fitnessLevel,
+  //       fitness_goals: formData.fitnessGoals,
+  //       created_at: new Date().toISOString(),
+  //     };
+  //
+  //     const { data, error } = await supabase
+  //       .from("user_profiles")
+  //       .select()
+  //       .eq("user_id", user.id);
+  //     if (error) {
+  //       console.error("Supabase fetch error:", error);
+  //       throw error;
+  //     }
+  //     if (data.length > 0) {
+  //       const { data, error } = await supabase
+  //         .from("user_profiles")
+  //         .update(userData)
+  //         .eq("user_id", user.id)
+  //         .select();
+  //
+  //       if (error) {
+  //         console.error("Supabase update error:", error);
+  //         throw error;
+  //       }
+  //     }
+  //     else {
+  //       const { data, error } = await supabase
+  //         .from("user_profiles")
+  //         .insert(userData)
+  //         .select();
+  //
+  //       if (error) {
+  //         console.error("Supabase insertion error:", error);
+  //         throw error;
+  //       }
+  //     }
+  //
+  //
+  //     // const { data, error } = await supabase
+  //     //   .from("user_profiles")
+  //
+  //     //   .insert(userData)
+  //     //   .select();
+  //
+  //     // if (error) {
+  //     //   console.error("Supabase insertion error:", error);
+  //     //   throw error;
+  //     // }
+  //
+  //     setIsLoggedIn(true);
+  //     router.replace("/");
+  //
+  //     console.log("User profile created successfully:", data);
+  //   } catch (error) {
+  //     console.error("Error submitting user details:", error);
+  //     Alert.alert("Error", "Failed to submit user details. Please try again.");
+  //   }
+  // };
 
   return (
     <View style={styles.container}>

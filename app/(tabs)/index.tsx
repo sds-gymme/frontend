@@ -105,24 +105,15 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
+        // Simulate fetching user data
+        const user = { id: "default_user_id" }; // Replace with actual user data if available
 
-        if (authError || !user) {
+        if (!user) {
           throw new Error("No authenticated user found");
         }
 
-        const { data, error } = await supabase
-          .from("user_profiles")
-          .select("user_name")
-          .eq("user_id", user.id)
-          .single();
-
-        if (error) {
-          throw error;
-        }
+        // Simulate fetching user profile
+        const data = { user_name: "Default User" }; // Replace with actual user profile data if available
 
         setUsername(data.user_name);
       } catch (error) {
@@ -132,6 +123,36 @@ const HomePage: React.FC = () => {
 
     fetchUserData();
   }, []);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const {
+  //         data: { user },
+  //         error: authError,
+  //       } = await supabase.auth.getUser();
+  //
+  //       if (authError || !user) {
+  //         throw new Error("No authenticated user found");
+  //       }
+  //
+  //       const { data, error } = await supabase
+  //         .from("user_profiles")
+  //         .select("user_name")
+  //         .eq("user_id", user.id)
+  //         .single();
+  //
+  //       if (error) {
+  //         throw error;
+  //       }
+  //
+  //       setUsername(data.user_name);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   };
+  //
+  //   fetchUserData();
+  // }, []);
 
   const Header = ({ username }: { username: string }) => (
     <View style={styles.header}>
