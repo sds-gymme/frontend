@@ -13,7 +13,6 @@ import { Appbar, Text, Avatar, useTheme, Surface } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import * as Location from "expo-location";
-import { supabase } from "@/lib/supabase";
 
 interface Gym {
   id: string;
@@ -102,23 +101,6 @@ const NearbyGymScreen = () => {
 
       setLocation({ latitude, longitude });
       console.log("User Location:", latitude, longitude);
-
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !user) {
-        throw new Error("No authenticated user found");
-      }
-
-      const { } = await supabase
-        .from("user_profiles")
-        .update({
-          longitude: longitude,
-          latitude: latitude,
-        })
-        .eq("user_id", user.id);
 
       fetchNearbyGyms(latitude, longitude);
     } catch (error) {
