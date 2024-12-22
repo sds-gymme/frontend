@@ -81,7 +81,11 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="verification"
-              options={{ title: "Verification", headerLeft: Blank }}
+              options={{
+                title: "Verification",
+                headerLeft: Blank,
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="registration"
@@ -90,10 +94,10 @@ export default function RootLayout() {
             <Stack.Screen
               name="decodeAge"
               options={{
-                title: "Decode Age"
+                title: "Decode Age",
               }}
             />
-            < Stack.Screen
+            <Stack.Screen
               name="dietPlanning"
               options={{ title: "Diet Planning" }}
             />
@@ -104,21 +108,19 @@ export default function RootLayout() {
             <Stack.Screen
               name="nearbyGym"
               options={{
-                title: "Nearby Gym"
+                title: "Nearby Gym",
               }}
             />
-            < Stack.Screen
+            <Stack.Screen
               name="recordedHomeWorkout"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="trainerHome" options={{ headerShown: false }} />
             <Stack.Screen
               name="livePersonalTraining"
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="trainerReg"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="trainerReg" options={{ headerShown: false }} />
             <Stack.Screen
               name="helpCenter"
               options={{ title: "Help Center" }}
@@ -157,7 +159,7 @@ export default function RootLayout() {
               name="aboutGymme"
               options={{
                 title: "Trainers",
-                headerShown: false
+                headerShown: false,
               }}
             />
           </Stack>

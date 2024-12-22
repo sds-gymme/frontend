@@ -47,7 +47,7 @@ const VerificationScreen: React.FC<VerificationScreenProps> = () => {
     newCode[index] = text;
     setCode(newCode);
 
-    if (text.length === 1 && index < 3) {
+    if (text.length === 1 && index < 5) {
       inputs.current[index + 1]?.focus();
     }
   };

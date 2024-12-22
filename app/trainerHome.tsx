@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,16 +11,11 @@ import {
   Dimensions,
 } from "react-native";
 import ImageCarousel from "@/components/ImageCarousel";
-import CouponCard from "@/components/CouponCard";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
-import { LoginContext } from "@/contexts/loginContext";
 import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
 import OnlineOfflineToggle from "@/components/TrainerToggle";
-import { supabase } from "@/lib/supabase";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -117,71 +112,16 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
 
 const TrainerHome: React.FC = () => {
   const [isOnline, setIsOnline] = useState(false);
-  const [name, setName] = useState("Vaibhav");
+  const [name] = useState("Vaibhav"); // Simplified to just use a static name
 
   const handlePress = (route: any) => {
     router.push(route);
   };
 
-  const handleOnlineToggle = async (isOnline: boolean) => {
-    try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !user) {
-        throw new Error("No authenticated user found");
-      }
-
-      const values = {
-        online: isOnline,
-      };
-      console.log(values);
-      const { data, error } = await supabase
-        .from("trainer_profiles")
-        .update(values)
-        .eq("user_id", user.id)
-        .select();
-      if (error) {
-        console.error("Supabase fetch error:", error);
-        throw error;
-      }
-      setIsOnline(isOnline);
-    } catch (error) {
-      console.error("Error updating online status:", error);
-    }
+  const handleOnlineToggle = (isOnline: boolean) => {
+    console.log("Online status changed to:", isOnline);
+    setIsOnline(isOnline);
   };
-
-  useEffect(() => {
-    const fetchOnlineStatus = async () => {
-      try {
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-
-        if (authError || !user) {
-          throw new Error("No authenticated user found");
-        }
-
-        const { data, error } = await supabase
-          .from("trainer_profiles")
-          .select("online, name")
-          .eq("user_id", user.id)
-          .single();
-        if (error) {
-          console.error("Supabase fetch error:", error);
-          throw error;
-        }
-        setIsOnline(data.online);
-        setName(data.name);
-      } catch (error) {
-        console.error("Error fetching online status:", error);
-      }
-    };
-    fetchOnlineStatus();
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -223,8 +163,7 @@ const TrainerHome: React.FC = () => {
           />
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={async () => {
-              await AsyncStorage.setItem("userType", "user");
+            onPress={() => {
               router.replace("/");
             }}
           >
@@ -259,6 +198,7 @@ const styles = StyleSheet.create({
   usernameText: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#333",
   },
   logo: {
     width: 120,
@@ -276,53 +216,60 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     paddingHorizontal: 4,
+    color: "#333",
   },
   appointmentCard: {
     flexDirection: "row",
-    padding: 12,
+    padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
     alignItems: "center",
     width: "100%",
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+    marginBottom: 12,
   },
   profileImage: {
-    width: 50,
-    height: 65,
-    borderRadius: 10,
+    width: 60,
+    height: 75,
+    borderRadius: 12,
   },
   infoContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 16,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
-    marginBottom: 4,
+    marginBottom: 6,
     color: "#000",
   },
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
   },
   location: {
     fontSize: 14,
-    color: "#666",
+    color: "#555",
     marginRight: 8,
   },
   duration: {
     fontSize: 14,
-    color: "#666",
+    color: "#555",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 8,
+    marginLeft: 12,
   },
   acceptButton: {
     backgroundColor: "#22c55e",
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
+    minWidth: 80,
+    alignItems: "center",
   },
   acceptButtonText: {
     color: "#fff",
@@ -336,6 +283,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#ddd",
+    minWidth: 80,
+    alignItems: "center",
   },
   rejectButtonText: {
     color: "#666",
@@ -349,11 +298,14 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 24,
     marginBottom: 24,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
   },
   logoutText: {
     marginLeft: 8,
     fontSize: 16,
-    color: "#666",
+    color: "#333",
+    fontWeight: "500",
   },
 });
 
