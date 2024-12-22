@@ -153,6 +153,13 @@ export default function RootLayout() {
                 title: "Trainers",
               }}
             />
+            <Stack.Screen
+              name="aboutGymme"
+              options={{
+                title: "Trainers",
+                headerShown: false
+              }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>
