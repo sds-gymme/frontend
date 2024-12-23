@@ -137,7 +137,7 @@ const SignIn = () => {
               loop
               width={width}
               height={height * 0.67}
-              autoPlay={false}
+              autoPlay={true}
               data={carouselImages}
               scrollAnimationDuration={1000}
               onProgressChange={(offset) => {

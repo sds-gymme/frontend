@@ -73,7 +73,7 @@ const HomePage: React.FC = () => {
       tags: ["calories", "counter", "nutrition", "health"],
       title: "Calorie Counter",
       style: styles.card,
-      size: 1.5,
+      size: 1.36,
     },
     {
       id: "decode-age",

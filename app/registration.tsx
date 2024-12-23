@@ -35,14 +35,52 @@ const Registration: React.FC = () => {
     fitnessGoals: "Fitness",
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { setIsLoggedIn } = useContext(LoginContext);
-
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const foodPreferences = ["Vegetarian", "Non-Vegetarian", "Eggetarian"];
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
   const fitnessLevels = ["Beginner", "Intermediate", "Professional"];
   const fitnessGoals = ["Weight Loss", "Weight Gain", "Fitness"];
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    // Validate gender
+    if (!formData.gender) {
+      newErrors.gender = "Gender is required";
+    }
+
+    // Validate height
+    if (!formData.height) {
+      newErrors.height = "Height is required";
+    } else if (
+      isNaN(parseFloat(formData.height)) ||
+      parseFloat(formData.height) <= 0
+    ) {
+      newErrors.height = "Please enter a valid height";
+    }
+
+    // Validate weight
+    if (!formData.weight) {
+      newErrors.weight = "Weight is required";
+    } else if (
+      isNaN(parseFloat(formData.weight)) ||
+      parseFloat(formData.weight) <= 0
+    ) {
+      newErrors.weight = "Please enter a valid weight";
+    }
+
+    // Set errors and return validation result
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === "ios");
@@ -51,10 +89,16 @@ const Registration: React.FC = () => {
     }
   };
 
+  const renderError = (fieldName: string) => {
+    return errors[fieldName] ? (
+      <Text style={styles.errorText}>{errors[fieldName]}</Text>
+    ) : null;
+  };
+
   const renderSelectionButtons = (
     options: string[],
     selectedValue: string,
-    field: keyof typeof formData,
+    field: keyof typeof formData
   ) => {
     return (
       <View style={styles.buttonContainer}>
@@ -67,10 +111,10 @@ const Registration: React.FC = () => {
               formData[field] === option &&
                 option === "Vegetarian" &&
                 styles.greenButton,
-              formData[field] == option &&
+              formData[field] === option &&
                 option === "Eggetarian" &&
                 styles.greenButton,
-              formData[field] == option &&
+              formData[field] === option &&
                 option === "Non-Vegetarian" &&
                 styles.greenButton,
               formData[field] === option &&
@@ -109,6 +153,14 @@ const Registration: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      Alert.alert(
+        "Required Fields",
+        "Please fill in all required fields correctly before submitting."
+      );
+      return;
+    }
+
     try {
       const {
         data: { user },
@@ -124,7 +176,7 @@ const Registration: React.FC = () => {
         user_name: formData.name,
         dob: formData.dob.toISOString(),
         gender: formData.gender,
-        height: parseFloat(formData.height) || null, 
+        height: parseFloat(formData.height) || null,
         weight: parseFloat(formData.weight) || null,
         food_preference: formData.foodPreference,
         body_type: formData.bodyType,
@@ -133,15 +185,17 @@ const Registration: React.FC = () => {
         created_at: new Date().toISOString(),
       };
 
-      const {data, error} = await supabase
-      .from("user_profiles")
-      .select()
-      .eq("user_id", user.id);
+      const { data: existingData, error } = await supabase
+        .from("user_profiles")
+        .select()
+        .eq("user_id", user.id);
+
       if (error) {
         console.error("Supabase fetch error:", error);
         throw error;
       }
-      if (data.length > 0) {
+
+      if (existingData.length > 0) {
         const { data, error } = await supabase
           .from("user_profiles")
           .update(userData)
@@ -152,8 +206,7 @@ const Registration: React.FC = () => {
           console.error("Supabase update error:", error);
           throw error;
         }
-      }
-      else {
+      } else {
         const { data, error } = await supabase
           .from("user_profiles")
           .insert(userData)
@@ -165,22 +218,8 @@ const Registration: React.FC = () => {
         }
       }
 
-
-      // const { data, error } = await supabase
-      //   .from("user_profiles")
-
-      //   .insert(userData)
-      //   .select();
-
-      // if (error) {
-      //   console.error("Supabase insertion error:", error);
-      //   throw error;
-      // }
-
       setIsLoggedIn(true);
       router.replace("/");
-
-      console.log("User profile created successfully:", data);
     } catch (error) {
       console.error("Error submitting user details:", error);
       Alert.alert("Error", "Failed to submit user details. Please try again.");
@@ -192,18 +231,25 @@ const Registration: React.FC = () => {
       <ScrollView>
         <StatusBar style="auto" />
         <Text style={styles.title}>Add details</Text>
-        <Text style={styles.subtitle}>Enter name, height, weight, dob etc.</Text>
-        <Text style={styles.fieldLabel}>Name</Text>
+        <Text style={styles.subtitle}>
+          Enter name, height, weight, dob etc.
+        </Text>
+
+        <Text style={styles.fieldLabel}>Name *</Text>
         <TextInput
           mode="outlined"
           value={formData.name}
-          onChangeText={(text) => setFormData({ ...formData, name: text })}
+          onChangeText={(text) => {
+            setFormData({ ...formData, name: text });
+            setErrors({ ...errors, name: "" });
+          }}
           placeholder="Enter your name"
           keyboardType="default"
-          outlineColor="rgba(0, 0, 0, 0.2)"
+          outlineColor={errors.name ? "red" : "rgba(0, 0, 0, 0.2)"}
         />
+        {renderError("name")}
 
-        <Text style={styles.fieldLabel}>DOB</Text>
+        <Text style={styles.fieldLabel}>DOB *</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <TextInput
             mode="outlined"
@@ -222,68 +268,75 @@ const Registration: React.FC = () => {
           />
         )}
 
-        <Text style={styles.fieldLabel}>Gender</Text>
+        <Text style={styles.fieldLabel}>Gender *</Text>
         <Dropdown
           mode="outlined"
           value={formData.gender}
-          onSelect={(text) =>
-            setFormData({ ...formData, gender: text || "male" })
-          }
+          onSelect={(text) => {
+            setFormData({ ...formData, gender: text || "male" });
+            setErrors({ ...errors, gender: "" });
+          }}
           options={OPTIONS}
-          placeholder="Male"
+          placeholder="Select gender"
           menuDownIcon={
             <TextInput.Icon icon="chevron-down" color="#666" size={35} />
           }
         />
+        {renderError("gender")}
 
         <View style={styles.rowContainer}>
           <View style={styles.halfWidth}>
-            <Text style={styles.fieldLabel}>Height</Text>
+            <Text style={styles.fieldLabel}>Height *</Text>
             <TextInput
               mode="outlined"
               value={formData.height}
-              onChangeText={(text) =>
-                setFormData({ ...formData, height: text })
-              }
+              onChangeText={(text) => {
+                setFormData({ ...formData, height: text });
+                setErrors({ ...errors, height: "" });
+              }}
               placeholder="Enter height (m)"
               keyboardType="numeric"
               left={<TextInput.Icon icon="human-male-height" color="#007AFF" />}
-              outlineColor="rgba(0, 0, 0, 0.2)"
+              outlineColor={errors.height ? "red" : "rgba(0, 0, 0, 0.2)"}
             />
+            {renderError("height")}
           </View>
           <View style={styles.halfWidth}>
-            <Text style={styles.fieldLabel}>Weight</Text>
+            <Text style={styles.fieldLabel}>Weight *</Text>
             <TextInput
               mode="outlined"
               value={formData.weight}
-              onChangeText={(text) =>
-                setFormData({ ...formData, weight: text })
-              }
+              onChangeText={(text) => {
+                setFormData({ ...formData, weight: text });
+                setErrors({ ...errors, weight: "" });
+              }}
               placeholder="Enter weight (kg)"
               keyboardType="numeric"
               left={<TextInput.Icon icon="weight" color="#4CAF50" />}
-              outlineColor="rgba(0, 0, 0, 0.2)"
+              outlineColor={errors.weight ? "red" : "rgba(0, 0, 0, 0.2)"}
             />
+            {renderError("weight")}
           </View>
         </View>
 
-        <Text style={styles.fieldLabel}>Food preferences</Text>
+        <Text style={styles.fieldLabel}>Food preferences *</Text>
         {renderSelectionButtons(
           foodPreferences,
           formData.foodPreference,
           "foodPreference"
         )}
 
-        <Text style={styles.fieldLabel}>Body type</Text>
+        <Text style={styles.fieldLabel}>Body type *</Text>
         {renderSelectionButtons(bodyTypes, formData.bodyType, "bodyType")}
 
-        <Text style={styles.fieldLabel}>Fitness level</Text>
+        <Text style={styles.fieldLabel}>Fitness level *</Text>
         {renderSelectionButtons(
           fitnessLevels,
           formData.fitnessLevel,
           "fitnessLevel"
         )}
-        <Text style={styles.fieldLabel}>Fitness Goals</Text>
+
+        <Text style={styles.fieldLabel}>Fitness Goals *</Text>
         {renderSelectionButtons(
           fitnessGoals,
           formData.fitnessGoals,
@@ -398,7 +451,12 @@ const styles = StyleSheet.create({
     right: 0,
   },
   fitnessLevelContainer: {
-    marginBottom: 16, // Add margin to create space between fitness level buttons and submit button
+    marginBottom: 16,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 

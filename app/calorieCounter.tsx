@@ -90,7 +90,7 @@ const CalorieCounter: React.FC = () => {
       (sum, item) => sum + item.calories,
       0
     );
-    newMeals[selectedMealIndex].calories = `${totalCalories}/1000 Cal`; // Assuming 1000 Cal target for each meal
+    newMeals[selectedMealIndex].calories = `${totalCalories}/1000 Cal`; 
     setMeals(newMeals);
     setModalVisible(false);
     updateMacros();
