@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,10 @@ import { TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
+import { LoginContext } from "@/contexts/loginContext";
 import { Avatar } from "react-native-paper";
+import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OPTIONS = [
   { label: "Male", value: "male" },
@@ -36,6 +39,8 @@ const Trainer: React.FC = () => {
     location: "",
   });
 
+  const { setIsLoggedIn } = useContext(LoginContext);
+
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -45,16 +50,122 @@ const Trainer: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      console.log("Form submitted with data:", formData);
-      Alert.alert("Success", "Profile updated successfully!");
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      const userData = {
+        user_id: user.id,
+        name: formData.name,
+        dob: formData.dob.toISOString(),
+        gender: formData.gender,
+        expertise: formData.expertise,
+        years: formData.years,
+        mobile_number: formData.mobile_number,
+        email_id: formData.email_id,
+        certificate: formData.certificate,
+        about: formData.about,
+        price: formData.price,
+        location: formData.location,
+        created_at: new Date().toISOString(),
+      };
+
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select()
+        .eq("user_id", user.id);
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      if (data.length > 0) {
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .update(userData)
+          .eq("user_id", user.id)
+          .select();
+
+        if (error) {
+          console.error("Supabase update error:", error);
+          throw error;
+        }
+      } else {
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .insert(userData)
+          .select();
+
+        if (error) {
+          console.error("Supabase insertion error:", error);
+          throw error;
+        }
+      }
+
+      // const { data, error } = await supabase
+      //   .from("user_profiles")
+
+      //   .insert(userData)
+      //   .select();
+
+      // if (error) {
+      //   console.error("Supabase insertion error:", error);
+      //   throw error;
+      // }
+
+      setIsLoggedIn(true);
       router.replace("/trainerHome");
+      try {
+        await AsyncStorage.setItem("userType", "trainer");
+      } catch (e) {
+        console.error("Error storing user type in async storage:", e);
+      }
+
+      console.log("User profile created successfully:", data);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      Alert.alert("Error", "Failed to submit form. Please try again.");
+      console.error("Error submitting user details:", error);
+      Alert.alert("Error", "Failed to submit user details. Please try again.");
     }
   };
+
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select()
+        .eq("user_id", user.id)
+        .single();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+
+      if (data) {
+        let { dob, price, years, mobile_number, ...rest } = data;
+        dob = new Date(dob);
+        price = price.toString();
+        years = years.toString();
+        mobile_number = mobile_number.toString();
+        setFormData({ ...rest, dob, price, years, mobile_number });
+      }
+    };
+    fetchTrainer();
+  }, []);
 
   return (
     <View style={styles.container}>

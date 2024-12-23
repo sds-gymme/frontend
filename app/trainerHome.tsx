@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LogoutCurve } from "iconsax-react-native";
 import { router } from "expo-router";
 import OnlineOfflineToggle from "@/components/TrainerToggle";
+import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -112,16 +114,67 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
 
 const TrainerHome: React.FC = () => {
   const [isOnline, setIsOnline] = useState(false);
-  const [name] = useState("Vaibhav"); // Simplified to just use a static name
+  const [name, setName] = useState("Vaibhav"); // Simplified to just use a static name
 
   const handlePress = (route: any) => {
     router.push(route);
   };
 
-  const handleOnlineToggle = (isOnline: boolean) => {
-    console.log("Online status changed to:", isOnline);
-    setIsOnline(isOnline);
+  const handleOnlineToggle = async (isOnline: boolean) => {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+      const values = {
+        online: isOnline,
+      };
+      console.log(values);
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .update(values)
+        .eq("user_id", user.id)
+        .select();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      setIsOnline(isOnline);
+    } catch (error) {
+      console.error("Error updating online status:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchOnlineStatus = async () => {
+      try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+        if (authError || !user) {
+          throw new Error("No authenticated user found");
+        }
+        const { data, error } = await supabase
+          .from("trainer_profiles")
+          .select("online, name")
+          .eq("user_id", user.id)
+          .single();
+        if (error) {
+          console.error("Supabase fetch error:", error);
+          throw error;
+        }
+        setIsOnline(data.online);
+        setName(data.name);
+      } catch (error) {
+        console.error("Error fetching online status:", error);
+      }
+    };
+    fetchOnlineStatus();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -163,7 +216,8 @@ const TrainerHome: React.FC = () => {
           />
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => {
+            onPress={async () => {
+              await AsyncStorage.setItem("userType", "user");
               router.replace("/");
             }}
           >

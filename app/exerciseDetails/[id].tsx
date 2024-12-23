@@ -39,15 +39,25 @@ const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({
         console.error(error);
         return;
       }
+      let { data: imagedata, error: imageerror } = await supabase.storage
+        .from("photos")
+        .list();
+      if (imageerror) {
+        console.error(imageerror);
+        return;
+      }
+      data.photo_name = data.photo_id
+        ? imagedata.find((i: any) => i.id === data.photo_id).name
+        : null;
       setExercise(data);
     };
     fetchExercise();
-  }, []);
+  }, [id]);
 
   if (!exercise) {
     return null;
   }
-
+  console.log(baseImageURL + exercise.photo_name);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />

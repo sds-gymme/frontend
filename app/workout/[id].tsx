@@ -40,10 +40,23 @@ const ExercisePage: React.FC = () => {
         console.error(error);
         return;
       }
+      let { data: imagedata, error: imageerror } = await supabase.storage
+        .from("photos")
+        .list();
+      if (imageerror) {
+        console.error(imageerror);
+        return;
+      }
+      data.workout_exercises.forEach((e: any) => {
+        e.exercises.photo_name =
+          e.exercises.photo_id !== null
+            ? imagedata.find((i: any) => i.id === e.exercises.photo_id).name
+            : null;
+      });
       setWorkout(data);
     };
     fetchExercises();
-  }, []);
+  }, [id]);
 
   if (!workout) {
     return null;

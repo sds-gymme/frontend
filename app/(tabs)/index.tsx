@@ -27,11 +27,16 @@ interface GridItem {
   size?: number;
 }
 
+const baseImageURL =
+  "https://xnjquyseausfrxytquvs.supabase.co/storage/v1/object/public/";
+
 const HomePage: React.FC = () => {
   const [username, setUsername] = useState("User");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [filteredGridItems, setFilteredGridItems] = useState<GridItem[]>([]);
+  const [videos1, setVideos1] = useState<string[]>([]);
+  const [videos2, setVideos2] = useState<string[]>([]);
 
   const gridItems: GridItem[] = [
     {
@@ -94,7 +99,7 @@ const HomePage: React.FC = () => {
     return gridItems.filter(
       (item) =>
         item.tags.some((tag) => tag.toLowerCase().includes(lowercaseQuery)) ||
-        item.title.toLowerCase().includes(lowercaseQuery)
+        item.title.toLowerCase().includes(lowercaseQuery),
     );
   };
 
@@ -137,8 +142,28 @@ const HomePage: React.FC = () => {
         console.error("Error fetching user data:", error);
       }
     };
+    const fetchVideos = async () => {
+      const { data: d1, error: e1 } = await supabase.storage
+        .from("videos1")
+        .list();
+      if (e1) {
+        console.error(e1);
+        return;
+      }
+      setVideos1(d1.map((v) => v.name));
+
+      const { data: d2, error: e2 } = await supabase.storage
+        .from("videos2")
+        .list();
+      if (e2) {
+        console.error(e2);
+        return;
+      }
+      setVideos2(d2.map((v) => v.name));
+    };
 
     fetchUserData();
+    fetchVideos();
   }, []);
 
   const Header = ({ username }: { username: string }) => (
@@ -224,36 +249,23 @@ const HomePage: React.FC = () => {
             </View>
           ))}
         </View>
-
-        <VideoCarousel
-          title="Professional trainer's real life"
-          videos={[
-            {
-              src: "https://videos.pexels.com/video-files/3209068/3209068-uhd_3840_2160_25fps.mp4",
-            },
-            {
-              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            },
-            {
-              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-            },
-          ]}
-        />
+        {videos1.length > 0 && (
+          <VideoCarousel
+            title="Professional trainer's real life"
+            videos={videos1.map((vid) => ({
+              src: baseImageURL + "/videos1/" + vid,
+            }))}
+          />
+        )}
         <CouponCard />
-        <VideoCarousel
-          title="Your fitness and healthy lifestyle made easy"
-          videos={[
-            {
-              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            },
-            {
-              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-            },
-            {
-              src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            },
-          ]}
-        />
+        {videos2.length > 0 && (
+          <VideoCarousel
+            title="Your fitness and healthy lifestyle made easy"
+            videos={videos2.map((vid) => ({
+              src: baseImageURL + "/videos2/" + vid,
+            }))}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
