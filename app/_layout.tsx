@@ -126,18 +126,6 @@ export default function RootLayout() {
               options={{ title: "Help Center" }}
             />
             <Stack.Screen
-              name="excercisePage"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="excerciseDetails"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="gymWorkout"
-              options={{ title: "Gym Workout" }}
-            />
-            <Stack.Screen
               name="gymDetails/[slug]"
               options={{
                 headerShown: false,
@@ -160,6 +148,24 @@ export default function RootLayout() {
               options={{
                 title: "Trainers",
                 headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="worktype/[type]"
+              options={{
+                title: "Workouts",
+              }}
+            />
+            <Stack.Screen
+              name="workout/[id]"
+              options={{
+                title: "Workout",
+              }}
+            />
+            <Stack.Screen
+              name="exerciseDetails/[id]"
+              options={{
+                title: "Exercise",
               }}
             />
           </Stack>

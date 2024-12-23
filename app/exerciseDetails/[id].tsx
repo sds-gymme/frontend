@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,26 +9,44 @@ import {
   StatusBar,
   Platform,
   Dimensions,
+  Image,
 } from "react-native";
-import { Image } from "expo-image";
 import { Play } from "lucide-react-native";
+import { useLocalSearchParams } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 interface ExerciseDetailProps {
   navigation: any; // Replace with your navigation type
 }
+const baseImageURL =
+  "https://xnjquyseausfrxytquvs.supabase.co/storage/v1/object/public/photos/";
 
 const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({
   navigation,
 }) => {
-  const steps = [
-    "Load the barbell and lie on the bench.",
-    "Reach up and grab the bar with an even overhand grip. Your hands should be slightly more than shoulder-width apart.",
-    "Position yourself so your forehead is underneath the barbell.",
-    "Plant both feet on the floor, retract your shoulder blades, engage your abs, and inhale.",
-    "Unrack the bar by locking out your elbows and move it over your chest.",
-    "Take another breath and lower the bar to your chest.",
-    "Press the bar to the top position and exhale.",
-  ];
+  const { id } = useLocalSearchParams();
+
+  const [exercise, setExercise] = useState<any>();
+
+  useEffect(() => {
+    const fetchExercise = async () => {
+      let { data, error } = await supabase
+        .from("exercises")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) {
+        console.error(error);
+        return;
+      }
+      setExercise(data);
+    };
+    fetchExercise();
+  }, []);
+
+  if (!exercise) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,9 +55,8 @@ const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({
       <ScrollView style={styles.scrollView}>
         <View style={styles.videoContainer}>
           <Image
-            source={require("@/assets/images/dumbellFly.gif")}
+            src={baseImageURL + exercise.photo_name}
             style={styles.videoPreview}
-            contentFit="contain"
           />
           {/* <TouchableOpacity style={styles.playButton}>
             <Play size={32} color="#FFF" />
@@ -48,9 +65,9 @@ const ExerciseDetailScreen: React.FC<ExerciseDetailProps> = ({
 
         {/* Instructions */}
         <View style={styles.instructionsContainer}>
-          <Text style={styles.instructionsTitle}>How to (barbell)</Text>
+          <Text style={styles.instructionsTitle}>How to {exercise.name}</Text>
 
-          {steps.map((step, index) => (
+          {exercise.steps.map((step, index) => (
             <View key={index} style={styles.stepContainer}>
               <Text style={styles.stepNumber}>{index + 1}.</Text>
               <Text style={styles.stepText}>{step}</Text>
