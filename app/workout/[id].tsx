@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 interface Exercise {
   id: string;
@@ -20,64 +21,61 @@ interface Exercise {
   image: any;
 }
 
-const ExercisePage: React.FC = () => {
-  const exercises: Exercise[] = [
-    {
-      id: "1",
-      name: "PUSHUPS",
-      sets: 3,
-      reps: 12,
-      image: require("@/assets/images/pushupBar.gif"),
-    },
-    {
-      id: "2",
-      name: "FLAT CHEST PRESS",
-      sets: 3,
-      reps: 12,
-      image: require("@/assets/images/pecDecFly.gif"),
-    },
-    {
-      id: "3",
-      name: "CLOSE GRIP CHEST PRESS",
-      sets: 3,
-      reps: 12,
-      image: require("@/assets/images/dumbellFly.gif"),
-    },
-    {
-      id: "4",
-      name: "CHEST FLY",
-      sets: 3,
-      reps: 12,
-      image: require("@/assets/images/cableCrossover.gif"),
-    },
-  ];
+const baseImageURL =
+  "https://xnjquyseausfrxytquvs.supabase.co/storage/v1/object/public/photos/";
 
-  const handlePress = () => {
-    router.push(`/excerciseDetails`);
-  };
+const ExercisePage: React.FC = () => {
+  const { id } = useLocalSearchParams();
+
+  const [workout, setWorkout] = useState<any>();
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      let { data, error } = await supabase
+        .from("workouts")
+        .select("*, workout_exercises(*, exercises(*))")
+        .eq("id", id)
+        .single();
+      if (error) {
+        console.error(error);
+        return;
+      }
+      setWorkout(data);
+    };
+    fetchExercises();
+  }, []);
+
+  if (!workout) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Chest Workout</Text>
-          <Text style={styles.exerciseCount}>4 Exercises</Text>
+          <Text style={styles.headerTitle}>{workout.name}</Text>
+          <Text style={styles.exerciseCount}>
+            {workout.workout_exercises.length} Exercises
+          </Text>
         </View>
 
         <View style={styles.exerciseList}>
-          {exercises.map((exercise: any) => (
-            <TouchableOpacity key={exercise.id} onPress={() => handlePress()}>
+          {workout.workout_exercises.map((e: any) => (
+            <TouchableOpacity
+              key={e.id}
+              onPress={() => router.push("exerciseDetails/" + e.exercises.id)}
+            >
               <View style={styles.exerciseCard}>
                 <Image
-                  source={exercise.image}
+                  src={baseImageURL + e.exercises.photo_name}
                   style={styles.exerciseImage}
                   resizeMode="cover"
                 />
                 <View style={styles.exerciseDetails}>
-                  <Text style={styles.exerciseName}>{exercise.name}</Text>
+                  <Text style={styles.exerciseName}>{e.exercises.name}</Text>
                   <Text style={styles.exerciseReps}>
-                    {exercise.sets} Sets x {exercise.reps} Reps
+                    {e.sets} Sets x {e.reps} Reps
                   </Text>
                 </View>
               </View>
