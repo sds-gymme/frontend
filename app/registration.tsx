@@ -38,13 +38,14 @@ const Registration: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { setIsLoggedIn } = useContext(LoginContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [submitButtonText, setSubmitButtonText] = useState("Submit");
 
   const foodPreferences = ["Vegetarian", "Non-Vegetarian", "Eggetarian"];
   const bodyTypes = ["Lean", "Fit", "Obsessed"];
   const fitnessLevels = ["Beginner", "Intermediate", "Professional"];
   const fitnessGoals = ["Weight Loss", "Weight Gain", "Fitness"];
 
-  const validateForm = () => {
+  const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
 
     // Validate name
@@ -161,6 +162,8 @@ const Registration: React.FC = () => {
       return;
     }
 
+    setSubmitButtonText("Submitting");
+
     try {
       const {
         data: { user },
@@ -223,6 +226,8 @@ const Registration: React.FC = () => {
     } catch (error) {
       console.error("Error submitting user details:", error);
       Alert.alert("Error", "Failed to submit user details. Please try again.");
+    } finally {
+      setSubmitButtonText("Submit");
     }
   };
 
@@ -345,16 +350,19 @@ const Registration: React.FC = () => {
       </ScrollView>
       <View style={styles.submitButtonContainer}>
         <View style={styles.partition} />
-        <SubmitButton onPress={handleSubmit} />
+        <SubmitButton onPress={handleSubmit} text={submitButtonText} />
       </View>
     </View>
   );
 };
 
-const SubmitButton: React.FC<{ onPress: () => void }> = ({ onPress }) => {
+const SubmitButton: React.FC<{ onPress: () => void; text: string }> = ({
+  onPress,
+  text,
+}) => {
   return (
     <TouchableOpacity style={styles.submitButton} onPress={onPress}>
-      <Text style={styles.submitButtonText}>Submit</Text>
+      <Text style={styles.submitButtonText}>{text}</Text>
     </TouchableOpacity>
   );
 };
