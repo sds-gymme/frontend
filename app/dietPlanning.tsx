@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { ArrowLeft2, Clock, Timer1 } from 'iconsax-react-native';
-import { Link } from 'expo-router';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Modal,
+} from "react-native";
+import {
+  ArrowLeft2,
+  Clock,
+  Timer1,
+  ArrowDown,
+  ArrowUp,
+} from "iconsax-react-native";
+import { Link } from "expo-router";
 
-type MealCategory = 'Breakfast' | 'Lunch' | 'Dinner';
+type MealCategory = "Breakfast" | "Lunch" | "Dinner";
+type SortOrder = "asc" | "desc" | "none";
 
 interface MealItem {
   id: string;
@@ -12,51 +27,107 @@ interface MealItem {
   duration: number;
   image: any;
   category: MealCategory;
+  recipe: string;
 }
 
 const mealData: MealItem[] = [
   {
-    id: '1',
-    title: 'Green beans, tomatoes, eggs',
+    id: "1",
+    title: "Green beans, tomatoes, eggs",
     calories: 135,
     duration: 30,
-    image: require('../assets/images/DietPlanningImage1.png'),
-    category: 'Breakfast'
+    image: require("../assets/images/DietPlanningImage1.png"),
+    category: "Breakfast",
+    recipe:
+      "1. Boil green beans. \n2. Add chopped tomatoes. \n3. Cook scrambled eggs. \n4. Mix and serve.",
   },
   {
-    id: '2',
-    title: 'Healthy balanced vegetarian food',
+    id: "2",
+    title: "Healthy balanced vegetarian food",
     calories: 145,
     duration: 30,
-    image: require('../assets/images/DecodeAgeFood.png'),
-    category: 'Lunch'
+    image: require("../assets/images/DecodeAgeFood.png"),
+    category: "Lunch",
+    recipe:
+      "1. Prepare a salad with lettuce, cucumbers, and carrots. \n2. Add boiled lentils. \n3. Season with olive oil and lemon juice.",
   },
   {
-    id: '3',
-    title: 'Broccoli and eggs breakfast',
+    id: "3",
+    title: "Broccoli and eggs breakfast",
     calories: 165,
     duration: 25,
-    image: require('../assets/images/DietPlanningImage2.png'),
-    category: 'Breakfast'
+    image: require("../assets/images/DietPlanningImage2.png"),
+    category: "Breakfast",
+    recipe:
+      "1. Steam broccoli. \n2. Fry eggs sunny-side up. \n3. Serve broccoli with eggs on top.",
   },
   {
-    id: '4',
-    title: 'Grilled chicken salad',
+    id: "4",
+    title: "Grilled chicken salad",
     calories: 180,
     duration: 35,
-    image: require('../assets/images/DietPlanningImage2.png'),
-    category: 'Dinner'
-  }
+    image: require("../assets/images/DietPlanningImage2.png"),
+    category: "Dinner",
+    recipe:
+      "1. Grill chicken breast. \n2. Prepare a salad with greens, tomatoes, and cucumbers. \n3. Add chicken slices on top.",
+  },
 ];
 
 export default function DietPlanning() {
-  const [selectedCategory, setSelectedCategory] = useState<MealCategory>('Breakfast');
-  const filteredMeals = mealData.filter(meal => meal.category === selectedCategory);
+  const [selectedCategory, setSelectedCategory] =
+    useState<MealCategory>("Breakfast");
+  const [selectedMeal, setSelectedMeal] = useState<MealItem | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [sortOrder, setSortOrder] = useState<SortOrder>("none");
+
+  const sortMeals = (meals: MealItem[]): MealItem[] => {
+    if (sortOrder === "none") return meals;
+
+    return [...meals].sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.calories - b.calories;
+      } else {
+        return b.calories - a.calories;
+      }
+    });
+  };
+
+  const toggleSort = () => {
+    const orders: SortOrder[] = ["none", "asc", "desc"];
+    const currentIndex = orders.indexOf(sortOrder);
+    const nextIndex = (currentIndex + 1) % orders.length;
+    setSortOrder(orders[nextIndex]);
+  };
+
+  const getSortIcon = () => {
+    switch (sortOrder) {
+      case "asc":
+        return <ArrowUp size={16} color="#666" variant="Linear" />;
+      case "desc":
+        return <ArrowDown size={16} color="#666" variant="Linear" />;
+      default:
+        return null;
+    }
+  };
+
+  const filteredMeals = sortMeals(
+    mealData.filter((meal) => meal.category === selectedCategory)
+  );
+
+  const openModal = (meal: MealItem) => {
+    setSelectedMeal(meal);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setSelectedMeal(null);
+    setIsModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>
-        {['Breakfast', 'Lunch', 'Dinner'].map((category) => (
+        {["Breakfast", "Lunch", "Dinner"].map((category) => (
           <TouchableOpacity
             key={category}
             style={[
@@ -77,11 +148,22 @@ export default function DietPlanning() {
         ))}
       </View>
 
-      <Text style={styles.mealsCount}>{filteredMeals.length} meals</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.mealsCount}>{filteredMeals.length} meals</Text>
+        <TouchableOpacity style={styles.sortButton} onPress={toggleSort}>
+          <Text style={styles.sortButtonText}>
+            Sort by calories {getSortIcon()}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <ScrollView style={styles.mealList}>
         {filteredMeals.map((meal) => (
-          <TouchableOpacity key={meal.id} style={styles.mealCard}>
+          <TouchableOpacity
+            key={meal.id}
+            style={styles.mealCard}
+            onPress={() => openModal(meal)}
+          >
             <Image source={meal.image} style={styles.mealImage} />
             <View style={styles.mealInfo}>
               <Text style={styles.mealTitle}>{meal.title}</Text>
@@ -99,6 +181,40 @@ export default function DietPlanning() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      {selectedMeal && (
+        <Modal visible={isModalVisible} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{selectedMeal.title}</Text>
+              <Image source={selectedMeal.image} style={styles.modalImage} />
+              <View style={styles.modalStats}>
+                <View style={styles.modalStatItem}>
+                  <Text style={styles.modalStatValue}>
+                    {selectedMeal.calories}
+                  </Text>
+                  <Text style={styles.modalStatLabel}>Calories</Text>
+                </View>
+                <View style={styles.modalStatItem}>
+                  <Text style={styles.modalStatValue}>
+                    {selectedMeal.duration}
+                  </Text>
+                  <Text style={styles.modalStatLabel}>Minutes</Text>
+                </View>
+              </View>
+              <ScrollView style={{ width: "100%" }}>
+                <Text style={styles.modalRecipe}>{selectedMeal.recipe}</Text>
+              </ScrollView>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={closeModal}
+              >
+                <Text style={styles.modalCloseButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 }
@@ -107,25 +223,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 16,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginLeft: 16,
+    backgroundColor: "#fff",
   },
   categoryContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 16,
     marginBottom: 16,
   },
@@ -134,23 +235,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginRight: 8,
     borderRadius: 5,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   selectedCategory: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   categoryText: {
-    color: '#666',
+    color: "#666",
     fontSize: 16,
   },
   selectedCategoryText: {
-    color: '#fff',
+    color: "#fff",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   mealsCount: {
     fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 16,
-    marginBottom: 16,
+    fontWeight: "600",
+  },
+  sortButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+  sortButtonText: {
+    fontSize: 14,
+    color: "#666",
+    marginRight: 4,
   },
   mealList: {
     flex: 1,
@@ -159,9 +278,9 @@ const styles = StyleSheet.create({
   mealCard: {
     marginBottom: 16,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -171,30 +290,99 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   mealImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   mealInfo: {
     padding: 12,
   },
   mealTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
   },
   mealStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   statItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 16,
   },
   statText: {
-    color: '#666',
+    color: "#666",
     marginLeft: 4,
     fontSize: 14,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: "90%",
+    maxHeight: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  modalImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  modalRecipe: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 20,
+  },
+  modalCloseButton: {
+    backgroundColor: "#000",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+  },
+  modalCloseButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  modalStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginBottom: 16,
+  },
+  modalStatItem: {
+    alignItems: "center",
+  },
+  modalStatValue: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  modalStatLabel: {
+    fontSize: 14,
+    color: "#666",
   },
 });
