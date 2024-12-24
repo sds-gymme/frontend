@@ -25,6 +25,15 @@ interface Gym {
   address: string;
 }
 
+// Define constant colors that won't change with theme
+const CONSTANT_COLORS = {
+  TEXT_PRIMARY: "#000000",
+  TEXT_SECONDARY: "#666666",
+  STAR_COLOR: "#FFD700",
+  BACKGROUND: "#FFFFFF",
+  ICON_COLOR: "#666666",
+};
+
 const NearbyGymScreen = () => {
   const [gyms, setGyms] = useState<Gym[]>([]); // Gyms from the API
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,6 +45,7 @@ const NearbyGymScreen = () => {
 
   const CACHE_KEY = "nearby_gyms";
   const CACHE_EXPIRY = 3600 * 1000;
+
   const fetchNearbyGyms = async (latitude: number, longitude: number) => {
     try {
       setLoading(true);
@@ -182,7 +192,7 @@ const NearbyGymScreen = () => {
               <Icon
                 name="clock-outline"
                 size={16}
-                color={theme.colors.outline}
+                color={CONSTANT_COLORS.ICON_COLOR}
               />
               <Text variant="bodySmall" style={styles.infoText}>
                 {gym.timings}
@@ -192,7 +202,7 @@ const NearbyGymScreen = () => {
               <Icon
                 name="map-marker-outline"
                 size={16}
-                color={theme.colors.outline}
+                color={CONSTANT_COLORS.ICON_COLOR}
               />
               <Text variant="bodySmall" style={styles.infoText}>
                 {gym.address}
@@ -201,8 +211,10 @@ const NearbyGymScreen = () => {
           </View>
           <View style={styles.priceRating}>
             <View style={styles.rating}>
-              <Icon name="star" size={16} color="#FFD700" />
-              <Text variant="bodyMedium">{gym.rating}</Text>
+              <Icon name="star" size={16} color={CONSTANT_COLORS.STAR_COLOR} />
+              <Text variant="bodyMedium" style={styles.ratingText}>
+                {gym.rating}
+              </Text>
             </View>
           </View>
         </View>
@@ -234,7 +246,7 @@ const NearbyGymScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: CONSTANT_COLORS.BACKGROUND,
   },
   content: {
     flex: 1,
@@ -244,17 +256,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 6,
     backgroundColor: "transparent",
-    borderColor: "#000",
+    borderColor: CONSTANT_COLORS.TEXT_PRIMARY,
     borderWidth: 0.5,
   },
   sectionTitle: {
     marginBottom: 16,
     fontWeight: "600",
+    color: CONSTANT_COLORS.TEXT_PRIMARY,
   },
   gymCard: {
     marginBottom: 16,
     borderRadius: 12,
-    backgroundColor: "#fff",
+    backgroundColor: CONSTANT_COLORS.BACKGROUND,
     overflow: "hidden",
   },
   gymInfo: {
@@ -274,6 +287,7 @@ const styles = StyleSheet.create({
   gymName: {
     fontWeight: "600",
     marginBottom: 4,
+    color: CONSTANT_COLORS.TEXT_PRIMARY,
   },
   timeLocation: {
     flexDirection: "row",
@@ -282,7 +296,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginLeft: 4,
-    color: "#666",
+    color: CONSTANT_COLORS.TEXT_SECONDARY,
   },
   priceRating: {
     alignItems: "flex-end",
@@ -292,6 +306,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+  },
+  ratingText: {
+    color: CONSTANT_COLORS.TEXT_PRIMARY,
   },
 });
 

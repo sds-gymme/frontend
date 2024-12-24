@@ -72,12 +72,12 @@ const TrainerProfile = () => {
     if (authError || !user) {
       throw new Error("No authenticated user found");
     }
-
+    const receipt = makeid(20);
     const { data, error } = await supabase.functions.invoke("new-order", {
       body: {
         amount: parseInt(trainer.price),
         currency: "INR",
-        receipt: makeid(20),
+        receipt: receipt,
       },
     });
     console.log(data, error);
@@ -94,11 +94,25 @@ const TrainerProfile = () => {
         name: "John Doe",
       },
       theme: { color: "#F37254" },
+      customer_id: user.id,
     };
     try {
       const d = await RazorpayCheckout.open(options);
       // Handle success
       Alert.alert("Success", `Payment ID: ${d.razorpay_payment_id}`);
+      const { error: e } = await supabase.from("trainer_orders").insert({
+        user_id: user.id,
+        trainer_id: trainer.id,
+        amount: trainer.price,
+        receipt: receipt,
+        razorpay_payment_id: d.razorpay_payment_id,
+        razorpay_order_id: d.razorpay_order_id,
+        razorpay_signature: d.razorpay_signature,
+      });
+      if (e) {
+        console.error("Error inserting order", e);
+        return;
+      }
       router.replace("/");
     } catch (error: any) {
       // Handle failure
