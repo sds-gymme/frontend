@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,9 @@ import {
   ArrowDown,
   ArrowUp,
 } from "iconsax-react-native";
-import { Link } from "expo-router";
+import { supabase } from "@/lib/supabase";
+
+const mealCategories = ["Breakfast", "Lunch", "Dinner"];
 
 type MealCategory = "Breakfast" | "Lunch" | "Dinner";
 type SortOrder = "asc" | "desc" | "none";
@@ -25,60 +27,55 @@ interface MealItem {
   title: string;
   calories: number;
   duration: number;
-  image: any;
+  image: string;
   category: MealCategory;
   recipe: string;
 }
 
-const mealData: MealItem[] = [
-  {
-    id: "1",
-    title: "Green beans, tomatoes, eggs",
-    calories: 135,
-    duration: 30,
-    image: require("../assets/images/DietPlanningImage1.png"),
-    category: "Breakfast",
-    recipe:
-      "1. Boil green beans. \n2. Add chopped tomatoes. \n3. Cook scrambled eggs. \n4. Mix and serve.",
-  },
-  {
-    id: "2",
-    title: "Healthy balanced vegetarian food",
-    calories: 145,
-    duration: 30,
-    image: require("../assets/images/DecodeAgeFood.png"),
-    category: "Lunch",
-    recipe:
-      "1. Prepare a salad with lettuce, cucumbers, and carrots. \n2. Add boiled lentils. \n3. Season with olive oil and lemon juice.",
-  },
-  {
-    id: "3",
-    title: "Broccoli and eggs breakfast",
-    calories: 165,
-    duration: 25,
-    image: require("../assets/images/DietPlanningImage2.png"),
-    category: "Breakfast",
-    recipe:
-      "1. Steam broccoli. \n2. Fry eggs sunny-side up. \n3. Serve broccoli with eggs on top.",
-  },
-  {
-    id: "4",
-    title: "Grilled chicken salad",
-    calories: 180,
-    duration: 35,
-    image: require("../assets/images/DietPlanningImage2.png"),
-    category: "Dinner",
-    recipe:
-      "1. Grill chicken breast. \n2. Prepare a salad with greens, tomatoes, and cucumbers. \n3. Add chicken slices on top.",
-  },
-];
-
 export default function DietPlanning() {
-  const [selectedCategory, setSelectedCategory] =
-    useState<MealCategory>("Breakfast");
+  const [selectedCategory, setSelectedCategory] = useState<MealCategory>("Breakfast");
+  const [meals, setMeals] = useState<MealItem[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<MealItem | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchMeals() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        let { data: mealsData, error: mealsError } = await supabase
+          .from("diets")
+          .select("*, photo_id")
+          .order("id", { ascending: true });
+        if (mealsError) throw mealsError;
+
+        let { data: imagesData, error: imagesError } = await supabase.storage
+          .from("photos")
+          .list();
+        if (imagesError) throw imagesError;
+
+        const mealsWithImages = mealsData.map((meal) => {
+          const image = imagesData.find((img) => img.id === meal.photo_id);
+          return {
+            ...meal,
+            image: image ? supabase.storage.from("photos").getPublicUrl(image.name).data.publicUrl : null,
+          };
+        });
+        console.log(mealsWithImages);
+        setMeals(mealsWithImages);
+      } catch (err) {
+        setError("Failed to load meals. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMeals();
+  }, []);
 
   const sortMeals = (meals: MealItem[]): MealItem[] => {
     if (sortOrder === "none") return meals;
@@ -111,7 +108,7 @@ export default function DietPlanning() {
   };
 
   const filteredMeals = sortMeals(
-    mealData.filter((meal) => meal.category === selectedCategory)
+    meals.filter((meal) => meal.category === selectedCategory)
   );
 
   const openModal = (meal: MealItem) => {
@@ -126,8 +123,11 @@ export default function DietPlanning() {
 
   return (
     <View style={styles.container}>
+      {loading && <Text>Loading meals...</Text>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
       <View style={styles.categoryContainer}>
-        {["Breakfast", "Lunch", "Dinner"].map((category) => (
+        {mealCategories.map((category) => (
           <TouchableOpacity
             key={category}
             style={[
@@ -164,7 +164,7 @@ export default function DietPlanning() {
             style={styles.mealCard}
             onPress={() => openModal(meal)}
           >
-            <Image source={meal.image} style={styles.mealImage} />
+            <Image source={{ uri: meal.image }} style={styles.mealImage} />
             <View style={styles.mealInfo}>
               <Text style={styles.mealTitle}>{meal.title}</Text>
               <View style={styles.mealStats}>
@@ -187,18 +187,14 @@ export default function DietPlanning() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{selectedMeal.title}</Text>
-              <Image source={selectedMeal.image} style={styles.modalImage} />
+              <Image source={{ uri: selectedMeal.image }} style={styles.modalImage} />
               <View style={styles.modalStats}>
                 <View style={styles.modalStatItem}>
-                  <Text style={styles.modalStatValue}>
-                    {selectedMeal.calories}
-                  </Text>
+                  <Text style={styles.modalStatValue}>{selectedMeal.calories}</Text>
                   <Text style={styles.modalStatLabel}>Calories</Text>
                 </View>
                 <View style={styles.modalStatItem}>
-                  <Text style={styles.modalStatValue}>
-                    {selectedMeal.duration}
-                  </Text>
+                  <Text style={styles.modalStatValue}>{selectedMeal.duration}</Text>
                   <Text style={styles.modalStatLabel}>Minutes</Text>
                 </View>
               </View>
@@ -384,5 +380,10 @@ const styles = StyleSheet.create({
   modalStatLabel: {
     fontSize: 14,
     color: "#666",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
   },
 });

@@ -21,7 +21,8 @@ interface Gym {
   logo: string;
   rating: number;
   timings?: string;
-  location: string;
+  location: any;
+  address: string;
 }
 
 const NearbyGymScreen = () => {
@@ -56,22 +57,51 @@ const NearbyGymScreen = () => {
       const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${API_KEY}`,
+        "https://places.googleapis.com/v1/places:searchNearby",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": API_KEY!,
+            "X-Goog-FieldMask": "*",
+          },
+          body: JSON.stringify({
+            includedPrimaryTypes: ["gym", "fitness_center"],
+            locationRestriction: {
+              circle: {
+                center: {
+                  latitude,
+                  longitude,
+                },
+                radius: 5000.0,
+              },
+            },
+          }),
+        },
       );
 
       const data = await response.json();
-      console.log("Fetched Gyms Data:", JSON.stringify(data.results));
+      console.log("Fetched Gyms Data:", JSON.stringify(data.places));
 
-      const gymsData: Gym[] = data.results.map((gym: any) => ({
-        id: gym.place_id,
-        name: gym.name,
-        logo: gym.icon,
-        rating: gym.rating || 0,
-        timings: gym.opening_hours?.open_now ? "Open Now" : "Closed",
-        location: gym.vicinity,
-        photos: gym.photos,
-        geometry: gym.geometry,
-      }));
+      const gymsData: Gym[] = data.places
+        .filter((gym: any) =>
+          ["gym", "fitness_center"].includes(gym.primaryType),
+        )
+        .map((gym: any) => ({
+          id: gym.id,
+          name: gym.displayName.text,
+          logo: gym.icon,
+          rating: gym.rating || 0,
+          timings: gym.regularOpeningHours?.openNow ? "Open Now" : "Closed",
+          address: gym.shortFormattedAddress,
+          location: gym.location,
+          photos: gym.photos.map((photo: any) => ({
+            photo_reference: photo.name.split("/")[3],
+          })),
+          geometry: gym.geometry,
+        }));
+
+      console.log("Parsed Gyms Data:", gymsData);
 
       const cachePayload = {
         data: gymsData,
@@ -112,7 +142,7 @@ const NearbyGymScreen = () => {
         throw new Error("No authenticated user found");
       }
 
-      const { } = await supabase
+      const {} = await supabase
         .from("user_profiles")
         .update({
           longitude: longitude,
@@ -165,7 +195,7 @@ const NearbyGymScreen = () => {
                 color={theme.colors.outline}
               />
               <Text variant="bodySmall" style={styles.infoText}>
-                {gym.location}
+                {gym.address}
               </Text>
             </View>
           </View>

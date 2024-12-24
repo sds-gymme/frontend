@@ -25,6 +25,14 @@ import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MapView, { Marker } from "react-native-maps";
 import { LinearGradient } from "expo-linear-gradient";
+import RazorpayCheckout, { CheckoutOptions } from "react-native-razorpay";
+import { Alert } from "react-native";
+import { supabase } from "@/lib/supabase";
+import {
+  FunctionsHttpError,
+  FunctionsRelayError,
+  FunctionsFetchError,
+} from "@supabase/supabase-js";
 
 const { width } = Dimensions.get("window");
 
@@ -33,7 +41,7 @@ const sampleData = {
   name: "Pilates on Page, POP!",
   logo: "https://ui-avatars.com/api/?name=Pilates+on+Page",
   rating: 5,
-  price: "₹169/hr",
+  price: "169",
   timings: "Open Now",
   location: "Civic Center, San Francisco",
   details:
@@ -59,6 +67,19 @@ const sampleData = {
   ],
 };
 
+function makeid(length: number) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
 const CACHE_KEY = "nearby_gyms";
 
 const GymDetailsScreen = () => {
@@ -77,7 +98,6 @@ const GymDetailsScreen = () => {
             setGymData({
               ...sampleData,
               ...gym,
-              geometry: gym.geometry || sampleData.geometry,
               photos: gym.photos || [],
               plusCode: gym.plusCode || null,
             });
@@ -91,8 +111,62 @@ const GymDetailsScreen = () => {
     fetchData();
   }, [slug]);
 
-  const handleSubmit = () => {
-    router.replace("/nearbyGym");
+  const handleSubmit = async () => {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      throw new Error("No authenticated user found");
+    }
+
+    console.log({
+      amount: parseInt(gymData.price),
+      currency: "INR",
+      receipt: makeid(20),
+    });
+
+    const { data, error } = await supabase.functions.invoke("new-order", {
+      body: {
+        amount: parseInt(gymData.price),
+        currency: "INR",
+        receipt: makeid(20),
+      },
+    });
+    console.log(data, error);
+    if (error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json();
+      console.log("Function returned an error", errorMessage);
+    } else if (error instanceof FunctionsRelayError) {
+      console.log("Relay error:", error.message);
+    } else if (error instanceof FunctionsFetchError) {
+      console.log("Fetch error:", error.message);
+    }
+    const options: CheckoutOptions = {
+      description: "Gym Fee",
+      key: "rzp_test_GYHF9s4PYt6ahc",
+      amount: gymData.price,
+      currency: "INR",
+      name: "Gymme",
+      order_id: data.id,
+      prefill: {
+        email: user.email,
+        contact: user.phone,
+        name: "John Doe",
+      },
+      theme: { color: "#F37254" },
+    };
+    try {
+      const d = await RazorpayCheckout.open(options);
+      // Handle success
+      Alert.alert("Success", `Payment ID: ${d.razorpay_payment_id}`);
+      router.replace("/");
+    } catch (error: any) {
+      // Handle failure
+      console.log(error);
+      Alert.alert("Error", error.code + " " + error.description);
+    }
   };
 
   if (!gymData) {
@@ -171,7 +245,7 @@ const GymDetailsScreen = () => {
                       color={theme.colors.primary}
                     />
                     <Text variant="bodyMedium" style={styles.infoText}>
-                      {gymData.location}
+                      {gymData.address}
                     </Text>
                   </View>
                 </View>
@@ -213,24 +287,23 @@ const GymDetailsScreen = () => {
                 </Card.Content>
               </Card>
             )}
-            {gymData.geometry?.location?.lat &&
-            gymData.geometry?.location?.lng ? (
+            {gymData.location?.latitude && gymData.location?.longitude ? (
               <MapView
                 style={styles.mapImage}
                 initialRegion={{
-                  latitude: gymData.geometry.location.lat,
-                  longitude: gymData.geometry.location.lng,
+                  latitude: gymData.location.latitude,
+                  longitude: gymData.location.longitude,
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 }}
               >
                 <Marker
                   coordinate={{
-                    latitude: gymData.geometry.location.lat,
-                    longitude: gymData.geometry.location.lng,
+                    latitude: gymData.location.latitude,
+                    longitude: gymData.location.longitude,
                   }}
                   title={gymData.name}
-                  description={gymData.fullAddress || ""}
+                  description={gymData.address || ""}
                 />
               </MapView>
             ) : (
@@ -245,7 +318,7 @@ const GymDetailsScreen = () => {
       <Surface style={styles.footer} elevation={4}>
         <View style={styles.priceContainer}>
           <Text style={styles.priceLabel}>Total</Text>
-          <Text style={styles.price}>{gymData.price}</Text>
+          <Text style={styles.price}>₹{gymData.price}/hr</Text>
         </View>
         <TouchableOpacity style={styles.payButton} onPress={handleSubmit}>
           <Text style={styles.payButtonText}>Pay Now</Text>
@@ -300,7 +373,7 @@ const styles = StyleSheet.create({
   gymName: {
     fontWeight: "bold",
     marginBottom: 8,
-    color: "black"
+    color: "black",
   },
   timeLocation: {
     flexDirection: "row",
