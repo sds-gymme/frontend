@@ -1,62 +1,108 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { ArrowLeft2, Clock, Timer1 } from 'iconsax-react-native';
-import { Link } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { ArrowLeft2, Clock, Timer1 } from "iconsax-react-native";
+import { Link } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
-type MealCategory = 'Breakfast' | 'Lunch' | 'Dinner';
+type MealCategory = "Breakfast" | "Lunch" | "Dinner";
 
 interface MealItem {
   id: string;
   title: string;
   calories: number;
   duration: number;
-  image: any;
+  image: string;
   category: MealCategory;
 }
 
-const mealData: MealItem[] = [
-  {
-    id: '1',
-    title: 'Green beans, tomatoes, eggs',
-    calories: 135,
-    duration: 30,
-    image: require('../assets/images/DietPlanningImage1.png'),
-    category: 'Breakfast'
-  },
-  {
-    id: '2',
-    title: 'Healthy balanced vegetarian food',
-    calories: 145,
-    duration: 30,
-    image: require('../assets/images/DecodeAgeFood.png'),
-    category: 'Lunch'
-  },
-  {
-    id: '3',
-    title: 'Broccoli and eggs breakfast',
-    calories: 165,
-    duration: 25,
-    image: require('../assets/images/DietPlanningImage2.png'),
-    category: 'Breakfast'
-  },
-  {
-    id: '4',
-    title: 'Grilled chicken salad',
-    calories: 180,
-    duration: 35,
-    image: require('../assets/images/DietPlanningImage2.png'),
-    category: 'Dinner'
-  }
-];
+// const mealData: MealItem[] = [
+//   {
+//     id: '1',
+//     title: 'Green beans, tomatoes, eggs',
+//     calories: 135,
+//     duration: 30,
+//     image: require('../assets/images/DietPlanningImage1.png'),
+//     category: 'Breakfast'
+//   },
+//   {
+//     id: '2',
+//     title: 'Healthy balanced vegetarian food',
+//     calories: 145,
+//     duration: 30,
+//     image: require('../assets/images/DecodeAgeFood.png'),
+//     category: 'Lunch'
+//   },
+//   {
+//     id: '3',
+//     title: 'Broccoli and eggs breakfast',
+//     calories: 165,
+//     duration: 25,
+//     image: require('../assets/images/DietPlanningImage2.png'),
+//     category: 'Breakfast'
+//   },
+//   {
+//     id: '4',
+//     title: 'Grilled chicken salad',
+//     calories: 180,
+//     duration: 35,
+//     image: require('../assets/images/DietPlanningImage2.png'),
+//     category: 'Dinner'
+//   }
+// ];
+
+const baseImageURL =
+  "https://xnjquyseausfrxytquvs.supabase.co/storage/v1/object/public/photos/";
 
 export default function DietPlanning() {
-  const [selectedCategory, setSelectedCategory] = useState<MealCategory>('Breakfast');
-  const filteredMeals = mealData.filter(meal => meal.category === selectedCategory);
+  const [selectedCategory, setSelectedCategory] =
+    useState<MealCategory>("Breakfast");
+  const [mealData, setMealData] = useState<MealItem[]>([]);
+  const filteredMeals = mealData.filter(
+    (meal) => meal.category === selectedCategory,
+  );
+
+  useEffect(() => {
+    async function fetchMeals() {
+      let { data: meals, error } = await supabase
+        .from("diets")
+        .select("*")
+        .order("id", { ascending: true });
+      if (error) {
+        console.log("error", error);
+        return;
+      } else {
+        let { data: imagedata, error: imageerror } = await supabase.storage
+          .from("photos")
+          .list();
+        if (imageerror) {
+          console.error(imageerror);
+          return;
+        }
+
+        meals = meals.map((meal: any) => {
+          meal.image = meal.photo_id
+            ? imagedata.find((i: any) => i.id === meal.photo_id).name
+            : null;
+          return meal;
+        });
+        setMealData(meals as MealItem[]);
+      }
+    }
+
+    fetchMeals();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>
-        {['Breakfast', 'Lunch', 'Dinner'].map((category) => (
+        {["Breakfast", "Lunch", "Dinner"].map((category) => (
           <TouchableOpacity
             key={category}
             style={[
@@ -82,7 +128,7 @@ export default function DietPlanning() {
       <ScrollView style={styles.mealList}>
         {filteredMeals.map((meal) => (
           <TouchableOpacity key={meal.id} style={styles.mealCard}>
-            <Image source={meal.image} style={styles.mealImage} />
+            <Image src={baseImageURL + meal.image} style={styles.mealImage} />
             <View style={styles.mealInfo}>
               <Text style={styles.mealTitle}>{meal.title}</Text>
               <View style={styles.mealStats}>
@@ -107,11 +153,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 16,
@@ -121,11 +167,11 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 16,
   },
   categoryContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 16,
     marginBottom: 16,
   },
@@ -134,21 +180,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginRight: 8,
     borderRadius: 5,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   selectedCategory: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   categoryText: {
-    color: '#666',
+    color: "#666",
     fontSize: 16,
   },
   selectedCategoryText: {
-    color: '#fff',
+    color: "#fff",
   },
   mealsCount: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 16,
     marginBottom: 16,
   },
@@ -159,9 +205,9 @@ const styles = StyleSheet.create({
   mealCard: {
     marginBottom: 16,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -171,29 +217,29 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   mealImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   mealInfo: {
     padding: 12,
   },
   mealTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
   },
   mealStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   statItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 16,
   },
   statText: {
-    color: '#666',
+    color: "#666",
     marginLeft: 4,
     fontSize: 14,
   },

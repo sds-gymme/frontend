@@ -43,6 +43,19 @@ const info: TrainerInfo = {
   about: "Strength training expert. Let's build your dream physique!",
 };
 
+function makeid(length: number) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
 const TrainerProfile = () => {
   const handleSubmit = () => {
     router.back();
@@ -64,7 +77,7 @@ const TrainerProfile = () => {
       body: {
         amount: parseInt(trainer.price),
         currency: "INR",
-        receipt: "" + trainer.id + ":" + user.id,
+        receipt: makeid(20),
       },
     });
     console.log(data, error);
@@ -83,10 +96,10 @@ const TrainerProfile = () => {
       theme: { color: "#F37254" },
     };
     try {
-      const d = await RazorpayCheckout.open(options)
+      const d = await RazorpayCheckout.open(options);
       // Handle success
       Alert.alert("Success", `Payment ID: ${d.razorpay_payment_id}`);
-      router.replace("/")
+      router.replace("/");
     } catch (error: any) {
       // Handle failure
       console.log(error);
@@ -106,7 +119,7 @@ const TrainerProfile = () => {
         return;
       }
       setTrainer({ ...trainer, ...data });
-    }
+    };
     fetchTrainer();
   }, [id]);
 
@@ -123,7 +136,9 @@ const TrainerProfile = () => {
           <View style={styles.headerInfo}>
             <View style={styles.certifiedBadge}>
               <MaterialIcons name="stars" size={20} color="green" />
-              <Text style={styles.certified}>{trainer.certificate ? "Certified" : "Not Certified"}</Text>
+              <Text style={styles.certified}>
+                {trainer.certificate ? "Certified" : "Not Certified"}
+              </Text>
             </View>
             <Text style={styles.name}>{trainer.name}</Text>
             <View style={styles.locationContainer}>
@@ -158,9 +173,7 @@ const TrainerProfile = () => {
         <View style={styles.section}>
           <View style={styles.sectionRow}>
             <Text style={styles.sectionLabel}>Speak :</Text>
-            <Text style={styles.sectionContent}>
-              {trainer.languages}
-            </Text>
+            <Text style={styles.sectionContent}>{trainer.languages}</Text>
           </View>
 
           <View style={styles.sectionRow}>
@@ -171,9 +184,7 @@ const TrainerProfile = () => {
 
         <View style={styles.aboutSection}>
           <Text style={styles.aboutTitle}>About</Text>
-          <Text style={styles.aboutText}>
-            {trainer.about}
-          </Text>
+          <Text style={styles.aboutText}>{trainer.about}</Text>
         </View>
       </ScrollView>
 
