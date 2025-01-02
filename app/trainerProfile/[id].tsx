@@ -23,7 +23,7 @@ interface TrainerInfo {
   certificate: string;
   duration: string;
   rating: number;
-  price: string;
+  price: number;
   languages: string;
   qualification: string;
   about: string;
@@ -37,7 +37,7 @@ const info: TrainerInfo = {
   certificate: "Certified",
   rating: 4.5,
   duration: "45 Min",
-  price: "169",
+  price: 169,
   languages: "English, Hindi",
   qualification: "Diploma in personal training",
   about: "Strength training expert. Let's build your dream physique!",
@@ -75,7 +75,7 @@ const TrainerProfile = () => {
     const receipt = makeid(20);
     const { data, error } = await supabase.functions.invoke("new-order", {
       body: {
-        amount: parseInt(trainer.price),
+        amount: trainer.price * 100,
         currency: "INR",
         receipt: receipt,
       },
@@ -83,8 +83,8 @@ const TrainerProfile = () => {
     console.log(data, error);
     const options: CheckoutOptions = {
       description: "Trainer Fee", // Adding the required description field
-      key: "rzp_test_GYHF9s4PYt6ahc",
-      amount: trainer.price,
+      key: process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID,
+      amount: trainer.price * 100,
       currency: "INR",
       name: "Gymme",
       order_id: data.id,
@@ -94,7 +94,7 @@ const TrainerProfile = () => {
         name: "John Doe",
       },
       theme: { color: "#F37254" },
-      customer_id: user.id,
+      // customer_id: user.id,
     };
     try {
       const d = await RazorpayCheckout.open(options);
@@ -108,6 +108,7 @@ const TrainerProfile = () => {
         razorpay_payment_id: d.razorpay_payment_id,
         razorpay_order_id: d.razorpay_order_id,
         razorpay_signature: d.razorpay_signature,
+        call_started: false,
       });
       if (e) {
         console.error("Error inserting order", e);

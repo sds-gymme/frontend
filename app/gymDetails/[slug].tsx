@@ -123,7 +123,7 @@ const GymDetailsScreen = () => {
     const receipt = makeid(20);
     const { data, error } = await supabase.functions.invoke("new-order", {
       body: {
-        amount: parseInt(gymData.price),
+        amount: gymData.price * 100,
         currency: "INR",
         receipt: receipt,
       },
@@ -139,8 +139,8 @@ const GymDetailsScreen = () => {
     }
     const options: CheckoutOptions = {
       description: "Gym Fee",
-      key: "rzp_test_GYHF9s4PYt6ahc",
-      amount: gymData.price,
+      key: process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID,
+      amount: gymData.price * 100,
       currency: "INR",
       name: "Gymme",
       order_id: data.id,

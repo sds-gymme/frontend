@@ -151,8 +151,9 @@ const Trainer: React.FC = () => {
         .eq("user_id", user.id)
         .single();
       if (error) {
-        console.error("Supabase fetch error:", error);
-        throw error;
+        // console.error("Supabase fetch error:", error);
+        // throw error;
+        return;
       }
 
       if (data) {

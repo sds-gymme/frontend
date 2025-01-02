@@ -36,47 +36,37 @@ const Header = ({ username = "Trainer Vaibhav" }) => (
 
 interface Appointment {
   id: string;
+  user_id: string;
   name: string;
   location: string;
   duration: string;
 }
 
-const appointments: Appointment[] = [
-  {
-    id: "1",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    duration: "45 Min",
-  },
-  {
-    id: "2",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    duration: "45 Min",
-  },
-  {
-    id: "3",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    duration: "45 Min",
-  },
-  {
-    id: "4",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    duration: "45 Min",
-  },
-  {
-    id: "5",
-    name: "Siddhartha Gaur",
-    location: "Mumbai",
-    duration: "45 Min",
-  },
-];
-
-const renderAppointment = ({ item }: { item: Appointment }) => {
+const renderAppointment = (
+  { item }: { item: Appointment },
+  refreshData: () => void,
+) => {
   const handlePress = (route: any) => {
     router.push(route);
+  };
+
+  const acceptAppointment = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("trainer_orders")
+        .update({ call_started: true })
+        .eq("id", item.id)
+        .select();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      console.log("DATA", data);
+      console.log("ITEM", item);
+      refreshData();
+    } catch (error) {
+      console.error("Error accepting appointment:", error);
+    }
   };
 
   return (
@@ -97,7 +87,7 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.acceptButton}
-          onPress={() => handlePress("/underdev")}
+          onPress={() => acceptAppointment()}
         >
           <Text style={styles.acceptButtonText}>Accept</Text>
         </TouchableOpacity>
@@ -115,6 +105,7 @@ const renderAppointment = ({ item }: { item: Appointment }) => {
 const TrainerHome: React.FC = () => {
   const [isOnline, setIsOnline] = useState(false);
   const [name, setName] = useState("Vaibhav"); // Simplified to just use a static name
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   const handlePress = (route: any) => {
     router.push(route);
@@ -148,32 +139,78 @@ const TrainerHome: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchOnlineStatus = async () => {
-      try {
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError || !user) {
-          throw new Error("No authenticated user found");
-        }
-        const { data, error } = await supabase
-          .from("trainer_profiles")
-          .select("online, name")
-          .eq("user_id", user.id)
-          .single();
-        if (error) {
-          console.error("Supabase fetch error:", error);
-          throw error;
-        }
-        setIsOnline(data.online);
-        setName(data.name);
-      } catch (error) {
-        console.error("Error fetching online status:", error);
+  const fetchAppointments = async (id: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("trainer_orders")
+        .select("*")
+        .eq("trainer_id", id);
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
       }
-    };
-    fetchOnlineStatus();
+      console.log(data);
+      const { data: userData, error: userError } = await supabase
+        .from("user_profiles")
+        .select("*")
+        .in(
+          "user_id",
+          data.map((item) => item.user_id),
+        );
+
+      if (userError) {
+        console.error("Supabase fetch error:", userError);
+        throw userError;
+      }
+      console.log(userData);
+      const appointments = data
+        .filter((item) => !item.call_started)
+        .map((item: any) => {
+          const user = userData.find(
+            (user: any) => user.user_id === item.user_id,
+          );
+          return {
+            id: item.id,
+            user_id: item.user_id,
+            name: user.user_name,
+            location: "Online",
+            duration: "45 min",
+          };
+        });
+
+      setAppointments(appointments);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
+  const refreshData = async () => {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !user) {
+        throw new Error("No authenticated user found");
+      }
+      const { data, error } = await supabase
+        .from("trainer_profiles")
+        .select("online, name, id")
+        .eq("user_id", user.id)
+        .single();
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        throw error;
+      }
+      setIsOnline(data.online);
+      setName(data.name);
+      fetchAppointments(data.id);
+    } catch (error) {
+      console.error("Error fetching online status:", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   return (
@@ -188,9 +225,14 @@ const TrainerHome: React.FC = () => {
               setIsOnline={handleOnlineToggle}
             />
             <Text style={styles.headerText}>Your Appointments</Text>
+            {appointments.length === 0 && (
+              <Text style={{ color: "#666", textAlign: "center" }}>
+                No appointments available
+              </Text>
+            )}
             <FlatList
               data={appointments}
-              renderItem={renderAppointment}
+              renderItem={(item) => renderAppointment(item, refreshData)}
               keyExtractor={(item) => item.id}
               scrollEnabled={false}
               contentContainerStyle={styles.appointmentsList}
