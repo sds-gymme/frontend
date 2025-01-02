@@ -168,6 +168,13 @@ export default function RootLayout() {
                 title: "Exercise",
               }}
             />
+            <Stack.Screen
+              name="videoCall"
+              options={{
+                title: "Video Call",
+                headerShown: false,
+              }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>

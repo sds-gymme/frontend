@@ -266,6 +266,16 @@ const TrainerHome: React.FC = () => {
             <LogoutCurve size={24} color="#666" variant="Linear" />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={async () => {
+              await AsyncStorage.setItem("userType", "user");
+              router.replace("/videoCall");
+            }}
+          >
+            <LogoutCurve size={24} color="#666" variant="Linear" />
+            <Text style={styles.logoutText}>Call</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
