@@ -166,7 +166,7 @@ const HistoryPage: React.FC = () => {
       }
     };
 
-    // fetchHistoryData();
+    fetchHistoryData();
   }, []);
 
   const handleCallPress = async () => {

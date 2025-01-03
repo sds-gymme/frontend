@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "sds",
-    "slug": "sds",
+    "slug": "gymmeapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -38,15 +38,22 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-video"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-video"
+    ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": "8e4eb5e6-2f82-461f-a691-daab5e4190b4"
+        "projectId": "38ac3d5d-6e32-4b9a-9521-66cf5ff0fc08"
+      },
+      "router": {
+        "origin": false
       }
     },
-    "owner": "sds-gymme"
+    "owner": "joonx05"
   }
 }
