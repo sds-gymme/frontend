@@ -19,6 +19,7 @@ Deno.serve(async (req) => {
     }
 
     const razorpayApiUrl = 'https://api.razorpay.com/v1/orders';
+    console.log("ENV VARS ARE ALIVE", Deno.env.get('RAZORPAY_KEY_ID'));
     const keyId = Deno.env.get('RAZORPAY_KEY_ID');
     const secretKey = Deno.env.get('RAZORPAY_SECRET_KEY');
 
@@ -28,7 +29,7 @@ Deno.serve(async (req) => {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
-
+          
     const authorizationToken = 'Basic ' + btoa(`${keyId}:${secretKey}`);
 
     const body = {
@@ -68,8 +69,6 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-
 
 /* To invoke locally:
 

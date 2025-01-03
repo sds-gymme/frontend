@@ -83,7 +83,7 @@ const TrainerProfile = () => {
     console.log(data, error);
     const options: CheckoutOptions = {
       description: "Trainer Fee", // Adding the required description field
-      key: process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID,
+      key: process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID as string,
       amount: trainer.price * 100,
       currency: "INR",
       name: "Gymme",

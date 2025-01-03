@@ -45,7 +45,7 @@ export default function DietPlanning() {
     async function fetchMeals() {
       setLoading(true);
       setError(null);
-
+      
       try {
         let { data: mealsData, error: mealsError } = await supabase
           .from("diets")
@@ -59,7 +59,7 @@ export default function DietPlanning() {
         if (imagesError) throw imagesError;
 
         const mealsWithImages = mealsData.map((meal) => {
-          const image = imagesData.find((img) => img.id === meal.photo_id);
+          const image = imagesData?.find((img) => img.id === meal.photo_id);
           return {
             ...meal,
             image: image ? supabase.storage.from("photos").getPublicUrl(image.name).data.publicUrl : null,

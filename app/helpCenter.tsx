@@ -31,7 +31,7 @@ const HelpCenter = () => {
       id: "youtube",
       name: "Youtube",
       icon: require("../assets/images/Youtube.svg"),
-    },
+    }
   ];
 
   const contactOptions = [
@@ -74,7 +74,7 @@ const HelpCenter = () => {
             contentFit="contain"
           />
         </View>
-
+        
         <View style={styles.contactOptionsContainer}>
           {contactOptions.map((option) => (
             <TouchableOpacity

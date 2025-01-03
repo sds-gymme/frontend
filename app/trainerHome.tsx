@@ -87,13 +87,16 @@ const renderAppointment = (
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.acceptButton}
-          onPress={() => acceptAppointment()}
+          onPress={() => {
+            acceptAppointment()
+            handlePress("/videoCall")
+          }}
         >
           <Text style={styles.acceptButtonText}>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.rejectButton}
-          onPress={() => handlePress("/underdev")}
+          onPress={() => handlePress("/trainerHome")}
         >
           <Text style={styles.rejectButtonText}>Reject</Text>
         </TouchableOpacity>
@@ -266,7 +269,7 @@ const TrainerHome: React.FC = () => {
             <LogoutCurve size={24} color="#666" variant="Linear" />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.logoutButton}
             onPress={async () => {
               await AsyncStorage.setItem("userType", "user");
@@ -275,7 +278,7 @@ const TrainerHome: React.FC = () => {
           >
             <LogoutCurve size={24} color="#666" variant="Linear" />
             <Text style={styles.logoutText}>Call</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -13,7 +13,7 @@
 //     rtcCallbacks: {
 //       EndCall: () => {
 //         setVideoCall(false);
-//         router.replace("/trainerHome")
+//         router.replace("/")
 //       },
 //     },
 //   };

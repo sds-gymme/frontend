@@ -1,13 +1,27 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Call } from "iconsax-react-native"; // Importing the phone icon
 
-const HistoryCard = ({
+interface HistoryCardProps {
+  date: string;
+  activityName: string;
+  gymName: string | null;
+  duration: number;
+  price: number;
+  isLiveSession?: boolean;
+  showCallButton?: boolean;
+  onCallPress?: () => void;
+}
+
+const HistoryCard: React.FC<HistoryCardProps> = ({
   date,
   activityName,
   gymName,
   duration,
   price,
   isLiveSession = false,
+  showCallButton = false,
+  onCallPress,
 }) => {
   return (
     <View
@@ -49,6 +63,14 @@ const HistoryCard = ({
           <Text style={styles.dateText}>{date}</Text>
           <Text style={styles.durationText}>{duration} min</Text>
         </View>
+
+        {/* Call Button */}
+        {showCallButton && (
+          <TouchableOpacity style={styles.callButton} onPress={onCallPress}>
+            <Call size={18} color="#fff" />
+            <Text style={styles.callButtonText}>Call Instructor</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -121,6 +143,22 @@ const styles = StyleSheet.create({
   durationText: {
     fontSize: 14,
     color: "#666666",
+  },
+  callButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#007BFF",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginTop: 12, // Ensures spacing below the duration
+    alignSelf: "flex-start", // Aligns button to the left
+  },
+  callButtonText: {
+    color: "#fff",
+    marginLeft: 6,
+    fontSize: 14,
+    fontWeight: "600",
   },
 });
 

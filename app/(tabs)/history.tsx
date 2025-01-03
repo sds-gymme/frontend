@@ -2,15 +2,26 @@ import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
-  View,
-  Text,
   StyleSheet,
   StatusBar,
+  Alert,
 } from "react-native";
 import HistoryCard from "@/components/HistoryCard";
 import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
-const sampleHistoryData = [
+interface HistoryData {
+  date: string;
+  activityName: string;
+  gymName: string | null;
+  duration: number;
+  price: number;
+  isLiveSession: boolean;
+  callStarted: boolean;
+}
+
+const sampleHistoryData: HistoryData[] = [
   {
     date: "3 Jun 2024",
     activityName: "Live Personal Training",
@@ -18,6 +29,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: true,
+    callStarted: false
   },
   {
     date: "25 May 2024",
@@ -26,6 +38,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
   {
     date: "25 May 2024",
@@ -34,6 +47,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
   {
     date: "20 May 2024",
@@ -42,6 +56,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
   {
     date: "20 May 2024",
@@ -50,6 +65,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
   {
     date: "20 May 2024",
@@ -58,6 +74,7 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
   {
     date: "25 May 2024",
@@ -66,24 +83,25 @@ const sampleHistoryData = [
     duration: 45,
     price: 199,
     isLiveSession: false,
+    callStarted: false
   },
 ];
 
-const HistoryPage = () => {
-  const [historyData, setHistoryData] = useState(sampleHistoryData);
+const HistoryPage: React.FC = () => {
+  const [historyData, setHistoryData] = useState<HistoryData[]>(sampleHistoryData);
 
   useEffect(() => {
     const fetchHistoryData = async () => {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !user) {
-        throw new Error("No authenticated user found");
-      }
-
       try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+          throw new Error("No authenticated user found");
+        }
+
         // Fetch data from `trainer_orders`
         const { data: trainerData, error: trainerError } = await supabase
           .from("trainer_orders")
@@ -106,8 +124,8 @@ const HistoryPage = () => {
           return;
         }
 
-        // Format data
-        const formattedTrainerData = trainerData.map((order) => ({
+        // Format trainer data
+        const formattedTrainerData: HistoryData[] = trainerData.map((order) => ({
           date: new Date(order.created_at).toLocaleDateString("en-US", {
             day: "numeric",
             month: "short",
@@ -115,12 +133,14 @@ const HistoryPage = () => {
           }),
           activityName: "Live Personal Training",
           gymName: null,
-          duration: 45, // Assuming fixed duration
+          duration: 45,
           price: parseFloat(order.amount),
           isLiveSession: true,
+          callStarted: false
         }));
 
-        const formattedGymData = gymData.map((order) => ({
+        // Format gym data
+        const formattedGymData: HistoryData[] = gymData.map((order) => ({
           date: new Date(order.created_at).toLocaleDateString("en-US", {
             day: "numeric",
             month: "short",
@@ -128,9 +148,10 @@ const HistoryPage = () => {
           }),
           activityName: "Gym Session",
           gymName: order.gym_name,
-          duration: 60, // Assuming fixed duration
+          duration: 60,
           price: parseFloat(order.amount),
           isLiveSession: false,
+          callStarted: false
         }));
 
         // Combine and set history data
@@ -141,14 +162,25 @@ const HistoryPage = () => {
         setHistoryData(combinedHistoryData);
       } catch (error) {
         console.error("Error fetching history data:", error);
+        Alert.alert("Error", "Unable to fetch history data");
       }
     };
 
-    fetchHistoryData();
+    // fetchHistoryData();
   }, []);
+
+  const handleCallPress = async () => {
+    try {
+      await AsyncStorage.setItem("userType", "user");
+      router.replace("/clientVideo");
+    } catch (error) {
+      Alert.alert("Error", "Failed to start the call");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -161,6 +193,8 @@ const HistoryPage = () => {
             gymName={item.gymName}
             duration={item.duration}
             price={item.price}
+            showCallButton={item.isLiveSession && !item.callStarted}
+            onCallPress={handleCallPress}
             isLiveSession={item.isLiveSession}
           />
         ))}
