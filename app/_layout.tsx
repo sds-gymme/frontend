@@ -175,6 +175,13 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="clientVideo"
+              options={{
+                title: "Client Video",
+                headerShown: false,
+              }}
+            />
           </Stack>
         </ThemeProvider>
       </PaperProvider>
