@@ -146,7 +146,7 @@ const AccountPage: React.FC = () => {
           <MenuItem
             icon={<UserAdd size={24} color="#666" variant="Linear" />}
             title="Referral Programs"
-            onPress={() => handlePress("/underdev")}
+            onPress={() => handlePress("/referral")}
           />
           <MenuItem
             icon={<UserOctagon size={24} color="#666" variant="Linear" />}

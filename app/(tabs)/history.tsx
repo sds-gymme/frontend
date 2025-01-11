@@ -136,7 +136,7 @@ const HistoryPage: React.FC = () => {
           duration: 45,
           price: parseFloat(order.amount),
           isLiveSession: true,
-          callStarted: false
+          callStarted: order.call_started
         }));
 
         // Format gym data
@@ -197,6 +197,7 @@ const HistoryPage: React.FC = () => {
             onCallPress={handleCallPress}
             isLiveSession={item.isLiveSession}
           />
+      
         ))}
       </ScrollView>
     </SafeAreaView>

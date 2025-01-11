@@ -98,6 +98,12 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
+              name="referral"
+              options={{
+                title: "Referral Program",
+              }}
+            />
+            <Stack.Screen
               name="dietPlanning"
               options={{ title: "Diet Planning" }}
             />

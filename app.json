@@ -48,12 +48,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "38ac3d5d-6e32-4b9a-9521-66cf5ff0fc08"
+        "projectId": "ba0d84dd-2ee2-448c-be15-b832d7a44a8a"
       },
       "router": {
         "origin": false
       }
     },
-    "owner": "joonx05"
+    "owner": "back_end"
   }
 }
